@@ -4,7 +4,7 @@
 
 > [한국어 README](./README.ko.md) · [English (this page)]
 
-[![CI](https://img.shields.io/badge/CI-passing-2ea44f)](https://github.com/OWNER/driftless/actions)
+[![CI](https://img.shields.io/badge/CI-passing-2ea44f)](https://github.com/mizan0515/driftless/actions)
 [![containment](https://img.shields.io/badge/containment-PASS-2ea44f)](./docs/en/guardrails.md)
 [![mirror-parity](https://img.shields.io/badge/mirror--parity-PASS-2ea44f)](./docs/en/single-source-mirror.md)
 [![version](https://img.shields.io/badge/version-v0.1.0-blue)](#changelog)
@@ -88,10 +88,9 @@ Measured from the source repository:
 - **114** commits
 - **73** agent skills (39 Claude + 34 Codex)
 
-Browse the living graph: [pull requests](https://github.com/OWNER/driftless/pulls?q=is%3Apr+is%3Amerged) ·
-[issues](https://github.com/OWNER/driftless/issues?q=is%3Aissue) ·
-[commits](https://github.com/OWNER/driftless/commits) (placeholder `OWNER`
-until the public remote is set).
+Browse the living graph: [pull requests](https://github.com/mizan0515/driftless/pulls?q=is%3Apr+is%3Amerged) ·
+[issues](https://github.com/mizan0515/driftless/issues?q=is%3Aissue) ·
+[commits](https://github.com/mizan0515/driftless/commits).
 
 ## Changelog
 

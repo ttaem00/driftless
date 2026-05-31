@@ -1,0 +1,102 @@
+{
+  "$schema_note": "Canonical forbidden-path + leaked-secret rule set CONSUMED by the containment gate scripts/Test-Containment.ps1 (the gate reads the `rules` array directly). Each rule has: id (stable, reported in findings); kind ('path' = a forbidden filesystem location, 'secret' = a leaked-credential token pattern); reason (plain-language explanation shown to the reviewer); pathRegex (a file whose OWN repo-relative path matches is forbidden -- its contents are never read); refRegex (a 'path' rule matches content that references/accesses the path; a 'secret' rule matches the credential token); globs (human-readable equivalents, for documentation only). ENFORCEMENT MODEL: the OWN-path check and all 'secret' rules apply to EVERY scanned file and are never suppressed. A 'path' rule's refRegex (content reference) is suppressed only on the policy / containment-infrastructure surface (any *.md, .github/**, tests/**, and the schemas/ folder itself plus the gate scripts), because those files legitimately NAME the forbidden paths in order to describe or enforce the boundary. Application code and every other file are fully checked. SHARED across both tool profiles: this single file is the source of truth, so one edit applies to the Claude profile and the Codex profile alike (driftless mirror parity). Host-global agent homes (~/.claude, ~/.codex) are always blocked; the repo-local isolated runtime home is repo-relative and exempt from the OWN-path check only.",
+  "schemaVersion": "1.1",
+  "rules": [
+    {
+      "id": "dotenv",
+      "kind": "path",
+      "reason": "References a .env / .env.* file (environment secrets).",
+      "globs": [".env", ".env.*"],
+      "pathRegex": "(^|/)\\.env(\\.[^/]*)?$",
+      "refRegex": "(^|[^A-Za-z0-9_-])\\.env(\\.[A-Za-z0-9_.-]+)?($|[^A-Za-z0-9_-])"
+    },
+    {
+      "id": "ssh",
+      "kind": "path",
+      "reason": "References an .ssh directory (private SSH material).",
+      "globs": [".ssh", ".ssh/**", "**/.ssh/**"],
+      "pathRegex": "(^|/)\\.ssh(/|$)",
+      "refRegex": "(^|[^A-Za-z0-9_-])[~./\\\\]*\\.ssh([/\\\\]|$|[^A-Za-z0-9_-])"
+    },
+    {
+      "id": "secrets_dir",
+      "kind": "path",
+      "reason": "References a secrets/ directory.",
+      "globs": ["secrets/**", "**/secrets/**"],
+      "pathRegex": "(^|/)secrets(/|$)",
+      "refRegex": "(^|[^A-Za-z0-9_-])[~./\\\\]*secrets[/\\\\]"
+    },
+    {
+      "id": "private_key",
+      "kind": "path",
+      "reason": "References a private key file (*.pem / *.key).",
+      "globs": ["*.pem", "**/*.pem", "*.key", "**/*.key"],
+      "pathRegex": "\\.(pem|key)$",
+      "refRegex": "[A-Za-z0-9_.\\-]+\\.(pem|key)($|[^A-Za-z0-9_-])"
+    },
+    {
+      "id": "browser_profile",
+      "kind": "path",
+      "reason": "References a browser profile / credential store (Login Data, Cookies, chrome-profile).",
+      "globs": ["Login Data", "**/Login Data", "Cookies", "**/Cookies", "chrome-profile", "**/chrome-profile/**"],
+      "pathRegex": "(^|/)(chrome-profile|browser-profile|profile\\.default)(/|$)|(^|/)(Login Data|Cookies)$",
+      "refRegex": "(chrome-profile|browser-profile|profile\\.default|Login Data|(^|[/\\\\])Cookies($|[^A-Za-z0-9_-]))"
+    },
+    {
+      "id": "host_global_claude",
+      "kind": "path",
+      "reason": "References the host-global ~/.claude agent home (forbidden; a repo-local .claude/ own-path -- such as the isolated, gitignored runtime home -- is repo-relative and exempt from the OWN-path check, only a CONTENT reference to ~/.claude / $HOME/.claude / %USERPROFILE%/.claude is blocked).",
+      "globs": ["~/.claude", "~/.claude/**", "$HOME/.claude/**", "%USERPROFILE%/.claude/**"],
+      "pathRegex": "(^|[/\\\\])\\.claude([/\\\\]|$)",
+      "refRegex": "(^|[\\s~]|[/\\\\]|\\$HOME|%USERPROFILE%)\\.claude([/\\\\]|$|[^A-Za-z0-9_-])"
+    },
+    {
+      "id": "host_global_codex",
+      "kind": "path",
+      "reason": "References the host-global ~/.codex agent home (forbidden; a repo-local isolated codex home and a repo-local .codex/ own-path are repo-relative and exempt from the OWN-path check, only a CONTENT reference to ~/.codex / $HOME/.codex / %USERPROFILE%/.codex is blocked).",
+      "globs": ["~/.codex", "~/.codex/**", "$HOME/.codex/**", "%USERPROFILE%/.codex/**"],
+      "pathRegex": "(^|[/\\\\])\\.codex([/\\\\]|$)",
+      "refRegex": "(^|[\\s~]|[/\\\\]|\\$HOME|%USERPROFILE%)\\.codex([/\\\\]|$|[^A-Za-z0-9_-])"
+    },
+    {
+      "id": "github_token",
+      "kind": "secret",
+      "reason": "Looks like a GitHub access token (ghp_/gho_/ghu_/ghs_/ghr_).",
+      "globs": [],
+      "pathRegex": null,
+      "refRegex": "gh[pousr]_[A-Za-z0-9_]{20,}"
+    },
+    {
+      "id": "anthropic_key",
+      "kind": "secret",
+      "reason": "Looks like an Anthropic API key (sk-ant-...).",
+      "globs": [],
+      "pathRegex": null,
+      "refRegex": "sk-ant-[A-Za-z0-9_-]{20,}"
+    },
+    {
+      "id": "openai_key",
+      "kind": "secret",
+      "reason": "Looks like an OpenAI-style secret key (sk-...).",
+      "globs": [],
+      "pathRegex": null,
+      "refRegex": "sk-[A-Za-z0-9]{32,}"
+    },
+    {
+      "id": "aws_access_key",
+      "kind": "secret",
+      "reason": "Looks like an AWS access key id (AKIA...).",
+      "globs": [],
+      "pathRegex": null,
+      "refRegex": "AKIA[0-9A-Z]{16}"
+    },
+    {
+      "id": "private_key_block",
+      "kind": "secret",
+      "reason": "Contains an inline PRIVATE KEY block.",
+      "globs": [],
+      "pathRegex": null,
+      "refRegex": "-----BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY-----"
+    }
+  ]
+}

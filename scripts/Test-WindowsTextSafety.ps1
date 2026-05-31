@@ -43,6 +43,11 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+# Decode git stdout as UTF-8 so non-ASCII tracked paths (with core.quotepath=false)
+# are read correctly under Windows PowerShell 5.1, and keep our own output UTF-8.
+try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch { }
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
 # Extensions whose readers (PS 5.1, cmd.exe) are CP1252 on a BOM-less UTF-8 file.
 $script:FragileExt = @('.ps1', '.bat', '.cmd')
 
@@ -56,7 +61,7 @@ function Get-TrackedFragileFiles {
     $saved = $ErrorActionPreference
     try {
       $ErrorActionPreference = 'Continue'
-      $tracked = & git -C $RepoRoot ls-files 2>$null
+      $tracked = & git -C $RepoRoot -c core.quotepath=false ls-files 2>$null
       if ($LASTEXITCODE -eq 0 -and $tracked) {
         $files = foreach ($rel in $tracked) {
           $ext = [System.IO.Path]::GetExtension($rel).ToLowerInvariant()
@@ -195,7 +200,7 @@ if ($gitForSettings) {
   $savedSettings = $ErrorActionPreference
   try {
     $ErrorActionPreference = 'Continue'
-    $trackedSettings = & git -C $resolvedRoot ls-files 2>$null
+    $trackedSettings = & git -C $resolvedRoot -c core.quotepath=false ls-files 2>$null
     if ($LASTEXITCODE -eq 0 -and $trackedSettings) {
       $settingsFiles = @($trackedSettings |
         Where-Object { ($_ -replace '\\', '/') -match '(^|/)settings\.json$' } |

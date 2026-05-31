@@ -1,0 +1,65 @@
+{
+  "$comment": "Declares the single shared tier and how each profile consumes it. The mirror-parity gate (scripts/Test-ProfileMirrorParity.ps1) reads this file. A 'sharedAsset' is one shared-tier file that BOTH profiles consume by relative path -- editing it must update both profiles, never one. A 'toolSpecificExempt' asset is a deliberately tool-specific part (a Claude-only or Codex-only skill, a launcher mechanic, a hot-rules filename) that is NEVER required to mirror. The 39-vs-34 Claude/Codex skill-count delta is the SUM of these exempt entries, not drift.",
+  "sharedRoot": "profiles/shared",
+  "claudeProfileRoot": "profiles/claude",
+  "codexProfileRoot": "profiles/codex",
+
+  "sharedAssets": [
+    {
+      "name": "design-contract",
+      "file": "contract/SHARED_DESIGN_CONTRACT.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "One vocabulary, one set of safety rules, one report format. Section numbers are cited verbatim by both profiles' READMEs."
+    },
+    {
+      "name": "forbidden-paths",
+      "file": "schemas/forbidden-paths.json",
+      "consumedBy": ["claude", "codex"],
+      "why": "The single machine-readable forbidden surface consumed by both profiles' containment guards. One edit re-protects both profiles."
+    }
+  ],
+
+  "profileConsumerProof": {
+    "$comment": "Each profile must prove it actually consumes the shared tier (not silently re-copy it). The gate checks that each profile's README references the shared tier by relative path. A profile that stops pointing at the shared tier has forked = drift.",
+    "claude": {
+      "consumerFile": "profiles/claude/README.md",
+      "mustReference": "../shared/schemas/forbidden-paths.json"
+    },
+    "codex": {
+      "consumerFile": "profiles/codex/README.md",
+      "mustReference": "../shared/schemas/forbidden-paths.json"
+    }
+  },
+
+  "toolSpecificExempt": [
+    {
+      "name": "claude-only-skills",
+      "side": "claude",
+      "approxCount": 39,
+      "why": "Claude-specific skills (Workflow / dynamic-workflow / Chrome DevTools MCP dependent). These exist only in the Claude profile by design and are NEVER required to mirror into Codex."
+    },
+    {
+      "name": "codex-only-skills",
+      "side": "codex",
+      "approxCount": 34,
+      "why": "Codex-specific skills (goal-mode / openai.yaml registration dependent). These exist only in the Codex profile by design and are NEVER required to mirror into Claude."
+    },
+    {
+      "name": "hot-rules-filename",
+      "side": "both",
+      "why": "CLAUDE.md (Claude) vs AGENTS.md (Codex). Different filenames, same role. Intentionally tool-specific per the contract section 7."
+    },
+    {
+      "name": "launcher-mechanics",
+      "side": "both",
+      "why": "CLAUDE_CONFIG_DIR (Claude) vs CODEX_HOME (Codex). Different isolation env var, same isolation principle. Intentionally tool-specific per the contract section 7."
+    }
+  ],
+
+  "skillCountDelta": {
+    "$comment": "The Claude profile ships 39 skills; the Codex profile ships 34. This 5-delta is the difference between the two toolSpecificExempt skill buckets above. It is INTENTIONAL tool-specific specialization, not drift. The gate enforces parity on the SHARED tier only; it never forces the two skill counts to match.",
+    "claudeSkills": 39,
+    "codexSkills": 34,
+    "verdict": "intentional-tool-specific-not-drift"
+  }
+}

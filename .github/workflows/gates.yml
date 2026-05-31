@@ -1,0 +1,44 @@
+name: gates
+
+# Runs the Driftless safety gates on every push and pull request.
+# These are the checks behind the README badges: containment, mirror-parity,
+# and Windows text-safety. A reviewer can see them pass on a clean tree here.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  windows-gates:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Containment gate (PASS on a clean tree)
+        shell: pwsh
+        run: ./scripts/Test-Containment.ps1 -Path . -AllFiles
+
+      - name: Windows text-safety gate (.ps1/.bat/.cmd ASCII + no BOM)
+        shell: pwsh
+        run: ./scripts/Test-WindowsTextSafety.ps1 -Root .
+
+      - name: Mirror-parity gate (the two profiles never drift)
+        shell: pwsh
+        run: ./scripts/Test-ProfileMirrorParity.ps1 -Path .
+
+      - name: Skill-optimization validation harness (static, no paid LLM)
+        shell: pwsh
+        run: ./scripts/Test-SkillOptValidationHarness.ps1
+
+  posix-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer dry-run (POSIX shell, changes nothing)
+        shell: sh
+        run: ./install.sh --dry-run --both

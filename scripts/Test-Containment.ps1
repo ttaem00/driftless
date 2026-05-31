@@ -78,6 +78,12 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+# Decode git stdout as UTF-8 so non-ASCII paths (with core.quotepath=false) are
+# read correctly under Windows PowerShell 5.1 (whose default OEM codepage would
+# mangle them). Output is also UTF-8 so PASS/FAIL lines stay clean.
+try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch { }
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
 $GateCommand = 'Test-Containment.ps1'
 $RulesRelative = 'profiles/shared/schemas/forbidden-paths.json'
 
@@ -331,7 +337,7 @@ function Get-ChangedTextItems {
 
   $items = [System.Collections.Generic.List[object]]::new()
   $diffArgs = if ($StagedOnly) { @('diff', '--cached', '--unified=0') } else { @('diff', '--unified=0') }
-  $diff = @(git -C $RootPath @diffArgs)
+  $diff = @(git -C $RootPath -c core.quotepath=false @diffArgs)
 
   $currentFile = $null
   $lines = [System.Collections.Generic.List[object]]::new()
@@ -365,7 +371,7 @@ function Get-ChangedTextItems {
   & $flush $currentFile $lines
 
   if (-not $StagedOnly) {
-    $untracked = @(git -C $RootPath ls-files --others --exclude-standard)
+    $untracked = @(git -C $RootPath -c core.quotepath=false ls-files --others --exclude-standard)
     foreach ($file in $untracked) {
       $full = Join-Path $RootPath $file
       $numbered = [System.Collections.Generic.List[object]]::new()
@@ -389,7 +395,7 @@ function Get-AllTrackedTextItems {
     [Parameter(Mandatory = $true)][object[]]$Rules
   )
   $items = [System.Collections.Generic.List[object]]::new()
-  $tracked = @(git -C $RootPath ls-files)
+  $tracked = @(git -C $RootPath -c core.quotepath=false ls-files)
   foreach ($file in $tracked) {
     $full = Join-Path $RootPath $file
     $numbered = [System.Collections.Generic.List[object]]::new()

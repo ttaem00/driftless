@@ -7,6 +7,8 @@
 
 > **자기 전에 프롬프트 하나 붙여넣기. 일어나면 합쳐진 풀 리퀘스트.**
 > 코드는 한 줄도 직접 쓸 필요가 없습니다.
+> (*위험하거나 되돌릴 수 없거나 돈이 드는 일은 먼저 물어보라*고 시키는 전체 프롬프트는
+> [빠른 시작 4단계](./docs/ko/빠른시작.md)에 있어요.)
 
 [English](./README.md) · [한국어](./README.ko.md)
 
@@ -79,7 +81,8 @@
 - **이슈 94건**
 - **커밋 114건**
 - 그 개발 런타임 기준 두 프로필에 걸친 **Claude 스킬 39개 + Codex 스킬 34개**
-  (이 공개 키트는 starter 스킬 10개를 ship — `find profiles -name SKILL.md | wc -l`로 확인)
+  (이 공개 키트는 starter 스킬 12개를 ship — shared 8 + Claude 1 + Codex 1 + 단독 2개
+  `overnight-autonomous-work`·`skillopt`. `git ls-files | grep -c SKILL.md`로 직접 세어 보세요)
 - 깨끗한 트리에서 통과하는 정적 격리 가드, 스크립트의 ASCII + BOM 없음을 강제하는
   Windows 텍스트 안전 게이트, 프로필 거울 일치 게이트
 - 관리자 결정과 에이전트 결정을 이유와 함께 기록한, 날짜가 찍힌 결정 등록부

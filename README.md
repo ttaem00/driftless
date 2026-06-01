@@ -50,7 +50,9 @@ nothing else without asking you first (the answer defaults to "no").
 remaining ticket as far as you can overnight." The parent reads the open
 issues, splits them into conflict-aware tickets, runs workers in parallel, and
 turns them into branches and pull requests while you sleep. In the morning you
-review merged PRs, not raw code.
+review merged PRs, not raw code. (Use the full prompt — which tells the agent to
+*ask before anything risky, irreversible, or that costs money* — from
+[quickstart Step 4](./docs/en/quickstart.md#step-4--paste-one-prompt-30-sec).)
 
 ## One edit -> both profiles
 
@@ -138,10 +140,12 @@ not a claim about this repo's star count):
 - **113** merged pull requests
 - **94** issues
 - **114** commits
-- **10** starter agent skills shipped in this public kit (1 Claude-specific,
-  1 Codex-specific, 8 shared); the private development runtime it grew from
-  carries more (39 Claude + 34 Codex) — those are dev-runtime counts, not what
-  this repo ships
+- **12** starter agent skills shipped in this public kit (1 Claude-specific,
+  1 Codex-specific, 8 shared, plus 2 standalone — `overnight-autonomous-work`
+  and `skillopt`); count them yourself with
+  `git ls-files | grep -c SKILL.md`. The private development runtime it grew
+  from carries more (39 Claude + 34 Codex) — those are dev-runtime counts, not
+  what this repo ships
 - a dated decision register recording every manager and agent decision with its
   rationale
 

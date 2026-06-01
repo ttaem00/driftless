@@ -15,10 +15,16 @@ agent goes idle when its turn ends and does not restart itself.
    runs many cycles in the background (find the highest-value gap → ticket →
    branch → implement → gates → PR → merge → next), independent of any single
    reply ending. That is what keeps it going after a turn finishes.
-2. **Schedule a re-trigger.** Add a recurring (cron-style) job that re-enters the
-   loop on an interval and re-reads the mission + rules, so the loop survives turn
-   end and session boundaries.
-3. **Run a separate audit pass on a short interval** (~15 min) that does no feature
+2. **Trigger the next cycle when work FINISHES, not on a clock.** Prefer a **Stop
+   hook** (settings.json) that fires the moment a task/turn ends and re-enters the
+   loop immediately — "one task ends → next task starts now", not "wait N minutes".
+   A Stop hook can return `{"decision":"block","reason":"...","additionalContext":"<next instruction>"}`
+   to continue the conversation with the next gap as the instruction; there is NO
+   built-in loop guard, so keep a small `.runtime` iteration counter and allow the
+   stop once the backlog is genuinely converged. A time-based cron is only a
+   *backup* re-entry for when the session is fully closed — not the primary trigger.
+3. **Run a separate audit pass that catches drift** (driven by the same Stop-hook,
+   e.g. every Nth iteration, or a low-frequency backup job) that does no feature
    work — it re-reads the mission, checks recent work still serves the goal, checks
    every "done/PASS" has real gate/command evidence (no optimistic reporting), and
    confirms main is clean with no PR hanging. Long autonomous runs get
@@ -37,7 +43,8 @@ exists), ticket -> branch -> implement -> run the safety gates (containment,
 text-safety, mirror-parity) -> PR -> merge only on green. Improve at least one of:
 onboarding / trust / Codex+Claude applicability / non-dev ease / tokens-time-
 money-intervention / recurring-mistake prevention / security / reach per cycle.
-Also schedule a short-interval audit pass to catch context drift and optimistic
+Trigger the next cycle the moment work FINISHES via a Stop hook (not a clock), and
+run an audit pass (every Nth iteration) to catch context drift and optimistic
 reporting. Only pause for a human decision on: product/priority, credentials,
 money, public release, destructive/irreversible actions, host-global promotion,
 user-data moves, or force-push/history rewrite. Evidence honesty: a static change

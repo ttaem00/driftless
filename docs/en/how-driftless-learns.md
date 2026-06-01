@@ -189,6 +189,33 @@ A partial job reported as complete is a quiet false "done."
 deliberate exclusion with a reason, and proves the remaining-unported count is zero
 before "Done" — with the completeness check structural, not a promise in prose.
 
+### "Rejected a heavy idea without testing it" -> lean means pilot small, not discard
+A useful external idea looked expensive, so it was closed "too heavy, lean
+violation" — without ever trying it. That is the opposite of lean. Lean is not
+"reject anything big"; it is **start small**: take the core, build the *smallest*
+pilot that fits the real flow, measure it on the five axes, then adopt a minimal
+adapted form if it earns its place. A knowledge-graph becomes a one-page
+repo-structure summary file; a unified-state database becomes a small read-only
+index over the issues/PRs/evidence that already exist.
+**Fix:** "heavy" is no longer a valid rejection reason in the adoption and
+root-goal-check skills. A heavy candidate must first be reduced to its smallest
+pilot and measured; only a measured no-gain result (or real upkeep cost) closes it
+out. Skipping the pilot to wave a big idea away is recorded as the deferral mistake
+it is.
+
+### "Drove the loop on a clock instead of on finish" -> trigger the next cycle when work ENDS
+The autonomous loop was re-entered by a fixed timer (every few minutes / couple of
+hours). That fires uselessly while idle (wasted tokens) and is *not* "start the
+next task immediately" when a task runs longer than the interval. The honest
+trigger is the moment work finishes, not a wall clock.
+**Fix:** the next cycle is triggered on **finish** — Claude via a `Stop` hook that
+re-enters with the next gap as its instruction, Codex via the runner's finish hook —
+guarded by a small iteration counter so it stops when the backlog is genuinely
+converged. A timer is only a backup for a fully-closed session. The same
+finish-hook also drives the periodic drift/optimism audit, so the audit isn't a
+separate clock either. (Tool-shaped differently, same principle — see
+[Codex and Claude](./codex-and-claude.md).)
+
 > Two reach/process lessons we hold privately (manager-facing strategy lives
 > outside this public repo): things like *"inline links on some platforms get
 > near-zero reach, so the link goes in the reply, not the post"* are the same

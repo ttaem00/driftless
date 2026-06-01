@@ -54,13 +54,17 @@ ticket so the next session (Codex or Claude) picks up exactly where you stopped.
 
 ## Notes
 
-- **No self-restart by itself.** A goal runs long but still ends; to make it truly
-  continuous, re-issue this goal on a schedule (your runner's cron / a wrapper),
-  or have a human paste it again — same structural point as the Claude side.
-- **Audit pass.** For long runs, periodically (e.g. every ~15 min) run a *separate*
-  short check that re-reads this goal + the rules and confirms recent work still
-  serves the goal and that every claim has evidence — autonomous runs drift when
-  context is compacted. See the overnight skill's "audit worker" discipline
-  (`skills/overnight-autonomous-work/SKILL.md`).
+- **Re-trigger on FINISH, not on a clock.** A goal runs long but still ends. Make
+  the *next* goal start the moment the current one finishes — wire your runner so a
+  goal's completion immediately re-issues the next gap (a finish hook / wrapper that
+  loops while there is real work), rather than waiting a fixed interval. "One task
+  ends → next starts now." A timed re-issue is only a backup for a fully-closed
+  session. (Claude's equivalent is a Stop hook; Codex's is the runner's finish
+  hook — same principle, tool-shaped differently.)
+- **Audit pass.** For long runs, run a *separate* short check — driven by the same
+  finish hook (e.g. every Nth goal) or a low-frequency backup — that re-reads this
+  goal + the rules and confirms recent work still serves the goal and that every
+  claim has evidence — autonomous runs drift when context is compacted. See the
+  overnight skill's "audit worker" discipline (`skills/overnight-autonomous-work/SKILL.md`).
 - This file is the Codex-specific artifact; the Claude-specific artifact is its
   workflow/orchestration setup. The success criteria and gates are shared.

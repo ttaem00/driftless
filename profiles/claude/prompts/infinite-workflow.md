@@ -15,16 +15,20 @@ agent goes idle when its turn ends and does not restart itself.
    runs many cycles in the background (find the highest-value gap → ticket →
    branch → implement → gates → PR → merge → next), independent of any single
    reply ending. That is what keeps it going after a turn finishes.
-2. **Trigger the next cycle when work FINISHES, not on a clock.** Prefer a **Stop
-   hook** (settings.json) that fires the moment a task/turn ends and re-enters the
-   loop immediately — "one task ends → next task starts now", not "wait N minutes".
-   A Stop hook can return `{"decision":"block","reason":"...","additionalContext":"<next instruction>"}`
-   to continue the conversation with the next gap as the instruction; there is NO
-   built-in loop guard, so keep a small `.runtime` iteration counter and allow the
-   stop once the backlog is genuinely converged. A time-based cron is only a
-   *backup* re-entry for when the session is fully closed — not the primary trigger.
-3. **Run a separate audit pass that catches drift** (driven by the same Stop-hook,
-   e.g. every Nth iteration, or a low-frequency backup job) that does no feature
+2. **Trigger the next cycle when work FINISHES, not on a clock — use `/goal`.**
+   Claude Code's purpose-built autonomous-loop primitive is **`/goal`**: you set a
+   verifiable completion condition and Claude continues after *every* turn until the
+   condition is met — "one task ends → next starts now", no fixed interval, no block
+   cap. Set it once in the session: `/goal <backlog empty AND main clean AND no open
+   PR>` (or `claude -p "/goal ..."`). A **Stop hook is only a backup nudge**, NOT the
+   loop primitive: its `decision:block` is limited per user-prompt and Claude
+   force-overrides it after 8 consecutive blocks, and `stop_hook_active` makes it
+   yield — so a Stop hook gives at most one nudge per prompt, then defer to `/goal`.
+   Never let an ordinary status word ("waiting"/"idle") in your report end the loop:
+   only a deliberate, standalone completion sentinel should. A time-based cron is a
+   last-resort re-entry for a fully-closed session, not the trigger.
+3. **Run a separate audit pass that catches drift** (every Nth cycle, or a
+   low-frequency backup job) that does no feature
    work — it re-reads the mission, checks recent work still serves the goal, checks
    every "done/PASS" has real gate/command evidence (no optimistic reporting), and
    confirms main is clean with no PR hanging. Long autonomous runs get

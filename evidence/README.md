@@ -71,3 +71,5 @@ gitignored `.runtime/` directory. The example artifacts below are
 hand-authored templates, clearly labeled, with no real account or session data.
 The containment gate (`scripts/Test-Containment.ps1`) treats this whole folder
 like any other and must pass on it.
+
+- **real-use-verification.md** — a measured fresh-clone non-dev run (clone -> install -> both isolated homes -> containment PASS) end-to-end in ~16s. The 5-axis TIME proof + onboarding-works check.

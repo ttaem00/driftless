@@ -13,6 +13,13 @@
 
 Paste one prompt before bed. Wake up to merged pull requests. You never have to write code.
 
+> **v0.1.0, released today.** This repo's own star/PR graph grows from zero, in
+> the open — judge it by cloning it and running the gates, not by a star count.
+> The method is already proven: it maintains itself
+> ([how the loop ran on its own backlog](./evidence/loop-log.md)), and what's
+> verified on which OS is stated honestly in the
+> [host evidence matrix](./docs/en/host-evidence-matrix.md).
+
 ## 60-second proof
 
 **1. Apply it** (run once, inside the repo you cloned):
@@ -48,6 +55,28 @@ machine check instead of human memory:
 It FAILs the moment the two profiles drift apart, so they never silently
 diverge. That is what *driftless* means: the profiles never split, and the
 agent never wanders off your goal.
+
+## It gets better on its own (the five-axis gradient)
+
+"Self-improving" here is concrete, not a slogan. Every recurring mistake is
+promoted up an enforced ladder — **memory < skill < hot rule < hook < gate** —
+until re-introducing it FAILs a check (see
+[the lesson-promotion ladder](./docs/en/lesson-promotion-ladder.md), with a real
+worked example). And the whole system is tuned to push five measured axes *down*
+over time, because all five are forms of burden on you:
+
+| Axis | What it means for you |
+|---|---|
+| **Tokens** | cheaper runs |
+| **Your interventions** | fewer questions back to you |
+| **Time** | faster to merged |
+| **Money** | lower cost per merged PR |
+| **Correctness** | fewer re-do loops |
+
+A static, no-paid-LLM harness scores skill changes on these axes and rejects
+regressions before they ship (`scripts/Test-SkillOptValidationHarness.ps1`; see
+[evidence/5-axis-roi](./evidence/5-axis-roi/)). The point isn't more output — it
+is less of your time, attention, and money spent each run.
 
 ## Works with Claude Code and OpenAI Codex
 

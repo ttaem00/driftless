@@ -28,6 +28,27 @@ inputs:
 The materialized profile is the combination of the two. Keep shared rules in the
 shared tier; keep only genuinely Claude-specific things here.
 
+## What this profile consumes
+
+This profile consumes **all** of the shared skills under `../shared/skills/` by
+relative path — they are authored once and run identically here and in the Codex
+profile:
+
+- `../shared/skills/finish-to-done/`
+- `../shared/skills/root-goal-check/`
+- `../shared/skills/easy-briefing/`
+- `../shared/skills/parallel-ticket-planner/`
+- `../shared/skills/ticket-issue/`
+- `../shared/skills/learning-loop/`
+
+On top of those, this profile adds its **own tool-specific skills** that only make
+sense for Claude Code and are never mirrored into Codex:
+
+- `ultracode-orchestration` — Claude-only multi-agent / Workflow orchestration.
+
+Editing a shared skill once updates this profile and the Codex profile together;
+the `ultracode-orchestration` skill stays Claude-only by design.
+
 ## It never touches host-global config
 
 This profile runs entirely against its repo-local isolated home via

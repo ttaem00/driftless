@@ -49,6 +49,23 @@ no mirroring, and no external sync step.
 | `schemas/` | `forbidden-paths.json` — the machine-readable list of paths and secret patterns the containment guard must never touch or leak. | both profiles' containment guards |
 | `skills/` | Tool-agnostic skills (one folder each) that behave the same regardless of which AI runs them. | both profiles |
 
+### Shared skills present under `skills/`
+
+These tool-agnostic skills live here **once** and are consumed by both the Claude
+profile and the Codex profile:
+
+- `finish-to-done/` — drive a task investigate -> fix -> verify -> done, with evidence.
+- `root-goal-check/` — gate new info/ideas against the project's core goal before adopting.
+- `easy-briefing/` — explain the current situation to a non-developer manager in plain language.
+- `parallel-ticket-planner/` — split remaining work into low-conflict parallel tickets.
+- `ticket-issue/` — the issue-before-edit gate for non-trivial repo work.
+- `learning-loop/` — record recurring problems and promote only the proven ones into rules.
+
+**Edit one of these once and both profiles get it.** Because each profile consumes
+`skills/` by relative path (`../shared/skills/<name>/`), a single edit to any skill
+above updates the Claude profile and the Codex profile at the same time — no
+copying, no mirroring, no sync step.
+
 ## What does NOT live here
 
 Anything that is legitimately different between the two tools stays in the

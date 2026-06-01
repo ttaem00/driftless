@@ -16,6 +16,42 @@
       "file": "schemas/forbidden-paths.json",
       "consumedBy": ["claude", "codex"],
       "why": "The single machine-readable forbidden surface consumed by both profiles' containment guards. One edit re-protects both profiles."
+    },
+    {
+      "name": "skill-finish-to-done",
+      "file": "skills/finish-to-done/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic finish-to-done skill. Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both."
+    },
+    {
+      "name": "skill-root-goal-check",
+      "file": "skills/root-goal-check/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic root-goal-check skill. Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both."
+    },
+    {
+      "name": "skill-easy-briefing",
+      "file": "skills/easy-briefing/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic easy-briefing skill. Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both."
+    },
+    {
+      "name": "skill-parallel-ticket-planner",
+      "file": "skills/parallel-ticket-planner/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic parallel-ticket-planner skill. Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both."
+    },
+    {
+      "name": "skill-ticket-issue",
+      "file": "skills/ticket-issue/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic ticket-issue skill. Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both."
+    },
+    {
+      "name": "skill-learning-loop",
+      "file": "skills/learning-loop/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic learning-loop skill. Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both."
     }
   ],
 
@@ -32,6 +68,20 @@
   },
 
   "toolSpecificExempt": [
+    {
+      "name": "skill-ultracode-orchestration",
+      "side": "claude",
+      "file": "profiles/claude/skills/ultracode-orchestration/SKILL.md",
+      "verdict": "intentional-tool-specific-not-drift",
+      "why": "Claude-only multi-agent / Workflow orchestration skill. Exists only in the Claude profile by design and is NEVER required to mirror into Codex."
+    },
+    {
+      "name": "skill-goal-mode",
+      "side": "codex",
+      "file": "profiles/codex/skills/goal-mode/SKILL.md",
+      "verdict": "intentional-tool-specific-not-drift",
+      "why": "Codex-only goal-mode run prompt / driving paradigm. Exists only in the Codex profile by design and is NEVER required to mirror into Claude."
+    },
     {
       "name": "claude-only-skills",
       "side": "claude",

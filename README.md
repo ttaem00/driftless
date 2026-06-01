@@ -113,4 +113,11 @@ Watch this repo's history fill in: [commits](https://github.com/mizan0515/driftl
 - [Lesson-promotion ladder](./docs/en/lesson-promotion-ladder.md) — memory < skill < hot rule < hook < gate.
 - [Host evidence matrix](./docs/en/host-evidence-matrix.md) — what is proven on which operating system.
 
+## Who maintains this
+
+A human operator-architect ([@mizan0515](https://github.com/mizan0515)) directs
+the loop and owns every product, release, and irreversible decision; the AI
+agents this project ships do the implementation labor under that direction,
+behind containment and human-only gates. See [MAINTAINERS.md](./MAINTAINERS.md).
+
 Small modular pieces you own — not a heavy framework. MIT licensed.

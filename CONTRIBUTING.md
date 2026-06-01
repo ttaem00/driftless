@@ -14,6 +14,8 @@ gates CI runs, and you can run them locally:
 .\scripts\Test-WindowsTextSafety.ps1 -Root .          # .ps1/.bat/.cmd stay ASCII + no BOM
 .\scripts\Test-ProfileMirrorParity.ps1 -Path .        # the two profiles never drift
 .\scripts\Test-SkillOptValidationHarness.ps1          # skill changes do not regress the 5 axes
+.\scripts\Test-WorkDiscipline.ps1 -Root .             # no unresolved placeholder ships as a rule
+.\scripts\Test-SkillAudit.ps1 -Root .                 # every shipped SKILL.md is structurally sound
 ```
 
 ```sh

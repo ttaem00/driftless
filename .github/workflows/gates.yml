@@ -38,6 +38,10 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-WorkDiscipline.ps1 -Root .
 
+      - name: Skill-audit gate (every shipped SKILL.md is structurally sound)
+        shell: pwsh
+        run: ./scripts/Test-SkillAudit.ps1 -Root .
+
   linux-smoke:
     # Proves the cross-platform claim off Windows: the POSIX installer runs and
     # actually materializes the isolated home, and the containment gate (pwsh is

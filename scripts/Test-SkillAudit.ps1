@@ -114,8 +114,10 @@ function Get-Frontmatter {
 }
 
 # A description carries a discoverability signal if ANY of: a Trigger marker, a
-# quoted phrase, or a 'Use when'/'Use this skill' intent line. Accepting any one
-# keeps the gate fair to the front-loaded plain-intent style this repo adopted.
+# quoted phrase (double-quote OR backtick code span), or a 'Use ... when' /
+# 'Use this skill' intent line. Accepting any one keeps the gate fair to the
+# front-loaded plain-intent style this repo adopted, including phrasings like
+# "Use only when ..." or "Use this skill to ..." that still express clear intent.
 # Source stays ASCII-only (PS 5.1 reads this file as CP1252): the bilingual
 # "Trigger / <Korean>:" form in every SKILL.md always carries the ASCII word
 # "Trigger" alongside the Korean, so matching the ASCII token is sufficient - we
@@ -125,7 +127,11 @@ function Test-HasTriggerSignal {
   if ([string]::IsNullOrWhiteSpace($Description)) { return $false }
   if ($Description -match 'Trigger') { return $true }
   if ($Description -match '"[^"]+"') { return $true }
-  if ($Description -match 'Use when' -or $Description -match 'Use this skill') { return $true }
+  if ($Description -match '`[^`]+`') { return $true }
+  # 'Use ... when' (e.g. "Use when", "Use only when", "Use this skill when").
+  if ($Description -match 'Use\b[^.]{0,40}\bwhen\b') { return $true }
+  # 'Use this skill to ...' (intent without a literal "when").
+  if ($Description -match 'Use this skill') { return $true }
   return $false
 }
 

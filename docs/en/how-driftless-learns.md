@@ -90,6 +90,13 @@ is meant to leave telemetry so the trend is *visible, not guessed*. How a
 before/after delta is captured (and which numbers are still honestly UNVERIFIED)
 lives in **[evidence/5-axis-roi/](../../evidence/5-axis-roi/README.md)**.
 
+One concrete token-axis rule worth calling out: **keep the session-hot context
+prefix byte-stable**. Prompt-caching makes a repeated, unchanged prefix ~10x
+cheaper to re-read than to re-create, so volatile content (timestamps,
+run-scratch, big evidence dumps) goes at the tail or into artifacts — never edited
+into the front of the always-loaded rules mid-session. Editing the front silently
+invalidates the cache and re-pays for the whole prefix every turn.
+
 > **Honest status (v0.1.0, day one):** the *method* and the validation harness are
 > implemented and run today. The per-axis production numbers across many merged
 > PRs are still being captured and are labeled **UNVERIFIED** until a dated run

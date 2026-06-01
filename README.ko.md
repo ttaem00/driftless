@@ -120,6 +120,7 @@ cd driftless
 ## 다음으로 볼 곳
 
 - **[드리프트리스란?](./docs/ko/드리프트리스란.md)** — 더 자세한 소개.
+- **[내 에이전트에 적용하기](./docs/ko/내에이전트에적용하기.md)** — 설치하는 두 가지 방법(말 한마디 / 명령어 한 줄)과 실행 단계.
 - **[안전장치](./docs/ko/안전장치.md)** — "밤새 자율"을 안전하게 만드는 보호 울타리들.
 - 영어판: **[What is Driftless?](./docs/en/what-is-driftless.md)**,
   **[Guardrails](./docs/en/guardrails.md)**,

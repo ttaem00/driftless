@@ -74,23 +74,29 @@ the gate returns **FAIL**, blocking the change before it ships. The forbidden
 surface is declared in one shared contract that both profiles consume. Details:
 [guardrails](./docs/en/guardrails.md).
 
-## This repo built itself
+## Built by the loop it ships
 
-Driftless is its own proof. Its source ran the overnight loop on itself —
-issues became branches, branches became pull requests, pull requests got merged
-— with a non-developer giving the goal in plain language and the agent doing the
-git, GitHub, and validation mechanics.
+Driftless is the public extract of a runtime that ran this exact overnight loop
+**on its own backlog**: a non-developer gave goals in plain language, and the
+agent did the git, GitHub, issue/PR, and validation mechanics. Issues became
+branches, branches became pull requests, pull requests got reviewed and merged.
 
-Measured from the source repository:
+Measured on that development runtime at extraction (the proof the method works,
+not a claim about this repo's star count):
 
 - **113** merged pull requests
 - **94** issues
 - **114** commits
 - **73** agent skills (39 Claude + 34 Codex)
+- a dated decision register recording every manager and agent decision with its
+  rationale
 
-Browse the living graph: [pull requests](https://github.com/mizan0515/driftless/pulls?q=is%3Apr+is%3Amerged) ·
-[issues](https://github.com/mizan0515/driftless/issues?q=is%3Aissue) ·
-[commits](https://github.com/mizan0515/driftless/commits).
+This public repository is **v0.1.0, day one** — its own pull-request and issue
+graph starts now and grows as the loop runs here in the open. The point is not
+"look how many stars": it is that the loop is real enough to maintain itself.
+Watch this repo's history fill in: [commits](https://github.com/mizan0515/driftless/commits/main) ·
+[pull requests](https://github.com/mizan0515/driftless/pulls) ·
+[issues](https://github.com/mizan0515/driftless/issues).
 
 ## Changelog
 

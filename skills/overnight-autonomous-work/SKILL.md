@@ -82,6 +82,45 @@ stop and ask a short plain-language question for any of these:
 If a task is NOT on this list, the parent does it — it does not park the work
 and wait for the human.
 
+### Infinite mode = no-stop, no-sleep (when asked to "keep going")
+
+When the human says "keep going / don't stop / until it's done / run everything
+overnight", finishing one unit of work (one ticket, one PR, one round) and then
+stopping to ask the human is itself a violation — it forces the human back in and
+breaks the loop. Start the next unit immediately; report *as you go* (commit
+messages, issue/PR bodies, a progress log), never by halting to ask. The only
+reason to pause is a real escalation-fence item above. Everything else: judge it
+yourself against the mission and continue.
+
+Also do not "sleep and wait" on a background task as if that were progress —
+while a delegated worker runs, keep doing the next runnable unit yourself.
+
+### The loop does not restart itself — schedule it
+
+A conversational agent only acts when it is invoked, and goes idle the moment it
+finishes a reply. So "I'll keep iterating" is not self-sustaining: the next cycle
+will not arrive on its own. Make the loop a *structure*, not a promise:
+
+- Drive multi-cycle work with a workflow/orchestration tool (one invocation runs
+  many cycles in the background, independent of any single reply ending), and/or
+- Schedule a recurring trigger (a cron-style job) that re-enters this skill on an
+  interval, and/or
+- Leave a **resume note + the next ticket** in a durable file every cycle so a
+  fresh session can pick up exactly where the last left off.
+
+### Run a periodic audit worker (catch context drift)
+
+Long autonomous runs get auto-compacted, and the agent can quietly lose the
+thread — drifting off-mission or reporting optimistically. So in addition to the
+work loop, run a lightweight **audit pass on a short interval** (e.g. every
+~15 minutes) that does NOT do feature work — it re-reads the mission and the
+load-bearing rules, checks the recent work still serves the goal, checks that
+every "done/PASS" claim has real command/gate evidence (no optimistic reporting),
+and confirms the main branch is clean with no PR left hanging. If it finds drift,
+it records the correction and steers the loop back; if all is well it logs a
+one-line "audit OK" and stops cheaply (save tokens). The work loop and the audit
+loop are separate on purpose.
+
 ## Load-bearing gates (absolute rules; violating one voids that work)
 
 Bake these into the parent bundle and into every worker instruction.

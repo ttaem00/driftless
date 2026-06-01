@@ -115,6 +115,48 @@ In practice:
 
 ---
 
+## 3b. The work-discipline gate — no unfinished stub ships as a real rule
+
+**Plain version.** Two habits keep the maintainer honest: a rule must be *real*
+before it ships (no "I'll fill this in later" left inside an authoritative file),
+and non-trivial work runs on a branch tied to a tracked issue. Both used to live
+only as written advice. The work-discipline gate turns the first one into a
+mechanical check and surfaces the second as an advisory.
+
+**What it enforces (blocking).** The gate scans every tracked `.md` and `.ps1`
+for an *unresolved placeholder* — a leftover stub marker introducing unfinished
+content. The genuine-stub signal is narrow on purpose, so prose that merely
+*names* the word in passing is not flagged:
+
+- A marker in **stub form** (`TODO:` / `FIXME:` / `XXX:` / `TBD:`, or `FIXME(`)
+  introducing leftover content, or a marker that is the **first token** of a line
+  or list item.
+- An **angle-bracket template token** — an unfilled slot such as `<PLACEHOLDER>`,
+  `<FILL-IN>`, `<TBD>`, or `<REPLACE-ME>`.
+
+If a tracked rule file ships one of these, the gate **FAILs** with the exact
+`file:line`, so the stub is resolved before the change is called done. A token
+cited inside a code span (`` `TODO` ``) is treated as a deliberate mention and is
+*not* a hit — the same fairness the containment and text-safety gates give to
+docs that name the thing they guard. This very document, which describes the
+work-discipline gate and names those markers, is exempt for that reason.
+
+**Proven to have teeth.** A built-in negative self-test plants a placeholder in
+an in-memory rule fixture and asserts the detector FAILs on it, then asserts a
+clean fixture PASSes — no temp files, no git mutation:
+
+```powershell
+.\scripts\Test-WorkDiscipline.ps1 -SelfTest
+```
+
+**What it advises (non-blocking).** The gate also reports whether the current
+working branch follows `agent/issue-<n>-<slug>` (or the tool-specific
+`claude/issue-...` / `codex/issue-...` forms), tying non-trivial work to a
+tracked issue. This is an **advisory** only: a detached HEAD or the default
+branch is skipped, never failed — a clean release cut should not break the gate.
+
+---
+
 ## 4. Human-only escalation — some decisions never become the AI's to make
 
 **Plain version.** A short list of decisions is *always* yours. When the
@@ -171,6 +213,9 @@ powershell.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -AllFi
 
 # Windows text safety: every tracked .ps1 / .bat / .cmd
 powershell.exe -ExecutionPolicy Bypass -File scripts/Test-WindowsTextSafety.ps1
+
+# Work discipline: no unresolved placeholder ships inside a tracked rule file
+powershell.exe -ExecutionPolicy Bypass -File scripts/Test-WorkDiscipline.ps1
 ```
 
 Add `-Json` to either gate for a machine-readable summary. Exit codes: `0` = PASS,

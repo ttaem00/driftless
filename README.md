@@ -104,6 +104,18 @@ the gate returns **FAIL**, blocking the change before it ships. The forbidden
 surface is declared in one shared contract that both profiles consume. Details:
 [guardrails](./docs/en/guardrails.md).
 
+A work-discipline gate keeps the *evidence-first* discipline mechanical, not
+just prose: it FAILs if an unresolved placeholder (`TODO:` / `FIXME:` /
+`<PLACEHOLDER>`) ships inside a tracked rule file, so an unfinished stub can
+never land as if it were authoritative. A built-in self-test proves it FAILs on
+a planted placeholder and PASSes clean. It also reports an advisory check that
+the working branch follows `agent/issue-<n>-<slug>`:
+
+```powershell
+.\scripts\Test-WorkDiscipline.ps1            # full check on a clean tree
+.\scripts\Test-WorkDiscipline.ps1 -SelfTest  # prove the detector has teeth
+```
+
 ## Built by the loop it ships
 
 Driftless is the public extract of a runtime that ran this exact overnight loop

@@ -34,6 +34,10 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-SkillOptValidationHarness.ps1
 
+      - name: Work-discipline gate (no unresolved placeholder ships as a rule)
+        shell: pwsh
+        run: ./scripts/Test-WorkDiscipline.ps1 -Root .
+
   linux-smoke:
     # Proves the cross-platform claim off Windows: the POSIX installer runs and
     # actually materializes the isolated home, and the containment gate (pwsh is

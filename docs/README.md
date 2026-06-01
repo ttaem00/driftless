@@ -25,6 +25,7 @@ parentheses where a Korean mirror exists.
 ## Extend
 
 - **[Adopt an external tool safely](./en/adopt-external-tools-safely.md)** (한국어: [외부 도구 안전 도입](./ko/외부도구안전도입.md)) — vet a repo before applying it.
+- **[12-Factor Agents, read through Driftless](./en/twelve-factors-driftless.md)** (한국어: [12요소로 본 드리프트리스](./ko/12요소.md)) — an honest factor-by-factor adoption of the HumanLayer 12-factor principles: what Driftless already does well vs. partially.
 - **[CONTRIBUTING](../CONTRIBUTING.md)** — the one rule: every change passes the gates.
 
 ## Evidence (this repo maintains itself)

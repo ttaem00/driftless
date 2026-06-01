@@ -134,6 +134,8 @@ Watch this repo's history fill in: [commits](https://github.com/mizan0515/driftl
 
 ## Learn more
 
+- [5-minute quickstart](./docs/en/quickstart.md) (non-developer; KO: [빠른 시작](./docs/ko/빠른시작.md)) — install -> one prompt -> morning report.
+
 - [What is Driftless](./docs/en/what-is-driftless.md) — the idea in plain language.
 - [Apply it to your own agent](./docs/en/apply-to-your-agent.md) — adopt the pieces you want.
 - [Single-source two-profile mirror](./docs/en/single-source-mirror.md) — how one edit updates both.

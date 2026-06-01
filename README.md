@@ -9,7 +9,7 @@
 [![mirror-parity](https://img.shields.io/badge/mirror--parity-PASS-2ea44f)](./docs/en/single-source-mirror.md)
 [![version](https://img.shields.io/badge/version-v0.1.0-blue)](#changelog)
 [![license](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
-[![built itself](https://img.shields.io/badge/built%20itself-113%20PRs%20%2F%2094%20issues%20%2F%20114%20commits%20%2F%2073%20skills-6f42c1)](#this-repo-built-itself)
+[![built itself](https://img.shields.io/badge/built%20itself-113%20PRs%20%2F%2094%20issues%20%2F%20114%20commits-6f42c1)](#this-repo-built-itself)
 
 Paste one prompt before bed. Wake up to merged pull requests. You never have to write code.
 
@@ -129,7 +129,10 @@ not a claim about this repo's star count):
 - **113** merged pull requests
 - **94** issues
 - **114** commits
-- **73** agent skills (39 Claude + 34 Codex)
+- **10** starter agent skills shipped in this public kit (1 Claude-specific,
+  1 Codex-specific, 8 shared); the private development runtime it grew from
+  carries more (39 Claude + 34 Codex) — those are dev-runtime counts, not what
+  this repo ships
 - a dated decision register recording every manager and agent decision with its
   rationale
 

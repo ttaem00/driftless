@@ -57,7 +57,7 @@ headline.
 ## Reproducing it with the validation harness
 
 The skill-optimization side of the loop is gated by a **local, LLM-zero
-validation harness** (`scripts/Test-SkillOptimizationValidationHarness.ps1`,
+validation harness** (`scripts/Test-SkillOptValidationHarness.ps1`,
 mirrored from the source project's skill-optimization gate). It is deliberately
 static and repo-local: it does **not** run model loops, trainers, broad
 benchmarks, paid API calls, recursive agents, or any host-global mutation. It
@@ -68,10 +68,10 @@ be adopted. That deterministic verdict is what makes a before/after skill delta
 
 ```powershell
 # Reproduce a skill before/after verdict against the committed fixtures
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptimizationValidationHarness.ps1
+powershell.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1
 
 # Validate a single candidate spec
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptimizationValidationHarness.ps1 -SpecPath path/to/spec.json
+powershell.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1 -SpecPath path/to/spec.json
 ```
 
 Exit `0` = the candidate is valid (the fixture expectations are met); exit `1`

@@ -31,10 +31,32 @@ a merged PR you can browse). Not tagged as a new version yet.
 - README: a five-axis gradient section, a day-one honesty banner, and a maintainer
   declaration (MAINTAINERS.md).
 
+- **Test-SkillAudit gate** — a 6th gate that holds every shipped `SKILL.md` to
+  structural soundness (name matches its folder, a non-empty description with a
+  trigger signal) so a skill can never land that silently never fires. Ships the
+  skillspector *idea* (scan a skill before you trust it) in the lean in-repo
+  form, with a `-SelfTest` that proves it FAILs on planted-bad fixtures.
+- **work-discipline gate** + **overnight reversibility / retry-safety gate** —
+  mechanical checks that an unresolved placeholder cannot ship as a rule, and
+  that a recovery retry stays reversible (12-factor-agents principles, adopted
+  in the lean in-repo form).
+- **Measured real-use verification** — a fresh-clone non-developer path timed
+  end-to-end (~16s), plus a real captured 60-second-proof demo transcript.
+- **Navigation** — a docs index and a shared-skills index for onboarding.
+- **Honest skill count** — the public kit ships 12 starter skills (8 shared +
+  1 Claude + 1 Codex + 2 standalone), now stated consistently in both READMEs
+  with a verify command that counts the whole repo.
+
 ### Changed
 - The single-source mirror is populated with real shared skills; the mirror-parity
   gate now enforces them (13 checks).
-- CI runs the gates on Windows **and** Linux (containment + installer smoke).
+- CI runs the gates on Windows **and** Linux (containment + installer smoke), and
+  the README CI badge reflects live status instead of a hardcoded "passing".
+- **Onboarding parity (EN/KO)** — install commands are ZIP-safe (`sh ./install.sh`),
+  the Korean README and quickstart carry the same `git clone` + start-command
+  steps as English, and the README points to the full prompt's safety clause.
+- A cache-stable hot-prefix discipline and a meaning-preserving compression of
+  the largest skill keep the per-run token cost down.
 
 ### Removed
 - Internal application/promotion strategy docs are kept private (not in the public

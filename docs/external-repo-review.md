@@ -88,7 +88,7 @@ a real read. We do not inflate.
   standard file format, so they work in normal Claude tooling and aren't a
   private invention. We follow the format; we don't copy their example tasks.
 
-## 4. nvidia/skillspector — `PILOT_ONLY` (strong fit, but prove it before relying)
+## 4. nvidia/skillspector — `ADOPT` (pilot shipped as the in-repo Test-SkillAudit gate)
 
 - **Useful pattern.** Scan an agent skill for malicious patterns / risky
   behaviors *before* you trust it — exactly the question you should ask of any
@@ -113,6 +113,15 @@ a real read. We do not inflate.
   to maintain.
 - **Pilot success/fail.** Success = the extended grep flags a planted bad skill
   and stays clean on the real ones (mirror the containment FAIL/PASS proof).
+- **Pilot outcome: ADOPTED.** Shipped as `scripts/Test-SkillAudit.ps1` (a 6th
+  gate). It does the skillspector *idea* in the lean in-repo form: it audits
+  every shipped `SKILL.md` for structural soundness (name matches its folder, a
+  non-empty description with a trigger signal) so a skill cannot land that
+  silently never fires. It pairs a `-SelfTest` that FAILs on planted-bad
+  fixtures (missing name, name/folder mismatch, empty description, no
+  frontmatter) with a clean live PASS on the real skills — exactly the planted-
+  FAIL / real-PASS proof the pilot asked for. No new dependency, no external
+  scanner; the same gate runs in the claude/codex dev runtime too (mirror).
   Fail = unavoidable false positives → revert, keep the manual review note.
 
 ## 5. rohitg00/agentmemory — `WATCH_LATER` (Driftless's memory tier is already the lean answer)

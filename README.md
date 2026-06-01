@@ -24,12 +24,21 @@ Paste one prompt before bed. Wake up to merged pull requests. You never have to 
 
 *(See a real captured run: [examples/demo-transcript.txt](./examples/demo-transcript.txt) — clone -> install dry-run -> gates PASS.)*
 
-**1. Apply it** (run once, inside the repo you cloned):
+**You need two things first:** [git](https://git-scm.com/downloads) and one agent
+CLI — [Claude Code](https://docs.anthropic.com/claude-code) or
+[OpenAI Codex](https://developers.openai.com/codex) — installed. Driftless drives
+an agent; it does not replace one.
+
+**1. Get the repo, then apply it** (run these in a terminal):
 
 ```sh
+git clone https://github.com/mizan0515/driftless
+cd driftless
 sh ./install.sh        # macOS / Linux  (interactive: Claude, Codex, or both)
 ```
 ```powershell
+git clone https://github.com/mizan0515/driftless
+cd driftless
 .\install.ps1          # Windows PowerShell
 ```
 

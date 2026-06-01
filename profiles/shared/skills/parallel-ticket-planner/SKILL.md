@@ -1,9 +1,12 @@
 ---
 name: parallel-ticket-planner
 description: >
-  병행티켓 parallel-ticket-planner: 남은 저장소 작업을 충돌이 적은 병렬 티켓과
-  창별/세션별 paste-ready 프롬프트로 쪼갭니다. 같은 파일/계약을 건드리는 작업은
-  직렬화하고, 충돌 없는 작업만 병렬로 묶습니다. Use when the manager asks for
+  Use when the manager asks to split remaining work into parallel tickets, run
+  multiple sessions/worktrees, or decompose a backlog without conflicts -- 매니저가
+  작업을 충돌 없이 병렬로 쪼개 달라고 할 때. (병행티켓 parallel-ticket-planner) 남은
+  저장소 작업을 충돌이 적은 병렬 티켓과 창별/세션별 paste-ready 프롬프트로 쪼갭니다.
+  같은 파일/계약을 건드리는 작업은 직렬화하고, 충돌 없는 작업만 병렬로 묶습니다.
+  Use when the manager asks for
   parallel tickets, ticket decomposition, backlog splitting, multiple sessions,
   independent worktrees, coordinator cleanup/adoption prompts, or a top-to-bottom
   guide the manager can follow without judging raw Git details.

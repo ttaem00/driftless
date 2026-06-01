@@ -17,8 +17,14 @@ Driftless is overnight self-improving maintainer automation for Claude **and**
 Codex. The strongest evidence is the project's own history: the work was driven
 by the same overnight autonomous loop the product ships.
 
-You can verify the shape of that history on the source project's public GitHub
-graph (real, measured):
+These headline numbers were measured on the **development runtime** Driftless
+was extracted from (a private, containment-sensitive runtime), so they are the
+*method's* proof, self-attested. The part a reviewer can verify with **no trust
+required** is this public repo's own, growing graph. The two are kept side by
+side, honestly, in **[loop-log.md](./loop-log.md)** — read it first so the
+numbers below are never mistaken for this repo's day-one graph.
+
+Development-runtime numbers at extraction (real, measured):
 
 - **113 merged pull requests** — each one a unit of self-built work.
 - **94 issues** — the work was ticketed before it was edited (issue-before-edit).

@@ -34,11 +34,30 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-SkillOptValidationHarness.ps1
 
-  posix-install:
+  linux-smoke:
+    # Proves the cross-platform claim off Windows: the POSIX installer runs and
+    # actually materializes the isolated home, and the containment gate (pwsh is
+    # preinstalled on the runner) passes on Linux too.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Installer dry-run (POSIX shell, changes nothing)
         shell: sh
         run: sh ./install.sh --dry-run --both
+
+      - name: Installer real run materializes a repo-local home (and only there)
+        shell: sh
+        run: |
+          sh ./install.sh --both --yes
+          test -d .runtime/claude-home || { echo "claude-home not materialized"; exit 1; }
+          test -d .runtime/codex-home  || { echo "codex-home not materialized"; exit 1; }
+          # The host-global agent homes must NOT have been created or touched.
+          test ! -e "$HOME/.claude" || { echo "host-global ~/.claude was touched"; exit 1; }
+          echo "Linux install OK: isolated homes under .runtime, host-global untouched."
+
+      - name: Containment gate on Linux (pwsh)
+        shell: pwsh
+        run: ./scripts/Test-Containment.ps1 -Path . -AllFiles

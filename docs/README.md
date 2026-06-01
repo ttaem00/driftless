@@ -1,0 +1,33 @@
+# Driftless docs
+
+A map of the documentation. New here? Start at the top. KO links are in
+parentheses where a Korean mirror exists.
+
+## Start here (non-developer)
+
+- **[What is Driftless](./en/what-is-driftless.md)** (한국어: [드리프트리스란](./ko/드리프트리스란.md)) — the idea in plain language.
+- **[5-minute quickstart](./en/quickstart.md)** (한국어: [빠른 시작](./ko/빠른시작.md)) — clone → install → one prompt → morning report.
+- **[Apply it to your own agent](./en/apply-to-your-agent.md)** — say "apply this repo to me" and the agent sets it up.
+
+## How it works
+
+- **[Single-source two-profile mirror](./en/single-source-mirror.md)** — one edit improves both Claude and Codex.
+- **[Codex and Claude](./en/codex-and-claude.md)** (한국어: [코덱스와 클로드](./ko/코덱스와클로드.md)) — how each tool uses Driftless, and which tool for which job.
+- **[How Driftless learns](./en/how-driftless-learns.md)** (한국어: [어떻게 학습하나](./ko/드리프트리스는어떻게학습하나.md)) — the lesson-promotion ladder, the five axes, per-tool mistake learning.
+- **[Lesson-promotion ladder](./en/lesson-promotion-ladder.md)** — memory < skill < hot rule < hook < gate.
+
+## Safety
+
+- **[Guardrails](./en/guardrails.md)** (한국어: [안전장치](./ko/안전장치.md)) — containment, ask-before-install, human-only escalation.
+- **[Host evidence matrix](./en/host-evidence-matrix.md)** — exactly what is verified on which OS (honest UNVERIFIED labels).
+- **[SECURITY.md](../SECURITY.md)** — how to report a vulnerability; the containment guarantee.
+
+## Extend
+
+- **[Adopt an external tool safely](./en/adopt-external-tools-safely.md)** (한국어: [외부 도구 안전 도입](./ko/외부도구안전도입.md)) — vet a repo before applying it.
+- **[CONTRIBUTING](../CONTRIBUTING.md)** — the one rule: every change passes the gates.
+
+## Evidence (this repo maintains itself)
+
+- **[evidence/](../evidence/)** — the loop log, the redacted development-runtime PR
+  list, the 5-axis ROI shape, and a fully-worked lesson-ladder example.

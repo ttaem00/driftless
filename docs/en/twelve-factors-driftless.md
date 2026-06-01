@@ -172,10 +172,13 @@ Driftless's "business state" is its GitHub issues, PRs, and a dated decision
 register; its "execution state" is what a session is doing right now.
 
 - *What it already does:* durable state lives in the **issue/PR body** under a
-  dated section and in `docs/MANAGER_DECISIONS.md`, *not* in ephemeral chat. Every
-  session re-reads that register before working, so the agent's working memory is
-  re-derived from the same record a human reads. There is no separate secret
-  scratch-state that the manager can't see — the audit trail *is* the state.
+  dated section and in a **dated decision register**, *not* in ephemeral chat.
+  Every session re-reads that register before working, so the agent's working
+  memory is re-derived from the same record a human reads. (The source project's
+  register file is kept private; the same dated, tagged decisions surface inline in
+  the public issue/PR bodies, so the trail is reconstructable from them.) There is
+  no separate secret scratch-state that the manager can't see — the audit trail
+  *is* the state.
 - *The gap:* the two are unified by **convention and re-reading**, not by a single
   machine-checked store with a schema. An overnight done-state gate checks that no
   unfinished lane is hidden behind a "done" claim, which enforces *part* of this —

@@ -41,4 +41,4 @@ jobs:
 
       - name: Installer dry-run (POSIX shell, changes nothing)
         shell: sh
-        run: ./install.sh --dry-run --both
+        run: sh ./install.sh --dry-run --both

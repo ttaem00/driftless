@@ -2,6 +2,44 @@
 
 All notable changes to Driftless are recorded here. Dates are ISO (YYYY-MM-DD).
 
+## [Unreleased]
+
+Work since v0.1.0, merged in the open (this repo maintains itself — each item is
+a merged PR you can browse). Not tagged as a new version yet.
+
+### Added
+- **apply-driftless skill** — "apply this repo to my Claude/Codex" is now a real
+  procedure both profiles follow (detect tool, dry-run, ask-before-install, verify
+  the isolated home + gates, report in plain language).
+- **5-minute non-developer quickstart** (EN + KO): clone → installer → start agent
+  → one prompt → morning report, with honest limits.
+- **SECURITY.md** and **CODE_OF_CONDUCT.md**.
+- **docs/codex-and-claude** (EN + KO) — how each tool uses Driftless (Codex goal
+  mode vs Claude dynamic workflow / ultracode) and the shared core.
+- **docs/how-driftless-learns** (EN + KO) — the lesson-promotion ladder, the five
+  axes trending down, **model-specific mistake learning** (Codex and Claude fail
+  differently, so each is optimized per profile), and an honest lessons changelog.
+- **Both-tool infinite maintainer loop**: `profiles/codex/prompts/infinite-goal.md`
+  (Codex goal) and `profiles/claude/prompts/infinite-workflow.md` (Claude
+  workflow + schedule + audit) — same shared rules/gates, tool-specific mechanism.
+- **adopt-external-tool skill** + safe-adoption guide (EN + KO) — vet an external
+  repo before applying it.
+- **GitHub issue + PR templates** — non-developer task-request, bug-report, and a
+  gate-aware PR template.
+- **evidence/loop-log** and a **redacted development-runtime PR list** — the
+  private method-proof numbers vs this repo's public, growing graph, side by side.
+- README: a five-axis gradient section, a day-one honesty banner, and a maintainer
+  declaration (MAINTAINERS.md).
+
+### Changed
+- The single-source mirror is populated with real shared skills; the mirror-parity
+  gate now enforces them (13 checks).
+- CI runs the gates on Windows **and** Linux (containment + installer smoke).
+
+### Removed
+- Internal application/promotion strategy docs are kept private (not in the public
+  tree or its history) — the public repo shows a product, not a prize application.
+
 ## v0.1.0 — 2026-06-01
 
 First public cut. Driftless is the self-improving, containment-first environment

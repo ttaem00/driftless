@@ -43,3 +43,11 @@ Thumbs.db
 
 # Node (if any tooling is added later)
 node_modules/
+
+# Internal maintainer strategy — never public (application/promo are not product docs)
+docs/application/
+docs/community/
+docs/**/promotion-strategy.md
+docs/**/codex-for-oss-application.md
+docs/**/ecosystem-role.md
+docs/ko/홍보-전략.md

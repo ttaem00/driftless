@@ -53,11 +53,9 @@ agent never wanders off your goal.
 
 This is depth and safety on two tools, not a breadth checklist. The shared tier
 (rules, skills, schemas, gates) is authored once; each profile runs it isolated
-under its own config home. OpenAI's open-source agent program is tool-agnostic,
-and OpenAI co-founds open agent standards with Anthropic (MCP + AGENTS.md), so
-running both is **ecosystem leverage** — not split loyalty. See
-[single-source mirror](./docs/en/single-source-mirror.md) and
-[why Driftless matters to the ecosystem](./docs/en/ecosystem-role.md).
+under its own config home. The agent ecosystem is built on shared open standards
+(MCP, AGENTS.md), so running both is **ecosystem leverage** — not split loyalty.
+See [single-source mirror](./docs/en/single-source-mirror.md).
 
 ## Guardrails at a glance
 

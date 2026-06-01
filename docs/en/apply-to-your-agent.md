@@ -164,3 +164,13 @@ appearing on your machine. You decide, every time.
   ```
 
 Both gates are read-only: no network, no secrets, no host-global access.
+
+
+## For the agent: the apply-driftless skill
+
+The procedure the agent follows when you say "apply this repo to me" is the
+shared **apply-driftless** skill (`profiles/shared/skills/apply-driftless/SKILL.md`),
+consumed identically by both the Claude and Codex profiles: detect the tool, dry-run
+the installer, ask before any MCP/dependency/plugin (default no), verify the isolated
+home materialized and the gates pass, then report in plain language. It never touches
+your host-global config.

@@ -52,6 +52,12 @@
       "file": "skills/learning-loop/SKILL.md",
       "consumedBy": ["claude", "codex"],
       "why": "Tool-agnostic learning-loop skill. Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both."
+    },
+    {
+      "name": "skill-apply-driftless",
+      "file": "skills/apply-driftless/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic auto-apply skill ('apply this repo to my Claude/Codex'). One procedure both profiles follow to install/verify/report the isolated profile, ask-before-install, never touching host-global config."
     }
   ],
 

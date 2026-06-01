@@ -30,9 +30,11 @@ Development-runtime numbers at extraction (real, measured):
 - **94 issues** — the work was ticketed before it was edited (issue-before-edit).
 - **114 commits** on the default branch.
 - **39 Claude skills + 34 Codex skills** — two tool profiles kept in mirror.
-- A committed **decision register** (`MANAGER_DECISIONS.md`) where every
-  non-trivial choice is recorded with a decider tag (`[manager]` / `[agent]`)
-  and a rationale, so a reviewer can trace *why*, not just *what*.
+- A **decision register** practice where every non-trivial choice is recorded
+  with a decider tag (`[manager]` / `[agent]`) and a rationale, so a reviewer can
+  trace *why*, not just *what*. The source project keeps this register **private**
+  (it holds development decisions specific to that runtime), but the same decider
+  tags + rationale appear inline in the public issue and PR bodies.
 
 The loop that produced this: an **issue** is opened, a **branch**
 (`agent/issue-<n>-<slug>`) is cut, a **pull request** is raised, gates run, and a
@@ -50,8 +52,10 @@ human approves the merge. Issues -> branches -> PRs -> merges, repeated overnigh
 
 1. Open the source project's GitHub graph and confirm the merged-PR / issue /
    commit counts above. The numbers are public.
-2. Read `MANAGER_DECISIONS.md` (committed) and follow any decision to its issue
-   and PR.
+2. Open any merged PR or issue body and find the dated decision lines tagged
+   `[manager]` / `[agent]` with a rationale, then follow the decision to its
+   issue and PR. (The source project's full decision register is private; the
+   same tagged decisions surface inline in these public threads.)
 3. Run the containment gate on a fresh clone — it must PASS, proving the public
    tree carries no secret, no host-global `~/.claude` / `~/.codex` content, and
    no `.runtime/` state:

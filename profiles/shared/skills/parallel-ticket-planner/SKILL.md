@@ -195,9 +195,9 @@ Runtime adaptations:
    ```text
    handoff 노트 (있으면)
    레포 instruction 파일 (도구별 CLAUDE.md / AGENTS.md 등)
-   docs/SHARED_DESIGN_CONTRACT.md
-   docs/MANAGER_DECISIONS.md
-   docs/design/DESIGN.md
+   docs/SHARED_DESIGN_CONTRACT.md (있으면)
+   결정 등록부 / 의사결정 로그 (프로젝트가 두는 경우 — 예: docs/MANAGER_DECISIONS.md)
+   docs/design/DESIGN.md (있으면)
    ```
 
 2. **Classify base state before planning.** base 체크아웃이 dirty/ahead/untracked면 정확한

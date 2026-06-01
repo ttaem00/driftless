@@ -1,8 +1,11 @@
 ---
 name: learning-loop
 description: >
-  레슨루프 learning-loop: 반복 문제와 시스템 개선 아이디어를 기록하고, 승인/충족된 것만
-  지침 파일 / 스킬 / 스크립트 / 훅 변경으로 승격한다. 조사만 하고 멈추지 않는다 -- 재발
+  Use when the manager points out a recurring problem/mistake or proposes a system
+  improvement to prevent recurrence -- 또 그러네 / 같은 실수 / 재발 방지 / 교훈 /
+  시스템 개선 제안일 때. (레슨루프 learning-loop) 반복 문제와 시스템 개선 아이디어를
+  기록하고, 승인/충족된 것만 지침 파일 / 스킬 / 스크립트 / 훅 변경으로 승격한다.
+  조사만 하고 멈추지 않는다 -- 재발
   방지가 암시되면 학습 노트에서 멈추지 말고 가장 좁은 저장소-로컬 수정까지 진행한다.
   Trigger / 트리거: "레슨루프", "반복 문제", "교훈", "배운 점", "레슨 적용", "재발 방지",
   "또 그러네", "같은 실수", "시스템 개선 제안", "learning loop", "lesson", "lessons learned",

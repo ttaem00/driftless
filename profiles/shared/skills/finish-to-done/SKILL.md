@@ -1,7 +1,10 @@
 ---
 name: finish-to-done
 description: >
-  끝까지해결 finish-to-done: 조사 -> 수정 -> 검증 -> 리뷰 -> 완료 신호까지 증거 기반으로
+  Use when the manager asks to finish a task to completion, fix the root cause so
+  it does not recur, or carry work all the way to PR_READY/verified -- 끝까지 /
+  근본 원인 / 재발 안 되게 / 검증까지 끝내달라고 할 때. (끝까지해결 finish-to-done)
+  조사 -> 수정 -> 검증 -> 리뷰 -> 완료 신호까지 증거 기반으로
   끝까지 진행한다. 조사만 하고 멈추지 않는다. agent-solvable blocker는 같은 세션에서
   근본원인 follow-up을 만들고 원 게이트를 재시도해 해결한다.
   Trigger / 트리거: "끝까지", "끝까지해결", "근본 원인", "재발 안 되게", "PR_READY까지",

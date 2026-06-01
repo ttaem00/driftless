@@ -1,8 +1,11 @@
 ---
 name: easy-briefing
 description: >
-  쉽게 easy-briefing: 비개발자 관리자에게 현재 상황, 판단할 것, 테스트할 것을
-  쉬운 한국어로 설명한다. 코드/약어 대신 사용자 눈에 보이는 동작 중심으로 브리핑.
+  Use when the manager asks what's going on, what to do next, or how to test
+  something in plain language -- 지금 뭐해 / 다음에 뭐 하면 돼 / 어떻게 테스트해 /
+  쉽게 설명해 / 관리자 입장으로 정리해 달라고 할 때. (쉽게 easy-briefing) 비개발자
+  관리자에게 현재 상황, 판단할 것, 테스트할 것을 쉬운 한국어로 설명한다.
+  코드/약어 대신 사용자 눈에 보이는 동작 중심으로 브리핑.
   Trigger / 트리거: "쉽게", "관리자 입장", "지금 뭐해야 해", "다음에 뭘 하면 돼",
   "어떻게 테스트해", "상황 정리", "쉽게 설명", "easy briefing", "explain simply",
   "manager view", "what should I test".

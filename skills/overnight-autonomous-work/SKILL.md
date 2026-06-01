@@ -325,14 +325,22 @@ When a worker fails, the parent runs a recovery loop:
    problem, external-API problem, unclear spec, misunderstood existing structure,
    or the worker instruction itself was ambiguous.
 3. Confirm the reproduction conditions.
-4. Form one to three cause hypotheses.
-5. Try a first fix.
-6. Verify by real execution.
-7. If it still fails, revise the hypothesis.
-8. Narrow or decompose the scope (sub-ticket).
-9. Consider reassigning to a fresh worker (add the missing context to its input).
-10. Look for a workaround path.
-11. If still blocked, report to the human — but always include candidate next
+4. **Check retry safety (reversibility gate).** Before retrying, confirm the
+   failed step left a REVERSIBLE state: work is uncommitted/unmerged, nothing was
+   sent externally (no post, no published release), and no destructive/irreversible
+   op ran. If reversible -> retry is safe, continue. If an irreversible side effect
+   already happened (a merge, a push to a shared branch, an external send, a delete)
+   -> do NOT blindly retry on top of it; hard-stop and ask the human one short
+   question with the candidate next actions. Retrying over a partial irreversible
+   change is how a recovery loop does damage.
+5. Form one to three cause hypotheses.
+6. Try a first fix.
+7. Verify by real execution.
+8. If it still fails, revise the hypothesis.
+9. Narrow or decompose the scope (sub-ticket).
+10. Consider reassigning to a fresh worker (add the missing context to its input).
+11. Look for a workaround path.
+12. If still blocked, report to the human — but always include candidate next
     actions.
 
 Branching by type: an ambiguous-instruction failure means **rewrite the

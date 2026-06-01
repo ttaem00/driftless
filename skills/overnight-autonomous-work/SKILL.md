@@ -101,10 +101,17 @@ A conversational agent only acts when it is invoked, and goes idle the moment it
 finishes a reply. So "I'll keep iterating" is not self-sustaining: the next cycle
 will not arrive on its own. Make the loop a *structure*, not a promise:
 
-- Drive multi-cycle work with a workflow/orchestration tool (one invocation runs
-  many cycles in the background, independent of any single reply ending), and/or
-- Schedule a recurring trigger (a cron-style job) that re-enters this skill on an
-  interval, and/or
+- **Primary: a finish-triggered loop primitive — "one turn ends → the next starts,
+  until a condition holds, no fixed interval".** On Claude that is `/goal <backlog
+  empty AND main clean AND no open PR>` (re-evaluates every turn, no block cap,
+  survives resume); on Codex it is the runner's `goal` with the same success
+  criteria. This is the right shape for "don't stop, keep going" — NOT a clock.
+- Drive a single multi-cycle burst with a workflow/orchestration tool (one
+  invocation runs many cycles in the background, independent of any reply ending).
+- A Stop/finish hook is only a BACKUP nudge (per-prompt limited; an ordinary status
+  word like "waiting"/"idle" must never end the loop — only a deliberate standalone
+  completion sentinel). A time-based cron is a last-resort re-entry for a fully
+  closed session, not the primary trigger.
 - Leave a **resume note + the next ticket** in a durable file every cycle so a
   fresh session can pick up exactly where the last left off.
 

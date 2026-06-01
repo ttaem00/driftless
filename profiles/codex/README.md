@@ -55,3 +55,8 @@ It **never** reads or mutates host-global `~/.codex`, and it never touches
 `../shared/schemas/forbidden-paths.json` and must pass before any work is reported
 done. Touching host-global config is a manager-only gate (see
 `../shared/contract/SHARED_DESIGN_CONTRACT.md`, section 3).
+
+
+## Continuous (infinite) maintainer loop
+
+See [infinite-goal (Codex goal-mode continuous loop)](./prompts/infinite-goal.md) for the paste-ready way to run this profile as a long, self-improving maintainer loop. Codex and Claude reach it differently (goal vs workflow+schedule) but share one set of rules, gates, and success criteria.

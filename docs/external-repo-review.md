@@ -192,3 +192,36 @@ so the kit stays small.
 > weight) was **not fetched live** in this review and is Unverified. Before any
 > verdict above moves to a real ADOPT-with-dependency, do a live read of the
 > candidate's maintenance + license + security posture and record it here.
+
+---
+
+## Update — adopted the SkillSpector idea (not the tool) + 12-factor as prior art
+
+*(2026-06-01)* Acted on the Bottom line above. Two verdicts moved from "idea" to
+"folded in", both in the lean, zero-dependency, offline form the rest of this
+review argued for. Nothing new was installed and no external scanner was vendored.
+
+- **nvidia/skillspector — `ADOPT` (idea only; was `PILOT_ONLY`).** The "scan
+  before you trust" instinct is now a real, reusable surface: the shared skill
+  `profiles/shared/skills/adopt-external-tool/SKILL.md`. It is a one-screen
+  checklist (license / new-infra / host-global+secret paths / inline secrets /
+  peer-recursive spawn / ROI / smallest-form) the agent runs **before** applying
+  any external repo, tool, third-party skill, or MCP, and closes with one verdict
+  (ADOPT_SMALL / PILOT_ONLY / WATCH_LATER / REJECT / UNVERIFIED). No dependency,
+  no NVIDIA tool pulled in — same offline shape as the containment + skillopt
+  gates. *Observed: skill created this session; registered as a shared asset in
+  `mirror-parity-allowlist.json` so one edit reaches both profiles.* The NVIDIA
+  scanner itself stays `WATCH_LATER` (a real adopt would need the deferred live
+  license + dependency read; that gate is unchanged).
+- **humanlayer/12-factor-agents — `ADOPT` (cited as prior art; was `WATCH_LATER`).**
+  Mined, not imported. Its principles (own your prompts/context, small focused
+  pieces, human-in-the-loop) are cited as grounding in the new principles pages
+  `docs/en/adopt-external-tools-safely.md` + `docs/ko/외부도구안전도입.md`,
+  adapted to Driftless's non-developer owner + two-profile reality. The document
+  is **not** vendored; the hot context stays small.
+
+**Unchanged this round.** `rohitg00/agentmemory` stays `WATCH_LATER` (the
+file-based memory tier + lesson-promotion ladder is still the leaner answer; a
+memory backend is still rejected as new infra). `ChromeDevTools/chrome-devtools-mcp`
+stays `WATCH_LATER` (opt-in, ask-before-install). No paid/recursive/infra surface
+was added; the kit stayed lean.

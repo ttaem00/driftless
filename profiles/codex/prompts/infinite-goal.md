@@ -58,7 +58,7 @@ ticket so the next session (Codex or Claude) picks up exactly where you stopped.
 The loop above is the long-horizon goal. But goal mode also shines on **short,
 well-scoped** maintainer work, where the "done" signal is concrete — exactly the
 PR-review / release-gating / triage tasks
-[the Codex profile is built for](../../docs/en/codex-and-claude.md). Each block
+[the Codex profile is built for](../../../docs/en/codex-and-claude.md). Each block
 below is paste-ready and reuses the **same RULES and gates** as the loop above;
 only the GOAL and SUCCESS CRITERIA change. Drop in the PR number / version as noted.
 

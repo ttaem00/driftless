@@ -22,6 +22,8 @@ Paste one prompt before bed. Wake up to merged pull requests. You never have to 
 
 ## 60-second proof
 
+*(See a real captured run: [examples/demo-transcript.txt](./examples/demo-transcript.txt) — clone -> install dry-run -> gates PASS.)*
+
 **1. Apply it** (run once, inside the repo you cloned):
 
 ```sh

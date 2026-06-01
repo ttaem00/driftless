@@ -1,0 +1,31 @@
+$ git clone https://github.com/mizan0515/driftless && cd driftless
+$ ./install.sh --dry-run --both
+--------------------------------------------------------
+Driftless installer
+--------------------------------------------------------
+  Repo:    ~/driftless
+  Profiles: ~/driftless/profiles
+  Isolated homes go under: ~/driftless/.runtime  (gitignored; never committed)
+  Mode:    DRY RUN -- nothing will be created or changed.
+
+Setting up: both
+
+  Claude CLI: installed
+  Codex CLI : installed
+
+  Claude isolated home will be created at: ~/driftless/.runtime/claude-home
+  [dry-run] would: create ~/driftless/.runtime/claude-home
+  [dry-run] would: copy the Claude profile into the isolated home
+  [dry-run] would: copy the shared tier (contract + safety schemas) into the isolated home
+  Claude isolation: the launcher will set CLAUDE_CONFIG_DIR to this repo-local home, so the host-global config is left untouched.
+
+  Codex isolated home will be created at: ~/driftless/.runtime/codex-home
+  [dry-run] would: create ~/driftless/.runtime/codex-home
+  [dry-run] would: copy the Codex profile into the isolated home
+
+$ pwsh scripts/Test-Containment.ps1 -Path . -AllFiles
+DRIFTLESS_CONTAINMENT_PASS
+PASS: scanned 69 item(s), 69 with content; no forbidden path or leaked secret found.
+
+$ pwsh scripts/Test-ProfileMirrorParity.ps1 -Path .
+RESULT: PASS (pass=13 fail=0 blocked=0 unverified=0)

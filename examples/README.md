@@ -17,3 +17,5 @@ as it fills in, watch this repo's
   plain-language morning report (done / needs-decision / in-progress / blocked)
   with example merged-PR lines and one risk decision the agent **refused** and
   escalated to you instead of guessing.
+
+- **demo-transcript.txt** — a real captured 60-second-proof run from a fresh clone (clone -> install dry-run -> containment + mirror-parity gates PASS). Paths sanitized; not fabricated.

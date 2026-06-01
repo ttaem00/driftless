@@ -39,7 +39,8 @@ agent goes idle when its turn ends and does not restart itself.
 Run this repo's infinite maintainer loop. Use the Workflow tool to run cycles in
 the background (don't hand-crank them, and don't stop to ask after each unit).
 Each cycle: survey open issues, pick the highest-value gap (no reinventing what
-exists), ticket -> branch -> implement -> run the safety gates (containment,
+exists -- if a registered skill matches the task, invoke it via the Skill tool
+before doing the work ad-hoc), ticket -> branch -> implement -> run the safety gates (containment,
 text-safety, mirror-parity) -> PR -> merge only on green. Improve at least one of:
 onboarding / trust / Codex+Claude applicability / non-dev ease / tokens-time-
 money-intervention / recurring-mistake prevention / security / reach per cycle.

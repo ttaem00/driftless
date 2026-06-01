@@ -20,7 +20,8 @@ GOAL: Keep this repository healthy and moving, autonomously, over a long horizon
 Survey the open issues, split them into conflict-aware tickets, work each on its
 own branch, open PRs, and merge only the ones that pass every safety gate. Treat
 this as a continuous loop, not a one-shot: when one ticket is done, pick the next
-highest-value one and keep going.
+highest-value one and keep going. If a registered skill matches the task, invoke
+it (e.g. `$skill-name`) before doing the work ad-hoc, rather than reimplementing it.
 
 SUCCESS CRITERIA (verifiable — keep working until these hold, then loop again):
 - Every change merged passed the safety gates (containment, text-safety,

@@ -36,10 +36,6 @@ jobs:
 
       - name: Work-discipline gate (no unresolved placeholder shipped as a rule)
         shell: pwsh
-        run: ./scripts/Test-WorkDiscipline.ps1 -Path .
-
-      - name: Work-discipline gate (no unresolved placeholder ships as a rule)
-        shell: pwsh
         run: ./scripts/Test-WorkDiscipline.ps1 -Root .
 
   linux-smoke:

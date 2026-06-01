@@ -162,7 +162,7 @@ function Install-IsolatedHome {
     }
   }
 
-  Step ($Name + " isolation: the launcher will set " + $EnvVar + " to this repo-local home, so the host-global config is left untouched.")
+  Step ($Name + " isolation: starting the agent with " + $EnvVar + " set to this repo-local home (the command printed at the end) keeps the host-global config untouched.")
 }
 
 # ---------------------------------------------------------------------------
@@ -179,7 +179,7 @@ function Show-OptionalExtras {
   if (Confirm-YesNo 'Install optional MCP server(s) for richer tool access?') {
     Step 'You said yes. Driftless does not bundle an MCP server installer in this'
     Step 'minimal kit, so nothing was installed. Add the server yourself only if'
-    Step 'you trust it; the launcher reads MCP definitions from the repo-local home.'
+    Step 'you trust it; the agent reads MCP definitions from the repo-local home.'
   } else {
     Step 'Skipped MCP servers. (You can add one later by hand.)'
   }
@@ -246,6 +246,13 @@ if ($DryRun) {
   Say 'Setup complete.'
   Step 'Your isolated home(s) live under .runtime and are contained to this repo.'
   Step 'The host-global Claude/Codex config was never read or changed.'
-  Step 'Next: start the agent against the isolated home (see docs/en/apply-to-your-agent.md).'
+  Say 'To start now, run from this folder (the env var points the agent at the isolated home):'
+  if ($chosen -eq 'claude' -or $chosen -eq 'both') {
+    Step 'Claude:  $env:CLAUDE_CONFIG_DIR="$PWD\.runtime\claude-home"; claude'
+  }
+  if ($chosen -eq 'codex' -or $chosen -eq 'both') {
+    Step 'Codex:   $env:CODEX_HOME="$PWD\.runtime\codex-home"; codex'
+  }
+  Step 'Details + the macOS/Linux form: docs/en/apply-to-your-agent.md (Step 3).'
 }
 Rule

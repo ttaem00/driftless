@@ -187,7 +187,7 @@ materialize_home() {
       sh -c "mkdir -p \"$HOME_DIR/shared\" && cp -R \"$_shared/.\" \"$HOME_DIR/shared/\""
   fi
 
-  step "$NAME isolation: the launcher will set $ENV_VAR to this repo-local home, so the host-global config is left untouched."
+  step "$NAME isolation: starting the agent with $ENV_VAR set to this repo-local home (the command printed at the end) keeps the host-global config untouched."
 }
 
 # ---------------------------------------------------------------------------
@@ -204,7 +204,7 @@ offer_optional_extras() {
   if ask_yes_no "Install optional MCP server(s) for richer tool access?"; then
     step "You said yes. Driftless does not bundle an MCP server installer in this"
     step "minimal kit, so nothing was installed. Add the server yourself only if"
-    step "you trust it; the launcher reads MCP definitions from the repo-local home."
+    step "you trust it; the agent reads MCP definitions from the repo-local home."
   else
     step "Skipped MCP servers. (You can add one later by hand.)"
   fi
@@ -272,6 +272,13 @@ else
   say "Setup complete."
   step "Your isolated home(s) live under .runtime and are contained to this repo."
   step "The host-global Claude/Codex config was never read or changed."
-  step "Next: start the agent against the isolated home (see docs/en/apply-to-your-agent.md)."
+  say "To start now, run from this folder (the env var points the agent at the isolated home):"
+  if [ "$TOOL" = "claude" ] || [ "$TOOL" = "both" ]; then
+    step "Claude:  CLAUDE_CONFIG_DIR=\"$(pwd)/.runtime/claude-home\" claude"
+  fi
+  if [ "$TOOL" = "codex" ] || [ "$TOOL" = "both" ]; then
+    step "Codex:   CODEX_HOME=\"$(pwd)/.runtime/codex-home\" codex"
+  fi
+  step "Details + the Windows (PowerShell) form: docs/en/apply-to-your-agent.md (Step 3)."
 fi
 rule

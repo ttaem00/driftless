@@ -30,8 +30,8 @@ we did not earn.
 | **Containment gate** (`Test-Containment.ps1`) | **PASS** — verified on Windows PowerShell 5.1 and PowerShell 7 | UNVERIFIED | **PASS** — runs in CI on an Ubuntu runner (`pwsh`) on every push/PR |
 | **Windows text-safety gate** (`Test-WindowsTextSafety.ps1`) | **PASS** — verified on Windows PowerShell 5.1 and PowerShell 7 | UNVERIFIED (the *rule* is Windows-specific, but the gate would still need a run to confirm it executes) | UNVERIFIED |
 | **Profile mirror-parity gate** | **PASS** on Windows | UNVERIFIED | UNVERIFIED |
-| **PowerShell launcher** (`Start-*.ps1`) | **PASS** on Windows | UNVERIFIED — needs PowerShell 7 (`pwsh`) on macOS | UNVERIFIED — needs PowerShell 7 (`pwsh`) on Linux |
-| **Cross-platform install path** (`install.sh`) | N/A (use the Windows launcher) | UNVERIFIED — intended path, not yet measured | **PASS** — CI runs `install.sh --both --yes` on Ubuntu, asserts the isolated homes materialize under `.runtime/` and host-global `~/.claude` is untouched |
+| **Env-var launch** (`CLAUDE_CONFIG_DIR` / `CODEX_HOME` -> isolated home; no `Start-*.ps1` launcher ships) | UNVERIFIED — the installer prints the command (`apply-to-your-agent.md` Step 3); a real session start is not yet e2e-measured | UNVERIFIED — same | UNVERIFIED — same |
+| **Cross-platform install path** (`install.sh` / `install.ps1`) | UNVERIFIED — `install.ps1` is the Windows entry point; dry-run works, a full run is not yet measured | UNVERIFIED — intended path, not yet measured | **PASS** — CI runs `install.sh --both --yes` on Ubuntu, asserts the isolated homes materialize under `.runtime/` and host-global `~/.claude` is untouched |
 
 ---
 

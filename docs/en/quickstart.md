@@ -35,10 +35,24 @@ changing anything.
 
 ## Step 3 — Start your agent against the isolated home (1 min)
 
-Start Claude Code or Codex **from inside this folder** so it uses the isolated
-profile the installer just made. (On Windows the launcher script sets this up
-for you; on macOS/Linux, point the tool's config at the repo-local home the
-installer printed.)
+Run **from inside this folder**. The environment variable points the CLI at the
+repo-local isolated home, so your host-global config is untouched — that env var
+*is* the isolation; there is no separate launcher to install. (The installer printed
+exactly these lines for the tool you chose.)
+
+macOS / Linux:
+
+```bash
+CLAUDE_CONFIG_DIR="$(pwd)/.runtime/claude-home" claude    # Claude
+CODEX_HOME="$(pwd)/.runtime/codex-home" codex             # Codex
+```
+
+Windows (PowerShell):
+
+```powershell
+$env:CLAUDE_CONFIG_DIR="$PWD\.runtime\claude-home"; claude   # Claude
+$env:CODEX_HOME="$PWD\.runtime\codex-home"; codex            # Codex
+```
 
 ## Step 4 — Paste one prompt (30 sec)
 

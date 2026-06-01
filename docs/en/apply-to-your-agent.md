@@ -147,6 +147,33 @@ appearing on your machine. You decide, every time.
 
 ## After it runs
 
+### Step 3 — start the agent against the isolated home
+
+Run from this repo folder. The environment variable is the whole trick: it points
+the CLI at the repo-local isolated home, so your host-global config is untouched.
+The installer prints exactly these lines for the tool(s) you chose.
+
+macOS / Linux:
+
+```bash
+# Claude
+CLAUDE_CONFIG_DIR="$(pwd)/.runtime/claude-home" claude
+# Codex
+CODEX_HOME="$(pwd)/.runtime/codex-home" codex
+```
+
+Windows (PowerShell):
+
+```powershell
+# Claude
+$env:CLAUDE_CONFIG_DIR="$PWD\.runtime\claude-home"; claude
+# Codex
+$env:CODEX_HOME="$PWD\.runtime\codex-home"; codex
+```
+
+That is the launch step — there is no separate launcher script to install; the env
+var IS the isolation. Then:
+
 - Your isolated home(s) are under `./.runtime/` (for example
   `./.runtime/claude-home` and `./.runtime/codex-home`). That folder is
   git-ignored, so it is never committed and never shared.

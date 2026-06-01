@@ -53,6 +53,60 @@ ticket so the next session (Codex or Claude) picks up exactly where you stopped.
 
 ---
 
+## Scoped goal examples (review-and-release side)
+
+The loop above is the long-horizon goal. But goal mode also shines on **short,
+well-scoped** maintainer work, where the "done" signal is concrete — exactly the
+PR-review / release-gating / triage tasks
+[the Codex profile is built for](../../docs/en/codex-and-claude.md). Each block
+below is paste-ready and reuses the **same RULES and gates** as the loop above;
+only the GOAL and SUCCESS CRITERIA change. Drop in the PR number / version as noted.
+
+**Review one pull request:**
+
+```text
+GOAL: Review pull request #<N> in this repository and report whether it is safe
+to merge. Read the diff, run the safety gates against the branch, and check it
+against the linked issue's intent. Do not merge — leave a verdict.
+
+SUCCESS CRITERIA:
+- Verdict is one of: MERGEABLE (gates green, no risk gate, matches the issue) /
+  CHANGES-NEEDED (specific, file:line) / BLOCKED (needs a human decision).
+- Every claim cites command-proof evidence (gate output, check status); no
+  "looks fine" without a run.
+- A plain-language summary names the one thing a non-developer should know.
+```
+
+**Gate a release:**
+
+```text
+GOAL: Verify this repository is ready to cut release <version>. Check the
+release conditions that are written down (CHANGELOG entry present, all gates
+green on main, version strings consistent, no unresolved placeholder in a
+shipped rule) and report PASS/FAIL per condition. Do not tag or publish.
+
+SUCCESS CRITERIA:
+- One line per condition with PASS/FAIL and its command-proof evidence.
+- If any condition FAILs, the smallest fix is named; tagging/publishing is left
+  to the human (release is a manager-only gate).
+```
+
+**Triage the open issues:**
+
+```text
+GOAL: Work down the open issues. Classify each as runnable-now (safe to do
+alone), needs-a-human-decision, or blocked, and act on the runnable ones one at
+a time through the normal branch -> PR -> gate -> merge flow.
+
+SUCCESS CRITERIA:
+- Every open issue ends in exactly one bucket with a one-line reason.
+- Runnable issues are carried to a merged PR (gates green) or, if larger than
+  one safe step, split into conflict-aware tickets first.
+- Manager-only items are surfaced as short questions, not acted on.
+```
+
+---
+
 ## Notes
 
 - **Re-trigger on FINISH, not on a clock.** A goal runs long but still ends. Make

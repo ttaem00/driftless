@@ -63,6 +63,14 @@ typos in the docs", "add a contributing guide"). Then paste:
 > them into safe parallel pieces, open PRs, and merge the ones that pass every
 > gate. Ask me before anything risky, irreversible, or that costs money.
 
+If you have **both** tools, either works for this overnight loop. As a rule of
+thumb: reach for **Codex** when the work is well-scoped with a concrete "done"
+(e.g. review all open PRs, gate a release); reach for **Claude** when the goal is
+large or open-ended (e.g. clear the whole backlog). See
+[which tool for which job](./codex-and-claude.md) for the full breakdown, and the
+[Codex scoped-goal examples](../../profiles/codex/prompts/infinite-goal.md#scoped-goal-examples-review-and-release-side)
+for paste-ready PR-review / release-gate / triage goals.
+
 ## Step 5 — Sleep, then read the morning report (next morning)
 
 You wake up to **merged pull requests** and a short plain-language report:

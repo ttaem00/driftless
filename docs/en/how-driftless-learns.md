@@ -98,6 +98,28 @@ lives in **[evidence/5-axis-roi/](../../evidence/5-axis-roi/README.md)**.
 
 ---
 
+## 3b. Two tools, two failure modes (model-specific learning)
+
+The ladder above handles **shared** lessons. But Claude and Codex do not make the
+*same* mistakes — they fail differently — so Driftless splits the learning:
+
+- **Shared lessons go to the shared tier, once.** A rule both tools need (e.g.
+  "a static change is UNVERIFIED until a gate proves it") lives in
+  `profiles/shared/` and the mirror-parity gate keeps both profiles in sync — one
+  edit fixes both.
+- **Tool-specific mistakes are tracked and fixed per profile.** A quirk that only
+  one tool exhibits (a Claude-only phrasing trap, a Codex-only goal-loop habit) is
+  captured and corrected **only in that profile's tier**, never forced onto the
+  other. A model-specific mistake optimizer means each tool's recurring failures
+  are driven down on their own track, so one tool's workaround can't distort the
+  other tool's behavior.
+
+This is the point of the two-profile design: improve together where the lesson is
+universal, improve separately where the failure is tool-shaped. Neither tool is
+held back by the other's quirks.
+
+---
+
 ## 4. What this project actually learned (an honest changelog)
 
 These are real recurring mistakes from building Driftless and the runtime it grew

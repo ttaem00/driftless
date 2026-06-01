@@ -90,14 +90,23 @@
 
 ## 설치
 
-```bash
-# macOS / Linux
-./install.sh
+**먼저 두 가지가 필요해요:** [git](https://git-scm.com/downloads) 과 에이전트 CLI 하나
+— [Claude Code](https://docs.anthropic.com/claude-code) 또는
+[OpenAI Codex](https://developers.openai.com/codex). 드리프트리스는 에이전트를
+*운전*하는 도구이지, 에이전트를 *대신*하는 게 아니에요.
+
+저장소를 받은 뒤 적용합니다 (터미널에 그대로 입력하세요):
+
+```sh
+git clone https://github.com/mizan0515/driftless
+cd driftless
+sh ./install.sh        # macOS / Linux  (Claude / Codex / 둘 다 중 물어봄)
 ```
 
 ```powershell
-# Windows (PowerShell)
-.\install.ps1
+git clone https://github.com/mizan0515/driftless
+cd driftless
+.\install.ps1          # Windows PowerShell
 ```
 
 설치는 작은 모듈 조각들을 여러분의 저장소에 놓아 줍니다. 무거운 프레임워크가 아니라

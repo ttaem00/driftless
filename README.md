@@ -56,7 +56,8 @@ This is depth and safety on two tools, not a breadth checklist. The shared tier
 under its own config home. OpenAI's open-source agent program is tool-agnostic,
 and OpenAI co-founds open agent standards with Anthropic (MCP + AGENTS.md), so
 running both is **ecosystem leverage** — not split loyalty. See
-[single-source mirror](./docs/en/single-source-mirror.md).
+[single-source mirror](./docs/en/single-source-mirror.md) and
+[why Driftless matters to the ecosystem](./docs/en/ecosystem-role.md).
 
 ## Guardrails at a glance
 

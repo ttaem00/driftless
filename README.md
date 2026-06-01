@@ -27,7 +27,7 @@ Paste one prompt before bed. Wake up to merged pull requests. You never have to 
 **1. Apply it** (run once, inside the repo you cloned):
 
 ```sh
-./install.sh           # macOS / Linux  (interactive: Claude, Codex, or both)
+sh ./install.sh        # macOS / Linux  (interactive: Claude, Codex, or both)
 ```
 ```powershell
 .\install.ps1          # Windows PowerShell

@@ -54,17 +54,17 @@ Prefer to do it yourself? Open a terminal in this folder and run one command.
 
 ```sh
 # See the plan first (changes nothing):
-./install.sh --dry-run
+sh ./install.sh --dry-run
 
 # Set up both profiles:
-./install.sh --both
+sh ./install.sh --both
 
 # Or just one:
-./install.sh --claude
-./install.sh --codex
+sh ./install.sh --claude
+sh ./install.sh --codex
 
 # Interactive (it asks which tool):
-./install.sh
+sh ./install.sh
 ```
 
 ### Windows (PowerShell)
@@ -128,7 +128,7 @@ appearing on your machine. You decide, every time.
 **2) 직접 한 줄 실행하기.**
 이 폴더에서 터미널을 열고 아래 한 줄만 실행하세요.
 
-- macOS / Linux: `./install.sh --both`
+- macOS / Linux: `sh ./install.sh --both`
 - Windows: `powershell.exe -ExecutionPolicy Bypass -File install.ps1 -Tool both`
 - 먼저 계획만 보고 싶다면 끝에 `--dry-run`(Windows는 `-DryRun`)을 붙이세요.
 

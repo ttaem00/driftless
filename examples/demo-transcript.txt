@@ -22,6 +22,7 @@ Setting up: both
   Codex isolated home will be created at: ~/driftless/.runtime/codex-home
   [dry-run] would: create ~/driftless/.runtime/codex-home
   [dry-run] would: copy the Codex profile into the isolated home
+  Codex isolation: the launcher will set CODEX_HOME to this repo-local home, so the host-global config is left untouched.
 
 $ pwsh scripts/Test-Containment.ps1 -Path . -AllFiles
 DRIFTLESS_CONTAINMENT_PASS
@@ -29,3 +30,10 @@ PASS: scanned 69 item(s), 69 with content; no forbidden path or leaked secret fo
 
 $ pwsh scripts/Test-ProfileMirrorParity.ps1 -Path .
 RESULT: PASS (pass=13 fail=0 blocked=0 unverified=0)
+
+$ CLAUDE_CONFIG_DIR="$(pwd)/.runtime/claude-home" claude
+> push every remaining ticket as far as you can overnight.
+
+The parent reads the open issues, splits them into conflict-aware tickets, runs
+workers in parallel, and turns them into branches and pull requests while you
+sleep. In the morning you review merged PRs, not raw code.

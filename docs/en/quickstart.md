@@ -24,13 +24,13 @@ computer's global Claude/Codex settings. It asks before installing anything
 extra, and the answer defaults to **no**.
 
 ```sh
-./install.sh            # macOS / Linux  (asks: Claude, Codex, or both)
+sh ./install.sh         # macOS / Linux  (asks: Claude, Codex, or both)
 ```
 ```powershell
 .\install.ps1           # Windows PowerShell
 ```
 
-Try `./install.sh --dry-run --both` first if you want to see the plan without
+Try `sh ./install.sh --dry-run --both` first if you want to see the plan without
 changing anything.
 
 ## Step 3 — Start your agent against the isolated home (1 min)

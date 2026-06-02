@@ -64,6 +64,30 @@
       "file": "skills/adopt-external-tool/SKILL.md",
       "consumedBy": ["claude", "codex"],
       "why": "Tool-agnostic 'vet an external repo/tool/skill/MCP before applying it' safety checklist (scan-before-you-trust). Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both. No new dependency or scanner -- a one-screen checklist closed with an ADOPT_SMALL / PILOT_ONLY / WATCH_LATER / REJECT / UNVERIFIED verdict."
+    },
+    {
+      "name": "skill-safety-guard",
+      "file": "skills/safety-guard/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic beginner safety guard. Authored once in the shared tier so both profiles protect secrets, host-global profiles, credentials, billing, public release, destructive action, and user data the same way."
+    },
+    {
+      "name": "skill-review-before-done",
+      "file": "skills/review-before-done/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic final review skill. Authored once in the shared tier so both profiles review bugs, regressions, safety, and missing evidence before PR_READY, merge, close, or release."
+    },
+    {
+      "name": "skill-work-ledger",
+      "file": "skills/work-ledger/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic goal/criteria/evidence ledger. Authored once in the shared tier so both profiles keep manager-readable done criteria and verification evidence."
+    },
+    {
+      "name": "skill-handoff-guard",
+      "file": "skills/handoff-guard/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic long-session handoff guard. Authored once in the shared tier so both profiles can resume overnight work without raw logs or stale claims."
     }
   ],
 

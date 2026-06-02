@@ -153,7 +153,7 @@ measured history of that source repository:
 - **94 issues**
 - **114 commits**
 - **39 Claude skills + 34 Codex skills** across the two profiles *in that
-  development runtime* (this public kit ships 10 starter skills — `find profiles
+  development runtime* (this public kit ships 14 profile starter skills — `find profiles
   -name SKILL.md | wc -l`)
 - A static containment guard that passes on a clean tree, a Windows text-safety
   gate enforcing ASCII + no-BOM scripts, and a profile mirror-parity gate

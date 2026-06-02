@@ -144,7 +144,7 @@ function Install-IsolatedHome {
     Step ("[dry-run] would create " + $HomeDir)
     Step ("[dry-run] would copy the " + $Name + " profile into the isolated home")
     if (Test-Path -LiteralPath $shared -PathType Container) {
-      Step "[dry-run] would copy the shared tier (contract + safety schemas) into the isolated home"
+      Step "[dry-run] would copy the shared tier (contract + safety schemas + shared skills) into the isolated home"
     }
   } else {
     if (-not (Test-Path -LiteralPath $HomeDir)) {

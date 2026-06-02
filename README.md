@@ -140,8 +140,8 @@ not a claim about this repo's star count):
 - **113** merged pull requests
 - **94** issues
 - **114** commits
-- **12** starter agent skills shipped in this public kit (1 Claude-specific,
-  1 Codex-specific, 8 shared, plus 2 standalone — `overnight-autonomous-work`
+- **16** starter agent skills shipped in this public kit (1 Claude-specific,
+  1 Codex-specific, 12 shared, plus 2 standalone — `overnight-autonomous-work`
   and `skillopt`); count them yourself with
   `git ls-files | grep -c SKILL.md`. The private development runtime it grew
   from carries more (39 Claude + 34 Codex) — those are dev-runtime counts, not

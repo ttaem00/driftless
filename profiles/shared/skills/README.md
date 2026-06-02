@@ -16,6 +16,10 @@ skills live under each profile (e.g. Claude's `ultracode-orchestration`, Codex's
 | **parallel-ticket-planner** | Splits remaining work into conflict-aware parallel tickets with paste-ready prompts; teaches infinite-mode + a periodic audit lane for long runs. |
 | **learning-loop** | Records recurring problems and promotes confirmed lessons up the enforced ladder (memory < skill < hot rule < hook < gate). |
 | **adopt-external-tool** | Vet an external repo/tool before applying it: trust + maintenance + license + security checks, ADOPT/PILOT/WATCH/DO_NOT verdicts, lean-by-default. |
+| **safety-guard** | Checks secret, host-global, credential, billing, public-release, destructive-action, and user-data risk so the manager does not inspect raw security logs. |
+| **review-before-done** | Reviews bugs, regressions, safety, and missing evidence before PR_READY, merge, issue close, or release. |
+| **work-ledger** | Turns vague work into visible success criteria and evidence rows the manager can understand. |
+| **handoff-guard** | Keeps long or overnight runs resumable with compact state, exact evidence, and no raw logs. |
 
 A skill is just a folder with a `SKILL.md` (frontmatter `name` + `description`
 with triggers, then the procedure). To add one that both tools should have, put

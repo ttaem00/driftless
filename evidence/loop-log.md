@@ -13,7 +13,7 @@ mistaken for this public repo's own (day-one) graph.
 | **Merged PRs** | 113 — [redacted list of all 113](./development-runtime-prs.md) | grows — see [merged PRs](https://github.com/mizan0515/driftless/pulls?q=is%3Apr+is%3Amerged) |
 | **Issues** | 94 | grows — see [issues](https://github.com/mizan0515/driftless/issues?q=is%3Aissue) |
 | **Commits** | 114 | grows — see [commits](https://github.com/mizan0515/driftless/commits/main) |
-| **Agent skills** | 73 (39 Claude + 34 Codex) | 12 shipped here (8 shared + 2 tool-specific + 2 standalone), mirror-parity-gated |
+| **Agent skills** | 73 (39 Claude + 34 Codex) | 16 shipped here (12 shared + 2 tool-specific + 2 standalone), mirror-parity-gated |
 
 ## Why both columns exist
 

@@ -40,6 +40,12 @@ profile:
 - `../shared/skills/parallel-ticket-planner/`
 - `../shared/skills/ticket-issue/`
 - `../shared/skills/learning-loop/`
+- `../shared/skills/apply-driftless/`
+- `../shared/skills/adopt-external-tool/`
+- `../shared/skills/safety-guard/`
+- `../shared/skills/review-before-done/`
+- `../shared/skills/work-ledger/`
+- `../shared/skills/handoff-guard/`
 
 On top of those, this profile adds its **own tool-specific skills** that only make
 sense for Claude Code and are never mirrored into Codex:

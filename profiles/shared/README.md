@@ -60,6 +60,12 @@ profile and the Codex profile:
 - `parallel-ticket-planner/` — split remaining work into low-conflict parallel tickets.
 - `ticket-issue/` — the issue-before-edit gate for non-trivial repo work.
 - `learning-loop/` — record recurring problems and promote only the proven ones into rules.
+- `safety-guard/` — keep secrets, host-global profiles, credentials, billing,
+  public release, destructive action, and user data behind clear gates.
+- `review-before-done/` — review changes before PR_READY, merge, issue close, or
+  release so the manager does not read raw diffs.
+- `work-ledger/` — turn vague work into visible success criteria and evidence.
+- `handoff-guard/` — keep long or overnight runs resumable without raw logs.
 
 **Edit one of these once and both profiles get it.** Because each profile consumes
 `skills/` by relative path (`../shared/skills/<name>/`), a single edit to any skill

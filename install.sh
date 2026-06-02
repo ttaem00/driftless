@@ -183,7 +183,7 @@ materialize_home() {
   run_or_plan "create $HOME_DIR" mkdir -p "$HOME_DIR"
   run_or_plan "copy the $NAME profile into the isolated home" sh -c "cp -R \"$_src/.\" \"$HOME_DIR/\""
   if [ -d "$_shared" ]; then
-    run_or_plan "copy the shared tier (contract + safety schemas) into the isolated home" \
+    run_or_plan "copy the shared tier (contract + safety schemas + shared skills) into the isolated home" \
       sh -c "mkdir -p \"$HOME_DIR/shared\" && cp -R \"$_shared/.\" \"$HOME_DIR/shared/\""
   fi
 

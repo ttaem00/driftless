@@ -14,6 +14,7 @@ skills live under each profile (e.g. Claude's `ultracode-orchestration`, Codex's
 | **root-goal-check** | A gate that judges any new idea/external input against the mission (reduce tokens/intervention/time/money + raise trust/applicability) before adopting it. |
 | **ticket-issue** | The issue-before-edit gate: confirm or create an issue (and register it) before non-trivial work. |
 | **parallel-ticket-planner** | Splits remaining work into conflict-aware parallel tickets with paste-ready prompts; teaches infinite-mode + a periodic audit lane for long runs. |
+| **student-autopilot** | Lets a non-developer student or maintainer ask in one sentence while the agent internally routes ticketing, long-session guardrails, parallel/overnight planning, validation, PR, and merge work. |
 | **learning-loop** | Records recurring problems and promotes confirmed lessons up the enforced ladder (memory < skill < hot rule < hook < gate). |
 | **goal-pair-guardian** | 목표동행: checks long autonomous goals for drift, early stopping, missing evidence, and continuation/new-session routing. |
 | **adopt-external-tool** | Vet an external repo/tool before applying it: trust + maintenance + license + security checks, ADOPT/PILOT/WATCH/DO_NOT verdicts, lean-by-default. |

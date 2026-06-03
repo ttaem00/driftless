@@ -36,6 +36,7 @@ profile:
 - `../shared/skills/root-goal-check/`
 - `../shared/skills/easy-briefing/`
 - `../shared/skills/parallel-ticket-planner/`
+- `../shared/skills/student-autopilot/`
 - `../shared/skills/ticket-issue/`
 - `../shared/skills/learning-loop/`
 - `../shared/skills/goal-pair-guardian/`

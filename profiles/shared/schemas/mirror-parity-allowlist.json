@@ -42,6 +42,12 @@
       "why": "Tool-agnostic parallel-ticket-planner skill. Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both."
     },
     {
+      "name": "skill-student-autopilot",
+      "file": "skills/student-autopilot/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic student autopilot UX entrypoint. Authored once in the shared tier so non-developer students and maintainers can ask in one sentence while both profiles route internal ticketing, validation, PR, long-session, and parallel/overnight mechanics the same way."
+    },
+    {
       "name": "skill-ticket-issue",
       "file": "skills/ticket-issue/SKILL.md",
       "consumedBy": ["claude", "codex"],

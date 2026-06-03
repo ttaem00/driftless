@@ -54,6 +54,12 @@
       "why": "Tool-agnostic learning-loop skill. Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both."
     },
     {
+      "name": "skill-goal-pair-guardian",
+      "file": "skills/goal-pair-guardian/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic 목표동행 long-goal skill. Authored once in the shared tier so both profiles check drift, early stopping, continuation state, and improvement routing with the same contract."
+    },
+    {
       "name": "skill-apply-driftless",
       "file": "skills/apply-driftless/SKILL.md",
       "consumedBy": ["claude", "codex"],

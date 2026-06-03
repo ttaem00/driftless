@@ -1,0 +1,7 @@
+interface:
+  display_name: "목표 동행"
+  short_description: "긴 Codex goal의 방향 이탈과 조기 중단을 점검합니다."
+  default_prompt: "Use $goal-pair-guardian. 긴 Codex goal이 원래 목적에서 벗어나는지, 성공 기준을 못 채웠는데 멈추는지 점검하고 필요하면 새 continuation goal을 만들어줘."
+
+policy:
+  allow_implicit_invocation: true

@@ -115,6 +115,16 @@ Driftless does not optimize for "more output." It pushes five measurable axes
 
 Each session leaves telemetry so the trend is visible, not guessed.
 
+That applies to Driftless itself, not only to the projects it maintains. A
+skill, hook, script, prompt, hot rule, doc, gate, installer, or report format is
+an optimization surface when changing it can reduce tokens, your interventions,
+time, or usage cost without weakening correctness. Shared improvements land once
+in `profiles/shared/` so Claude and Codex both get them. Tool-specific mistakes
+stay tool-specific: Codex goal-mode lessons stay in the Codex profile, while
+Claude ultracode/workflow lessons stay in the Claude profile. The system should
+detect, measure, rank, and ticket these opportunities automatically; risky
+changes still pass through the same validation gates.
+
 ### 3. An enforced lesson-promotion ladder
 
 When the maintainer learns a lesson, the lesson does not just sit in a memory

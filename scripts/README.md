@@ -10,6 +10,7 @@ PowerShell 5.1 and PowerShell 7.
 | --- | --- | --- |
 | `Test-Containment.ps1` | The code base never touches a forbidden path or leaks a secret. | A scanned file's own path is forbidden, references a forbidden path, or contains a credential token. |
 | `Test-WindowsTextSafety.ps1` | Every shippable script parses identically on Windows PowerShell 5.1. | Any `.ps1` / `.bat` / `.cmd` has a non-ASCII byte or a UTF-8 BOM. |
+| `Test-AgentRuntimeHealth.ps1` | The agent is not trying to repair the product from a broken Codex runtime. | Repo-local Codex uses elevated Windows sandbox, has sandbox setup errors, or recent Codex 400/self-error markers. |
 
 ## Run them
 
@@ -25,6 +26,9 @@ powershell.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -File 
 
 # Windows text safety: every tracked .ps1 / .bat / .cmd
 powershell.exe -ExecutionPolicy Bypass -File scripts/Test-WindowsTextSafety.ps1
+
+# Agent runtime health: stop early if the agent itself is broken
+powershell.exe -ExecutionPolicy Bypass -File scripts/Test-AgentRuntimeHealth.ps1
 ```
 
 Add `-Json` to either gate for a machine-readable summary.

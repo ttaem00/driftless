@@ -38,6 +38,7 @@ profile:
 - `../shared/skills/parallel-ticket-planner/`
 - `../shared/skills/ticket-issue/`
 - `../shared/skills/learning-loop/`
+- `../shared/skills/goal-pair-guardian/`
 - `../shared/skills/apply-driftless/`
 - `../shared/skills/adopt-external-tool/`
 - `../shared/skills/safety-guard/`

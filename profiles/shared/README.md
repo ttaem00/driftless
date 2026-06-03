@@ -58,6 +58,8 @@ profile and the Codex profile:
 - `root-goal-check/` — gate new info/ideas against the project's core goal before adopting.
 - `easy-briefing/` — explain the current situation to a non-developer manager in plain language.
 - `parallel-ticket-planner/` — split remaining work into low-conflict parallel tickets.
+- `student-autopilot/` — one non-developer entrypoint that routes ticketing,
+  long-session guardrails, parallel/overnight planning, validation, PR, and merge work internally.
 - `ticket-issue/` — the issue-before-edit gate for non-trivial repo work.
 - `learning-loop/` — record recurring problems and promote only the proven ones into rules.
 - `safety-guard/` — keep secrets, host-global profiles, credentials, billing,

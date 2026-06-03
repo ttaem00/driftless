@@ -42,6 +42,10 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-SkillAudit.ps1 -Root .
 
+      - name: Mission-control UX gate
+        shell: pwsh
+        run: ./scripts/Test-MissionControlUx.ps1 -Root .
+
   linux-smoke:
     # Proves the cross-platform claim off Windows: the POSIX installer runs and
     # actually materializes the isolated home, and the containment gate (pwsh is

@@ -142,6 +142,22 @@ After collecting:
 
 "Lots of data" is not the same as good data.
 
+## Manager Review Queue Discipline
+
+CHZZ real-use lesson, generalized: a user-facing review or approval queue should
+show only items the user can safely and meaningfully approve for the current
+purpose. Do not present debug rows, no-go/negative rows, uncertain candidates,
+automatic failure evidence, or source-only candidates as normal approve cards.
+
+- User can approve: safe, bounded, purpose-fit candidates only.
+- Quarantine/debug: failures, no-go, negative, uncertain, source-only, and
+  evidence-gathering rows.
+- Keep counts separate: user-accepted, auto-verified, provisional,
+  rejected/negative, and uncertain/debug are not the same evidence tier.
+- `review-needed` is not a scalable completion state. Either continue an
+  automated verification/quarantine path or leave an open follow-up with a retry
+  condition.
+
 ## Gradient Closeout
 
 Every mission-control run ends with a small optimization pass. This is not

@@ -137,6 +137,12 @@ unless the user explicitly narrows the goal.
   feature ideas, user-visible workflow, validation/quality, development process,
   security/credentials, operations/cost, and public-safe propagation.
 - A useful first patch may close one lane, but it cannot close the parent goal.
+- Large agent harness, orchestration, skill-pack, IDE-agent, MCP/plugin, or
+  automation-control repos must be split across concrete surfaces before parent
+  synthesis: hooks, scripts, skills, rules, commands/prompts,
+  multi-agent/workflow control, dashboard/status UI, credential/API/security
+  boundary, architecture, code-level reusable patterns, feature ideas, new
+  technology/libraries, test/fixture strategy, and development process.
 - When a candidate is too broad for direct import, transform each viable surface
   into a local lane before rejecting the whole system.
 - When a candidate is risky but plausibly valuable, prefer a contained pilot over

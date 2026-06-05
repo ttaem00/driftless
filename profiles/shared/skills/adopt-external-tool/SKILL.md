@@ -80,6 +80,15 @@ closeout. Risk is not a rejection by itself; if value is plausible, design the
 smallest contained pilot that avoids credentials, billing, host-global mutation,
 public release, destructive action, user data, or long-running infrastructure.
 
+For large agent harness, orchestration, skill-pack, IDE-agent, MCP/plugin, or
+automation-control repos, inspect the whole operational surface before deciding:
+hooks, scripts, skills, rules, commands/prompts, multi-agent/workflow control,
+dashboard/status UI, credential/API/security boundary, architecture, code-level
+reusable patterns, feature ideas, new technology/libraries, test/fixture
+strategy, and development process. Do not stop at README/package metadata or one
+safe subset; transform useful surfaces into local-safe gates, schemas, skills,
+UI status, docs, or fixture pilots.
+
 ## Post-Pilot Decision Gate
 
 PILOT_ONLY is not Done when the pilot merely ran. Before Done, record the

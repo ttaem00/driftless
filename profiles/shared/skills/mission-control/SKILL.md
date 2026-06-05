@@ -94,6 +94,55 @@ For large work, follow this order:
 10. Learn: run Gradient Closeout before final report.
 11. Report: explain user-visible result and next decision in plain language.
 
+## Outcome Contract
+
+Mission control must preserve the requested outcome shape before it splits work.
+Do not collapse a multi-axis goal into one attractive axis, and do not let an
+intermediate artifact replace the requested result.
+
+- Charter records the outcome class: `decide`, `inspect`, `plan`, `apply`,
+  `operate`, `release`, or `monitor`. A goal may have multiple classes.
+- If any class is action-oriented (`apply`, `operate`, `release`, `monitor`),
+  reports, tickets, worker summaries, and automations are intermediate evidence,
+  not Done.
+- Closeout must match the highest requested outcome class: implementation or
+  runtime evidence for `apply/operate`, release gate evidence for `release`,
+  active watch/backlog routing evidence for `monitor`, source-backed decision for
+  `decide`, and explicit blocker with next retry condition only when local work
+  cannot progress.
+- When a goal has parallel value axes such as user-visible workflow, functional
+  capability, architecture, code quality, cost, risk, and validation, keep them
+  as independent lanes until synthesis. Do not subordinate one axis to another
+  unless the user makes that tradeoff.
+- Before final answer, name any remaining lane as adopted, scaled to an owned
+  follow-up, watched, rejected, or blocked. Anything else is unfinished parent
+  cleanup.
+
+## Scope Preservation Gate
+
+Small safe steps are an execution tactic, not a success definition. Mission
+control must not shrink a broad user objective into the first low-risk patch
+unless the user explicitly narrows the goal.
+
+- For broad review, adoption, apply/discard, end-to-end, or ticket-push goals,
+  keep a parent-owned lane ledger before final answer. Each lane should have:
+  target, value axis, owner, write surface, status, evidence, next action, and
+  closeout state.
+- Broad adoption work should keep multiple value axes open: architecture, code,
+  feature ideas, user-visible workflow, validation/quality, development process,
+  security/credentials, operations/cost, and public-safe propagation.
+- A useful first patch may close one lane, but it cannot close the parent goal.
+- When a candidate is too broad for direct import, transform each viable surface
+  into a local lane before rejecting the whole system.
+- When a candidate is risky but plausibly valuable, prefer a contained pilot over
+  rejection: fixture credentials, dry-run installers, local-only mocks, static
+  dashboards, bounded benchmarks, and read-only audits.
+- Mission-control Done for an implementation/adoption/release request requires
+  merged/main-synced change, ready PR/draft PR with validation and owner,
+  parent-reviewed patch set ready for merge gate, or true manager-only blocker.
+  One safe subset applied is progress, not Done, when the parent objective is
+  broader.
+
 ## Split And Closeout Gates
 
 Run this before long-goal rollover, after major handoff, and whenever a worker

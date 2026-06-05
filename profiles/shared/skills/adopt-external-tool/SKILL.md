@@ -56,6 +56,29 @@ description: >
 7. **가장 작은 형태가 무엇인가.** 통째 도입 말고, 같은 쓸모를 주는 가장 작은 조각
    (문서 한 줄 / 체크리스트 한 개 / 작은 스크립트 한 개)으로 줄일 수 있는가.
 
+## Adoption Surface Ledger
+
+For broad systems, do not decide only `install vs reject`. Split the candidate
+into surfaces and close each useful surface as adopted, piloted, watched,
+rejected, or blocked.
+
+Common surfaces:
+
+- architecture pattern
+- script or CLI shape
+- GUI/dashboard/status UX
+- credential/security boundary
+- multi-worker/process model
+- fixture or benchmark method
+- docs/skill template
+- runtime dependency
+- public-safe propagation
+
+Full-system rejection is valid only after viable surfaces have their own
+closeout. Risk is not a rejection by itself; if value is plausible, design the
+smallest contained pilot that avoids credentials, billing, host-global mutation,
+public release, destructive action, user data, or long-running infrastructure.
+
 ## 판정 (하나로 닫기)
 - **ADOPT_SMALL** -- 7항목 통과 + 가장 작은 형태로 변형 가능. 작게 변형해 들인다.
 - **PILOT_ONLY** -- 쓸모는 있으나 실제 한 흐름에서 먼저 증명해야 함. 성공/실패 기준을

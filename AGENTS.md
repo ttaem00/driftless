@@ -17,6 +17,17 @@ reducing setup, git/GitHub, security, validation, and raw-script burden.
 ## Cross-Runtime Learning
 - When maintainers prove an improvement or lesson in real use, evaluate it for
   Driftless before calling the work done.
+- System/skill/hook/script/prompt changes follow
+  `profiles/shared/contract/SHARED_DESIGN_CONTRACT.md` §8: root cause first,
+  principle-based guidance over case rules, shared tier before tool-specific
+  splits, and no spec/case overfitting or one-off special-casing unless evidence
+  shows the exception lowers user effort, maintainer effort, time, tokens, cost,
+  recurrence risk, or maintenance cost.
+- When any project/session exposes a systemic recurrence risk, apply the
+  smallest safe repo-local prevention in that same session when scope is clear:
+  record it through `learning-loop`, update the relevant skill/hook/script/test,
+  and validate it. Stop at a proposal for host-global, credential, billing,
+  destructive, private, or unclear changes.
 - Public-safe, tool-agnostic improvements go to `profiles/shared/`.
 - Claude-specific improvements go to `profiles/claude/`; Codex-specific
   improvements go to `profiles/codex/`.

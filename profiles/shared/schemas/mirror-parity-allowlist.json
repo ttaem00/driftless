@@ -66,6 +66,18 @@
       "why": "Tool-agnostic 목표동행 long-goal skill. Authored once in the shared tier so both profiles check drift, early stopping, continuation state, and improvement routing with the same contract."
     },
     {
+      "name": "skill-long-research-gradient",
+      "file": "skills/long-research-gradient/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic long research gradient skill. Authored once in the shared tier so both profiles turn deep research into evidence sprints and close each sprint by reducing tokens, manager intervention, time, money, quality gaps, and recurrence risk."
+    },
+    {
+      "name": "skill-ui-ux-design-guidance",
+      "file": "skills/ui-ux-design-guidance/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic UI/UX design guidance skill. Authored once in the shared tier so both profiles read target repo docs/design/DESIGN.md first, fall back to the installed Driftless default guide when needed, and never encode machine-specific design paths."
+    },
+    {
       "name": "skill-apply-driftless",
       "file": "skills/apply-driftless/SKILL.md",
       "consumedBy": ["claude", "codex"],

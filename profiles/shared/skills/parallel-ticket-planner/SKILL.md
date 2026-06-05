@@ -126,6 +126,32 @@ under-adopt 해서다: 열린 PR, 미머지 draft, 낡은 claim, reopened issue,
   상태, secrets 디렉터리를 읽거나 쓰지 않는다(canonical set: `schemas/forbidden-paths.json`).
 - host helper 스크립트를 import 하지 않는다. 레포 안 `scripts/*.ps1`, `gh`, plain `git`을 쓴다.
 
+## Native Dispatch Mode
+
+Use this mode when the current tool exposes thread/session/worktree creation and
+the user has authorized the coordinator to manage sessions.
+
+- Do not stop at paste-ready prompts if the tool can create project-scoped
+  workers directly. Create or propose worker sessions with clear titles, roles,
+  owner surfaces, stop signals, and coordinator/guardian ids.
+- Verify every worker after creation: title, `cwd`, branch/worktree, owner
+  surfaces, and stop signal must match the plan.
+- Attach one guardian/heartbeat/audit lane to the coordinator, not to stale
+  workers. Copied hashes and counts in prompts are stale hints until verified.
+- Wrong-workspace, duplicate, or stale workers are stopped/checkpointed and
+  renamed or archived according to the tool profile after the replacement
+  mapping is verified.
+- Worker closeout is not success merely because tests ran. Useful changes must
+  end in a draft PR, `REVIEW_READY` packet, explicit blocker evidence, or
+  no-change evidence. Idle/completed plus uncommitted changes is early stop.
+- Final plan/report includes `active_goal`, `active_guardian`, `workers`,
+  `cleanup_gate`, `split_gate`, and stale-worker cleanup status when the tool can
+  expose these fields.
+- User interaction is intentionally narrow: do not present worker prompts as the
+  normal path when the coordinator can launch workers. Show prompts only as
+  fallback/recovery artifacts, and keep the user-facing instruction to one safe
+  action or one meaning-level decision.
+
 ## Source Lessons To Preserve
 
 `병행티켓` value = 비개발자 관리자가 운용 가능한 병렬 작업. Preserve:

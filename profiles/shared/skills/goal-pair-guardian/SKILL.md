@@ -66,12 +66,43 @@ If Codex app thread tools are available, use them directly:
 6. If an existing goal or goal-pair thread already matches the same objective,
    update/reuse it instead of creating duplicates.
 
+Session visibility and rollover gate:
+
+- Repo work must run under the target project or a repo-local worktree. A
+  projectless folder or unrelated profile workspace is wrong-workspace unless
+  the task is explicitly about that profile.
+- After thread creation or rollover, verify title, role, `cwd`, live ids, and
+  heartbeat target before reporting a pair active.
+- A heartbeat prompt update alone is not a rollover. A valid rollover has a
+  fresh implementation thread, fresh guardian thread, verified project `cwd`,
+  retargeted heartbeat, and stale visible pairs stopped or archived.
+- Before creating a single fresh continuation goal, run a split gate: inventory
+  remaining work and route to `parallel-ticket-planner` when two or more
+  agent-solvable items have disjoint write surfaces or output-only contracts.
+  If not parallelized, report `split_gate=single_lane` and the reason.
+- A goal that becomes idle/completed with uncommitted changes, no commit/push/PR,
+  no `REVIEW_READY` packet, and unmet criteria has stopped early. Steer it to
+  close out with validation, commit/push/draft PR, a review packet, or explicit
+  blocker evidence.
+
+User interaction boundary:
+
+- The user should not have to ask whether the goal is alive, which thread is
+  active, which automation is attached, or which worker prompt to paste next.
+  Verify those internally and report one active mapping.
+- Do not ask the user to inspect raw thread ids, stale previews, git status,
+  branch/worktree choices, PR gates, or heartbeat schedules.
+- If user input is needed, ask one meaning-level question only. Prefer direct
+  session/automation repair when the tool exposes those controls; prompts are
+  fallback artifacts when controls are unavailable or blocked.
+
 Tool contract:
 
 - use `create_thread` for the implementation goal thread;
 - use `create_thread` for the 목표동행 companion thread;
 - use `set_thread_title` so the manager can recognize both sessions;
-- use `send_message_to_thread` for steering messages between the two sessions;
+- use `send_message_to_thread` only for actionable corrections, not routine
+  heartbeat/status messages;
 - use `automation_update` heartbeat only for repeated checks, and prefer
   updating an existing matching automation over creating a duplicate.
 
@@ -111,8 +142,11 @@ Goal-pair companion thread prompt content:
 - read the goal thread through app thread tools;
 - check root intent, success criteria, scope, evidence, remaining work, blockers,
   context health, routing, and finish honesty;
+- run the split gate before a fresh single continuation goal;
 - use `send_message_to_thread` to correct the goal thread when it drifts, stops
   early, defers agent-solvable work, or reports unverified Done;
+- treat idle/completed plus uncommitted changes and no PR/review packet as
+  early-stop closeout work, not Done and not user work;
 - use `automation_update` heartbeat for repeated checks when requested or when a
   long run is expected;
 - when current context is no longer trustworthy, write a checkpoint where safe

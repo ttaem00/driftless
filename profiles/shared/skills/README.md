@@ -13,10 +13,12 @@ skills live under each profile (e.g. Claude's `ultracode-orchestration`, Codex's
 | **finish-to-done** | Investigate → fix → verify → review → done, evidence-based. Doesn't stop at investigation; solves agent-fixable blockers the same session. |
 | **root-goal-check** | A gate that judges any new idea/external input against the mission (reduce tokens/intervention/time/money + raise trust/applicability) before adopting it. |
 | **ticket-issue** | The issue-before-edit gate: confirm or create an issue (and register it) before non-trivial work. |
-| **parallel-ticket-planner** | Splits remaining work into conflict-aware parallel tickets with paste-ready prompts; teaches infinite-mode + a periodic audit lane for long runs. |
-| **mission-control** | Lets a non-developer student or maintainer give one large goal while the main session coordinates workers, goal companions, data quality, validation, learning, PR/merge, and gradient optimization. |
+| **parallel-ticket-planner** | Splits remaining work into conflict-aware parallel tickets with paste-ready prompts; supports native dispatch when a tool can create project-scoped workers directly. |
+| **mission-control** | Lets a non-developer student or maintainer give one large goal while the main session coordinates workers, goal companions, split gates, data quality, validation, learning, PR/merge, and gradient optimization. Student/autopilot UX belongs here; do not create a second shared orchestration skill for it. |
+| **ui-ux-design-guidance** | Applies target repo `docs/design/DESIGN.md` before UI work, or the installed Driftless default design guide when the target repo has no guide. Avoids machine-specific absolute paths and reports fallback use plainly. |
 | **learning-loop** | Records recurring problems and promotes confirmed lessons up the enforced ladder (memory < skill < hot rule < hook < gate). |
-| **goal-pair-guardian** | 목표동행: checks long autonomous goals for drift, early stopping, missing evidence, and continuation/new-session routing. |
+| **goal-pair-guardian** | 목표동행: checks long autonomous goals for drift, early stopping, missing evidence, split-before-rollover, and continuation/new-session routing. |
+| **long-research-gradient** | Turns long research into evidence-backed sprints and closes each sprint by reducing tokens, manager intervention, time, money, quality gaps, and recurrence risk. |
 | **adopt-external-tool** | Vet an external repo/tool before applying it: trust + maintenance + license + security checks, ADOPT/PILOT/WATCH/DO_NOT verdicts, lean-by-default. |
 | **safety-guard** | Checks secret, host-global, credential, billing, public-release, destructive-action, and user-data risk so the manager does not inspect raw security logs. |
 | **review-before-done** | Reviews bugs, regressions, safety, and missing evidence before PR_READY, merge, issue close, or release. |
@@ -27,3 +29,10 @@ A skill is just a folder with a `SKILL.md` (frontmatter `name` + `description`
 with triggers, then the procedure). To add one that both tools should have, put
 it here; the mirror-parity gate and the allowlist
 (`../schemas/mirror-parity-allowlist.json`) keep both profiles consuming it.
+
+Before adding a shared skill, first check whether an existing `SKILL.md`,
+`references/`, `scripts/`, or prompt template can carry the improvement. Create
+a new skill only when the workflow repeats, at least two existing skills were
+reviewed and rejected, triggers do not collide, and the separate skill reduces
+tokens, user intervention, or validation burden. Small student/autopilot
+orchestration improvements belong in `mission-control`.

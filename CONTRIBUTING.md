@@ -15,6 +15,8 @@ gates CI runs, and you can run them locally:
 .\scripts\Test-ProfileMirrorParity.ps1 -Path .        # the two profiles never drift
 .\scripts\Test-SkillOptValidationHarness.ps1          # skill changes do not regress the 5 axes
 .\scripts\Test-WorkDiscipline.ps1 -Root .             # no unresolved placeholder ships as a rule
+.\scripts\Test-ImprovementPrincipleDiscipline.ps1     # shared/root-cause/no-overfit rule stays present
+.\scripts\Test-HotContextDiscipline.ps1 -Root .       # hot rules stay small; no always-loaded helper docs
 .\scripts\Test-SkillAudit.ps1 -Root .                 # every shipped SKILL.md is structurally sound
 ```
 
@@ -49,6 +51,13 @@ change small and gate-green, and open a PR that links the issue.
 - **Shared before tool-specific.** If a skill or rule applies to both Claude and
   Codex, put it once under `profiles/shared/` so one edit improves both profiles.
   Tool-specific work goes under the owning profile.
+- **Root cause before rule sprawl.** Follow
+  `profiles/shared/contract/SHARED_DESIGN_CONTRACT.md` §8: prefer general
+  principles and root-cause fixes over case rules, special-casing, or prompt
+  growth that does not reduce real effort, cost, recurrence, or maintenance.
+- **Hot context stays honest.** Do not keep `AGENTS.md` / `CLAUDE.md` small by
+  making another doc always-loaded or by giving a skill every-task scope. Use
+  conditional docs/skills unless a short rule must apply to every session.
 - **Evidence-first.** No "PASS"/"done" claim without command proof. Label
   anything unrun `UNVERIFIED` rather than claiming it.
 - **Honest status.** Keep the `UNVERIFIED` / "day one" / host-evidence caveats

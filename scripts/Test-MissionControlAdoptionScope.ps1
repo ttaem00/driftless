@@ -1,0 +1,77 @@
+param(
+  [string]$Root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path,
+  [switch]$Json
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+function Add-Failure([System.Collections.Generic.List[string]]$Failures, [string]$Message) {
+  $Failures.Add($Message) | Out-Null
+}
+
+$root = (Resolve-Path -LiteralPath $Root).Path
+$missionPath = Join-Path $root "profiles\shared\skills\mission-control\SKILL.md"
+$adoptPath = Join-Path $root "profiles\shared\skills\adopt-external-tool\SKILL.md"
+$failures = [System.Collections.Generic.List[string]]::new()
+
+if (-not (Test-Path -LiteralPath $missionPath)) {
+  Add-Failure $failures "missing mission-control skill: $missionPath"
+}
+if (-not (Test-Path -LiteralPath $adoptPath)) {
+  Add-Failure $failures "missing adopt-external-tool skill: $adoptPath"
+}
+
+if ($failures.Count -eq 0) {
+  $mission = Get-Content -LiteralPath $missionPath -Raw -Encoding UTF8
+  $adopt = Get-Content -LiteralPath $adoptPath -Raw -Encoding UTF8
+
+  foreach ($pattern in @(
+    "## Outcome Contract",
+    "## Scope Preservation Gate",
+    "outcome class",
+    "parent-owned lane ledger",
+    "value axes",
+    "One safe subset applied is progress, not Done",
+    "risky but plausibly valuable",
+    "contained pilot"
+  )) {
+    if ($mission -notmatch [regex]::Escape($pattern)) {
+      Add-Failure $failures "mission-control missing required scope-preservation text: $pattern"
+    }
+  }
+
+  foreach ($pattern in @(
+    "## Adoption Surface Ledger",
+    "install vs reject",
+    "adopted, piloted, watched,",
+    "credential/security boundary",
+    "multi-worker/process model",
+    "public-safe propagation",
+    "Risk is not a rejection by itself",
+    "smallest contained pilot"
+  )) {
+    if ($adopt -notmatch [regex]::Escape($pattern)) {
+      Add-Failure $failures "adopt-external-tool missing required adoption-ledger text: $pattern"
+    }
+  }
+}
+
+$result = [pscustomobject]@{
+  check = "Test-MissionControlAdoptionScope"
+  status = if ($failures.Count -eq 0) { "PASS" } else { "FAIL" }
+  mission_control = $missionPath
+  adopt_external_tool = $adoptPath
+  failures = @($failures)
+}
+
+if ($Json) {
+  $result | ConvertTo-Json -Depth 8
+}
+
+if ($failures.Count -gt 0) {
+  Write-Error ("FAIL Test-MissionControlAdoptionScope:`n" + ($failures -join "`n"))
+  exit 1
+}
+
+Write-Output "PASS Test-MissionControlAdoptionScope"

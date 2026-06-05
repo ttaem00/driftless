@@ -34,6 +34,12 @@ if ($failures.Count -eq 0) {
     "value axes",
     "One safe subset applied is progress, not Done",
     "post-pilot decision",
+    "Large agent harness",
+    "hooks, scripts, skills, rules, commands/prompts",
+    "multi-agent/workflow control",
+    "dashboard/status UI",
+    "credential/API/security",
+    "technology/libraries",
     "risky but plausibly valuable",
     "contained pilot"
   )) {
@@ -53,7 +59,14 @@ if ($failures.Count -eq 0) {
     "smallest contained pilot",
     "## Post-Pilot Decision Gate",
     "PILOT_ONLY is not Done",
-    "post-pilot decision"
+    "post-pilot decision",
+    "Large agent harness",
+    "hooks, scripts, skills, rules, commands/prompts",
+    "multi-agent/workflow control",
+    "dashboard/status UI",
+    "credential/API/security",
+    "technology/libraries",
+    "development process"
   )) {
     if ($adopt -notmatch [regex]::Escape($pattern)) {
       Add-Failure $failures "adopt-external-tool missing required adoption-ledger text: $pattern"

@@ -40,6 +40,10 @@ if ($failures.Count -eq 0) {
     "dashboard/status UI",
     "credential/API/security",
     "technology/libraries",
+    "star-reason and strong-feature gate",
+    "strongest detailed features",
+    "Popularity is discovery evidence, not adoption evidence",
+    "star reason / strong features",
     "risky but plausibly valuable",
     "contained pilot"
   )) {
@@ -66,7 +70,14 @@ if ($failures.Count -eq 0) {
     "dashboard/status UI",
     "credential/API/security",
     "technology/libraries",
-    "development process"
+    "development process",
+    "## Star Reason / Strong Feature Ledger",
+    "Stars are discovery evidence",
+    "adoption evidence",
+    "pain point solved",
+    "strongest detailed features",
+    "why users would care",
+    "local transform"
   )) {
     if ($adopt -notmatch [regex]::Escape($pattern)) {
       Add-Failure $failures "adopt-external-tool missing required adoption-ledger text: $pattern"

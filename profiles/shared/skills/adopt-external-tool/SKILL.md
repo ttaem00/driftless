@@ -56,6 +56,21 @@ description: >
 7. **가장 작은 형태가 무엇인가.** 통째 도입 말고, 같은 쓸모를 주는 가장 작은 조각
    (문서 한 줄 / 체크리스트 한 개 / 작은 스크립트 한 개)으로 줄일 수 있는가.
 
+## Star Reason / Strong Feature Ledger
+
+For star/high-signal repos, do not classify before explaining why the repo
+plausibly earned adoption or attention. Stars are discovery evidence, not
+adoption evidence. Extract the real reason first: pain point solved, audience
+fit, workflow compression, differentiated UX, integration surface,
+distribution/community loop, or technical moat.
+
+Then list the strongest detailed features one by one. Each strong feature must
+be closed as its own lane with source evidence, why users would care, reusable
+mechanism, local transform, expected reduction in time/tokens/user intervention/
+risk, adoption cost, and a final state: adopted, scaled to an owned issue,
+watched, rejected, blocked, or manager-only. Weakly evidenced "cool" features
+are watched or rejected instead of recommended.
+
 ## Adoption Surface Ledger
 
 For broad systems, do not decide only `install vs reject`. Split the candidate

@@ -33,6 +33,7 @@ if ($failures.Count -eq 0) {
     "parent-owned lane ledger",
     "value axes",
     "One safe subset applied is progress, not Done",
+    "post-pilot decision",
     "risky but plausibly valuable",
     "contained pilot"
   )) {
@@ -44,12 +45,15 @@ if ($failures.Count -eq 0) {
   foreach ($pattern in @(
     "## Adoption Surface Ledger",
     "install vs reject",
-    "adopted, piloted, watched,",
+    "final closeout state",
     "credential/security boundary",
     "multi-worker/process model",
     "public-safe propagation",
     "Risk is not a rejection by itself",
-    "smallest contained pilot"
+    "smallest contained pilot",
+    "## Post-Pilot Decision Gate",
+    "PILOT_ONLY is not Done",
+    "post-pilot decision"
   )) {
     if ($adopt -notmatch [regex]::Escape($pattern)) {
       Add-Failure $failures "adopt-external-tool missing required adoption-ledger text: $pattern"

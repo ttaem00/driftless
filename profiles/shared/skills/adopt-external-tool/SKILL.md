@@ -59,8 +59,9 @@ description: >
 ## Adoption Surface Ledger
 
 For broad systems, do not decide only `install vs reject`. Split the candidate
-into surfaces and close each useful surface as adopted, piloted, watched,
-rejected, or blocked.
+into surfaces and close each useful surface as adopted, scaled to an owned
+issue, watched, rejected, blocked, or manager-only. `piloted` is evidence, not a
+final closeout state.
 
 Common surfaces:
 
@@ -79,10 +80,25 @@ closeout. Risk is not a rejection by itself; if value is plausible, design the
 smallest contained pilot that avoids credentials, billing, host-global mutation,
 public release, destructive action, user data, or long-running infrastructure.
 
+## Post-Pilot Decision Gate
+
+PILOT_ONLY is not Done when the pilot merely ran. Before Done, record the
+decision the pilot answered:
+
+- adopt the bounded surface now;
+- scale it to an owned issue or PR;
+- watch it with a concrete retry trigger;
+- reject it with measured evidence and a retry condition;
+- block it on an exact external or manager-only condition.
+
+Do not report a fixture, mock, benchmark, dry-run, read-only audit, or
+`piloted` surface as complete without that post-pilot decision.
+
 ## 판정 (하나로 닫기)
 - **ADOPT_SMALL** -- 7항목 통과 + 가장 작은 형태로 변형 가능. 작게 변형해 들인다.
 - **PILOT_ONLY** -- 쓸모는 있으나 실제 한 흐름에서 먼저 증명해야 함. 성공/실패 기준을
-  적고 한 번 돌려본다.
+  적고 한 번 돌려본다. 파일럿 후에는 ADOPT_SMALL / owned follow-up /
+  WATCH_LATER / REJECT / blocked(manager-only) 중 하나로 다시 닫는다.
 - **WATCH_LATER** -- 좋은 아이디어지만 지금은 크기/시점이 안 맞음. **재평가 트리거**를
   한 줄로 적는다(예: "UI 작업이 들어오면").
 - **REJECT** -- 경계 위반(인프라/유료/재귀/containment) 또는 ROI 없음. 사유를 적는다.

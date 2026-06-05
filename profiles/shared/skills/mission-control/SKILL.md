@@ -7,7 +7,8 @@ description: >
   and gradient optimization. 작업 관제 / mission control / main session control.
   Trigger / 트리거: "mission control", "work control", "작업 관제", "관제탑",
   "main session", "child sessions", "goal companion", "알아서 끝까지",
-  "하위 세션", "목표동행", "경사하강 최적화".
+  "하위 세션", "목표동행", "학생용", "비개발자", "나는 개발자가 아니니까",
+  "git/GitHub는 네가", "경사하강 최적화".
 ---
 
 # Mission Control
@@ -15,6 +16,10 @@ description: >
 `mission-control` is the shared Driftless entrypoint for large work owned by one
 main session. The main session becomes the control tower: it plans, dispatches,
 monitors, arbitrates, validates, learns, and reports.
+
+Non-developer student/manager autopilot is not a separate shared workflow. Route
+that UX to `mission-control` so one top-level skill owns the interaction
+boundary and the tool profile owns launch mechanics.
 
 The user should not choose between git, GitHub, test commands, PR checks,
 parallel workers, long-session companions, or overnight prompts. The user states
@@ -88,6 +93,47 @@ For large work, follow this order:
    review gates as appropriate.
 10. Learn: run Gradient Closeout before final report.
 11. Report: explain user-visible result and next decision in plain language.
+
+## Split And Closeout Gates
+
+Run this before long-goal rollover, after major handoff, and whenever a worker
+stops with unmet criteria.
+
+- Inventory remaining work from the goal/companion threads, handoff, repo
+  status, issue/PR state, and validation gates.
+- Classify each item as `start-now`, `serialized`, `blocked`, `manager-only`, or
+  `coordinator-cleanup`.
+- Parallelize only `start-now` items with disjoint write surfaces or output-only
+  contracts. Separate implementation, read-only audit, data/probe, docs/skill
+  prevention, and release/root-sync cleanup lanes when safe.
+- Do not split one ticket into serial micro-goals. A worker lane owns one
+  coherent ticket until `REVIEW_READY`, draft PR, or blocker evidence.
+- If there are two or more safe lanes, route to `parallel-ticket-planner` or the
+  tool's native dispatch path before creating another single continuation goal.
+- If there is only one lane, report `split_gate=single_lane` and the concrete
+  reason.
+- If a worker goes idle/completed with uncommitted changes and no
+  commit/push/PR/`REVIEW_READY`, treat it as early stop. Continue or steer the
+  worker through closeout instead of asking the user to judge raw git.
+
+## User Interaction Boundary
+
+The non-developer user/manager interaction surface should be simple, narrow, and
+meaning-level. Mission control expands agent-owned work instead of expanding user
+chores.
+
+- The user should see what changed, what was verified, what they can safely
+  click/run, and which true decision remains.
+- Do not ask the user to choose worker prompts, branch names, worktrees,
+  heartbeat ids, raw git commands, PR gate interpretation, test commands, stale
+  thread cleanup, or which internal skill to use.
+- If the current tool can create/retarget sessions, workers, automations, PRs,
+  comments, and cleanup directly, do it and report the active mapping. Manual
+  paste prompts are fallback artifacts.
+- Ask only for meaning-level decisions: product priority/scope, account/login or
+  credential approval, paid billing, public release, destructive action,
+  host-global promotion, user data transfer, or a domain/content judgment that
+  tools cannot infer.
 
 ## Worker Contract
 
@@ -193,6 +239,9 @@ Promotion rules:
 - repeated issue or manager intervention: `learning-loop`;
 - safe repo-local fix: create/update issue, patch, validate, PR/merge;
 - hot rule, hook, or global prompt change: placement review first;
+- skill, prompt, hook, script, hot-rule, or instruction changes: automatically
+  classify as `merge-now`, `wrapper-alias`, `narrow-trigger`,
+  `keep-internal-engine`, or `delete-candidate` before adding a new surface;
 - long prose: compress if safe;
 - public-safe lesson: keep it in the shared tier.
 

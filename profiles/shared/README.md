@@ -45,7 +45,7 @@ no mirroring, and no external sync step.
 
 | Folder | Contents | Consumed by |
 |---|---|---|
-| `contract/` | `SHARED_DESIGN_CONTRACT.md` — evidence statuses, the four manager report labels, manager-only gates, and the run-status enum. | both profiles |
+| `contract/` | `SHARED_DESIGN_CONTRACT.md` — evidence statuses, the four manager report labels, manager-only gates, run-status enum, and improvement principle. | both profiles |
 | `schemas/` | `forbidden-paths.json` — the machine-readable list of paths and secret patterns the containment guard must never touch or leak. | both profiles' containment guards |
 | `skills/` | Tool-agnostic skills (one folder each) that behave the same regardless of which AI runs them. | both profiles |
 

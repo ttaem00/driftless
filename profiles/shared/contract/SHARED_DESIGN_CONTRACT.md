@@ -119,3 +119,26 @@ These may differ between profiles and do **not** belong in the shared tier:
 
 A lesson learned for one tool stays in that tool's profile until it is shown to be
 genuinely tool-agnostic; only then is it promoted into this shared contract.
+
+---
+
+## 8. Improvement principle
+
+Every system, skill, hook, script, prompt, and policy change should improve at
+least one practical axis: user effort, maintainer effort, time, tokens, cost,
+performance, recurrence risk, or maintainability.
+
+Start with the root cause. Prefer root-cause fixes expressed as principle-based
+guidance or design heuristics that generalize. Put tool-agnostic improvements in
+`profiles/shared/` first; split into `profiles/claude/` or `profiles/codex/` only
+when a real tool difference requires it.
+
+Avoid spec overfitting, case overfitting, special-casing, and one-off rules unless
+evidence shows a bounded exception is cheaper, safer, and lower-maintenance than
+the general rule.
+
+Do not make the manager ask for skill-sprawl control. Any skill, hook, script,
+prompt, hot-rule, or instruction change must automatically check whether the
+improvement belongs in an existing asset, the shared tier, a tool-specific
+profile, a wrapper/alias, a narrower trigger, or a gate before adding a new
+surface.

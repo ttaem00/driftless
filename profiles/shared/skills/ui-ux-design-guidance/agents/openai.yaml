@@ -1,0 +1,25 @@
+version: 1
+name: ui-ux-design-guidance
+description: >
+  Use before UI/UX/frontend/visual design/layout/user-flow work. Prefer target
+  repo docs/design/DESIGN.md; if absent, resolve the installed Driftless root
+  from DRIFTLESS_REPO_ROOT, CODEX_ISOLATED_REPO_ROOT, CODEX_HOME,
+  CLAUDE_CONFIG_DIR, current checkout, or the skill location, then read
+  docs/design/DESIGN.md there. Never hard-code a machine absolute path.
+default_prompt: |
+  Apply the UI/UX design guidance skill.
+
+  1. Resolve the target repo root and read <target repo>\docs\design\DESIGN.md
+     when present.
+  2. If missing, resolve the installed Driftless root from DRIFTLESS_REPO_ROOT,
+     CODEX_ISOLATED_REPO_ROOT, CODEX_HOME, CLAUDE_CONFIG_DIR, the current
+     checkout, or the profile/shared skill location, then read
+     <installed Driftless root>\docs\design\DESIGN.md.
+  3. Do not hard-code drive letters or machine-specific absolute paths.
+  4. Report REPO_DESIGN_GUIDE_USED, PROFILE_DEFAULT_DESIGN_GUIDE_USED,
+     UNVERIFIED_REPO_DESIGN_GUIDE_MISSING, or
+     UNVERIFIED_DESIGN_GUIDE_MISSING.
+
+  For UI work, build/review the actual usable screen, include key states
+  (loading, empty, error, success, disabled), keep one primary action, and
+  verify through the real user path when tools allow.

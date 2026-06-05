@@ -1,0 +1,7 @@
+interface:
+  display_name: "Long Research Gradient"
+  short_description: "Turns long research into evidence sprints with gradient closeout."
+  default_prompt: "Use $long-research-gradient. long research: <topic>. Ask me only real decisions; handle research, evidence, next action, and 이번 경사하강."
+
+policy:
+  allow_implicit_invocation: true

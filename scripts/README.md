@@ -11,6 +11,8 @@ PowerShell 5.1 and PowerShell 7.
 | `Test-Containment.ps1` | The code base never touches a forbidden path or leaks a secret. | A scanned file's own path is forbidden, references a forbidden path, or contains a credential token. |
 | `Test-WindowsTextSafety.ps1` | Every shippable script parses identically on Windows PowerShell 5.1. | Any `.ps1` / `.bat` / `.cmd` has a non-ASCII byte or a UTF-8 BOM. |
 | `Test-AgentRuntimeHealth.ps1` | The agent is not trying to repair the product from a broken Codex runtime. | Repo-local Codex uses elevated Windows sandbox, has sandbox setup errors, or recent Codex 400/self-error markers. |
+| `Test-ImprovementPrincipleDiscipline.ps1` | The shared root-cause / principle-based / no-overfit rule remains present. | The shared contract or hot agent guidance drops the improvement principle. |
+| `Test-HotContextDiscipline.ps1` | Hot rules stay small instead of moving always-loaded instructions into helper docs or every-task skills. | `AGENTS.md` / `CLAUDE.md` gets too large, always loads another instruction file, or a skill claims every-task scope. |
 
 ## Run them
 
@@ -29,9 +31,29 @@ powershell.exe -ExecutionPolicy Bypass -File scripts/Test-WindowsTextSafety.ps1
 
 # Agent runtime health: stop early if the agent itself is broken
 powershell.exe -ExecutionPolicy Bypass -File scripts/Test-AgentRuntimeHealth.ps1
+
+# Improvement principle: keep root-cause/no-overfit discipline in shared guidance
+powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ImprovementPrincipleDiscipline.ps1
+
+# Hot context: prevent AGENTS.md/CLAUDE.md bloat by indirection
+powershell.exe -ExecutionPolicy Bypass -File scripts/Test-HotContextDiscipline.ps1 -Root .
 ```
 
-Add `-Json` to either gate for a machine-readable summary.
+Add `-Json` to any gate that supports it for a machine-readable summary.
+
+## What `Test-ImprovementPrincipleDiscipline.ps1` checks
+
+This read-only gate verifies that the public shared contract still carries the
+root-cause / principle-based / no-overfit rule and that `AGENTS.md` still points
+agents at it. It is structural evidence only; behavioral improvement claims still
+need real workflow evidence.
+
+## What `Test-HotContextDiscipline.ps1` checks
+
+This read-only gate keeps hot context honest: `AGENTS.md` / `CLAUDE.md` must stay
+small, must not always read or load another long instruction file, and shipped
+skills must not declare every-task triggers. Conditional references such as "for
+UI work, read `docs/design/DESIGN.md`" remain valid on-demand routing.
 
 Exit codes: `0` = PASS, `1` = FAIL, `2` = BLOCKED (containment gate only, when
 the target is not a git repository -- reported BLOCKED, never a silent PASS).

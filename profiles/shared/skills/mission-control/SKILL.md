@@ -117,6 +117,11 @@ intermediate artifact replace the requested result.
 - Before final answer, name any remaining lane as adopted, scaled to an owned
   follow-up, watched, rejected, or blocked. Anything else is unfinished parent
   cleanup.
+- A pilot lane is not a final state by itself. Any `PILOT_ONLY`, `C`, fixture,
+  benchmark, mock, dry-run, or read-only experiment must end with a post-pilot decision:
+  adopt the proven small surface, scale to an owned issue, watch with
+  a trigger, reject with evidence, block on an exact external condition, or
+  escalate a true manager-only gate.
 
 ## Scope Preservation Gate
 
@@ -137,6 +142,11 @@ unless the user explicitly narrows the goal.
 - When a candidate is risky but plausibly valuable, prefer a contained pilot over
   rejection: fixture credentials, dry-run installers, local-only mocks, static
   dashboards, bounded benchmarks, and read-only audits.
+- Contained pilots must record the decision they answered before closeout. Good
+  outcomes are not "pilot completed"; they are "adopt this bounded gate",
+  "scale to this owned issue", "watch until this trigger", "reject because
+  measured value failed", "blocked on this exact access", or "manager-only
+  approval required".
 - Mission-control Done for an implementation/adoption/release request requires
   merged/main-synced change, ready PR/draft PR with validation and owner,
   parent-reviewed patch set ready for merge gate, or true manager-only blocker.

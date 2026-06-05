@@ -143,6 +143,11 @@ unless the user explicitly narrows the goal.
   multi-agent/workflow control, dashboard/status UI, credential/API/security
   boundary, architecture, code-level reusable patterns, feature ideas, new
   technology/libraries, test/fixture strategy, and development process.
+- Star/high-signal external repos need a star-reason and strong-feature gate
+  before classification. Workers must identify why the repo plausibly earned
+  adoption or attention, then extract strongest detailed features one by one
+  with source evidence, local transform, expected Driftless benefit, adoption
+  cost, and closeout. Popularity is discovery evidence, not adoption evidence.
 - When a candidate is too broad for direct import, transform each viable surface
   into a local lane before rejecting the whole system.
 - When a candidate is risky but plausibly valuable, prefer a contained pilot over
@@ -226,6 +231,7 @@ Worker return shape:
 ```markdown
 worker result:
 - scope:
+- star reason / strong features:
 - changed:
 - evidence:
 - blocked:

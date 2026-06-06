@@ -46,6 +46,10 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-SkillAudit.ps1 -Root .
 
+      - name: Improvement-principle gate (root-cause, principle-based, no overfit)
+        shell: pwsh
+        run: ./scripts/Test-ImprovementPrincipleDiscipline.ps1 -Root .
+
       - name: Mission-control UX gate
         shell: pwsh
         run: ./scripts/Test-MissionControlUx.ps1 -Root .

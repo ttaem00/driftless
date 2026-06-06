@@ -11,7 +11,9 @@ description: >
   closeout", "Open Deep Research", "GPT Researcher", "Deep Agents", "mem0",
   "InternAgent", "STORM".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Long Research Gradient
 
 Manager outcome: long research becomes small evidence-backed sprints, and each

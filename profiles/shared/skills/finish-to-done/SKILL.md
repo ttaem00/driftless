@@ -10,7 +10,9 @@ description: >
   Trigger / 트리거: "끝까지", "끝까지해결", "근본 원인", "재발 안 되게", "PR_READY까지",
   "검증까지", "merge 후 pull", "티켓 완료", "finish to done".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Finish To Done
 
 `끝까지해결`: 요청한 작업을 완료선까지 증거 기반으로 진행한다. 조사하고 멈추거나,
@@ -54,6 +56,11 @@ manager-only / hard-external만 남을 때까지 반복한다. (6) follow-up이 
 해소하지 못하면, 정확한 다음 실행 행동과 함께 open / not-Done으로 둔다.
 Manager-only -> 짧은 한국어 질문 하나. Hard external -> 사용 불가한 의존성 +
 명령 증거 + 다음 재시도 조건을 정확히 보고.
+
+English enforcement anchor: run the root-cause follow-up in the same session,
+then retry the original ticket/gate. Completion requires original goal
+validation, or a verified manager-only / hard-external blocker with a not-Done
+tracker and next retry condition.
 
 ## No Substitute Done
 구현/증명/병합 티켓은 다음만 한 경우 완료가 아니다: blocker 원인만 기록, 증거 코멘트만

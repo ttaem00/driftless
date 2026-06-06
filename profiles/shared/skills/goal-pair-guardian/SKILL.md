@@ -11,7 +11,9 @@ description: >
   "context compaction", "goal stopped early", "새 goal", "목표 이탈",
   "중간에 끊음", "무한 진행", "경사하강", "목표 동행", "goal 세션 점검".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # 목표동행 Goal Pair
 
 Use this skill as the lightweight companion around a long Codex goal. The

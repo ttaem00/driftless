@@ -7,7 +7,9 @@ description: >
   fallback으로 적용한다. Trigger: UI, UX, frontend, 프론트엔드, 웹사이트,
   디자인, 레이아웃, 화면, 사용자 흐름, design.md, DESIGN.md.
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # UI/UX Design Guidance
 
 Use this skill whenever work changes or reviews user-visible UI: frontend code,

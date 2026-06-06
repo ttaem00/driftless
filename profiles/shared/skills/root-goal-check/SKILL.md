@@ -8,7 +8,9 @@ description: >
   "이거 해도 돼", "외부 자료 검토", "오픈소스 도입 후보 평가", "lessons learned",
   "배운 점", "교훈", "root goal check".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Root Goal Check (shared)
 
 두 프로필이 함께 소비하는 tool-agnostic 게이트다. 새 아이디어·외부 자료·기술 제안·

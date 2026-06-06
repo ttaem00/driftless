@@ -6,7 +6,9 @@ description: >
   "resume", "context", "long session", "overnight handoff", "인계", "컨텍스트",
   "긴 세션", "밤샘 작업".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Handoff Guard
 
 This shared skill keeps a long autonomous run understandable after context is

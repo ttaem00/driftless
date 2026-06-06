@@ -10,7 +10,9 @@ description: >
   Trigger / 트리거: "/티켓발행", "티켓 발행", "issue 생성", "GitHub Issue 만들기",
   "작업 전 이슈 만들기", "Project 등록", "board 등록", "backlog issue", "ticket gate".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Ticket Issue (shared)
 
 GitHub Issue first. Non-trivial repo mutation needs issue evidence before the

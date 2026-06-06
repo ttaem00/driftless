@@ -1,4 +1,4 @@
-﻿
+
 ## 2026-06-05 - Prevent hot-context growth by indirection
 
 ### Observed Pattern
@@ -26,3 +26,33 @@ Remove or revert the recorded change if it causes over-triggering or false posit
 
 ### Status
 recorded
+
+## 2026-06-06 - Improvement principle must be behavior-gated
+
+### Observed Pattern
+The public improvement principle existed in shared guidance, but rule application could still be missed because the gate only checked static pointers and not shipped skills, learning-loop, finish-to-done, CI, or PR review surfaces.
+
+### Evidence
+- Implementation in issue #102 strengthens public behavior-gated surfaces;
+  validation is recorded in the PR and final report.
+
+### Lesson
+The public improvement principle existed in shared guidance, but rule application could still be missed because the gate only checked static pointers and not shipped skills, learning-loop, finish-to-done, CI, or PR review surfaces.
+
+### Recommended Change
+Strengthen Test-ImprovementPrincipleDiscipline.ps1 to check public behavior-shaping surfaces, add compact Improvement Principle sections to shipped skills, wire the gate into CI, and require PR evidence for rule/skill/prompt/script/hook/doc changes.
+
+### Promotion
+- status: implementation_needed
+- placement: script/check gate, shipped skills, CI, and PR template
+- next action: Implemented in this change; keep the strengthened gate in CI and
+  PR review.
+
+### Scope
+repo-local
+
+### Rollback
+Remove or revert the recorded change if it causes over-triggering or false positives.
+
+### Status
+implemented

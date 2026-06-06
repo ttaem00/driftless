@@ -7,7 +7,9 @@ description: >
   boundary", "containment", "before publish", "before merge", "안전 검사",
   "비밀 검사", "보안 경계".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Safety Guard
 
 This shared skill keeps a non-developer manager from judging security logs or

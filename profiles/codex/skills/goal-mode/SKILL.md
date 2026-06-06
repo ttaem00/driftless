@@ -17,7 +17,9 @@ description: >
   "독립 티켓 병렬 레인", "session claim", "레인 경합", "race 방지",
   "autonomous goal", "long-running goal".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Goal Mode (Codex)
 
 Codex의 headline 실행 모드다. 관리자는 **무엇을 끝내야 하는가(목표)** 와

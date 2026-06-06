@@ -6,7 +6,9 @@ description: >
   Trigger: "work ledger", "criteria", "done criteria", "evidence ledger",
   "검증 기준", "완료 기준", "작업장부", "증거 장부".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Work Ledger
 
 This shared skill turns vague work into a small checklist the agent can verify.

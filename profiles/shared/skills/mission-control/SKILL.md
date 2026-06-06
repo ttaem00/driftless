@@ -10,7 +10,9 @@ description: >
   "하위 세션", "목표동행", "학생용", "비개발자", "나는 개발자가 아니니까",
   "git/GitHub는 네가", "경사하강 최적화".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Mission Control
 
 `mission-control` is the shared Driftless entrypoint for large work owned by one

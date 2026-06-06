@@ -6,7 +6,9 @@ description: >
   "before merge", "before close", "PR_READY", "release check", "끝내기 전 검토",
   "머지 전 검토", "최종 검토".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Review Before Done
 
 This shared skill prevents a non-developer manager from reading diffs, pull

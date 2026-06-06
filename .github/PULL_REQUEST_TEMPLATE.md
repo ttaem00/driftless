@@ -19,5 +19,8 @@ Linux). You can run them locally too — they print plain-language reasons.
 - [ ] Scripts (`.ps1`/`.bat`/`.cmd`) are ASCII + no BOM.
 - [ ] Claims are evidence-backed; anything not run is labeled UNVERIFIED (no
       inflated "done").
+- [ ] If I changed rules, skills, prompts, scripts, hooks, or docs, I used
+      root-cause analysis and principle-based guidance; I avoided spec/case
+      overfitting and special-casing unless the PR explains the bounded reason.
 
 ## Notes / 비고 (optional)

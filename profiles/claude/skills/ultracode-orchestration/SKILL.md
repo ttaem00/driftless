@@ -15,7 +15,9 @@ description: >
   "fan out", "이 큰 작업 한 번에", "복잡한 목표", "ambiguous goal",
   "이거 ultracode로", "오케스트레이션", "병렬 작업 직접".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Ultracode Orchestration (Claude-only headline mode)
 
 Ultracode is Claude's headline operating mode for THIS isolated runtime. It is

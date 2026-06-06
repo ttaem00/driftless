@@ -13,7 +13,9 @@ description: >
   설정", "apply this repo", "apply driftless", "set me up", "install this repo
   for yourself", "onboard me", "이 레포로 나 세팅".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Apply Driftless (이 레포를 내 Claude/Codex에 적용)
 
 이 스킬은 사용자가 "이 레포 적용해줘" 한 문장을 말했을 때 **에이전트가 스스로 따르는

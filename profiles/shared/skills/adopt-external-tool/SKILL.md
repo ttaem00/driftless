@@ -16,7 +16,9 @@ description: >
   "apply this repo's skill", "add this MCP", "is this safe to install",
   "vet this repo", "should I install this".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Adopt an external tool safely (외부 도구 안전 도입 체크리스트)
 
 이 스킬은 외부 자산(레포 / 도구 / 스킬 / 프롬프트 / MCP 서버 / 라이브러리)을

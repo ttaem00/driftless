@@ -15,7 +15,9 @@ description: >
   "작업 쪼개", "parallel tickets", "split work", "ticket decomposition",
   "conflict-aware tickets", "coordinator cleanup prompt".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # Parallel Ticket Planner
 
 Trigger / 트리거: parallel-ticket-planner, /병행티켓, 병행티켓, /parallel-ticket, 병렬 티켓, 동시 작업, ticket decomposition, conflict-aware tickets, coordinator cleanup prompt.

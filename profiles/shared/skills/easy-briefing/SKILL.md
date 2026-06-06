@@ -10,7 +10,9 @@ description: >
   "어떻게 테스트해", "상황 정리", "쉽게 설명", "easy briefing", "explain simply",
   "manager view", "what should I test".
 ---
+## Improvement Principle
 
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces user effort, maintainer effort, maintenance risk, or safety burden.
 # 쉽게 — 비개발자 관리자용 상황 브리핑
 
 현재 작업/프로젝트 상태를 비개발자 관리자가 이해할 수준으로 설명한다. 관리자는 코드를 읽지 못하고, 영문 약어/기술 용어에 익숙하지 않다. 핵심은 "뭘 해달라는 건지", "뭘 확인하면 되는지".

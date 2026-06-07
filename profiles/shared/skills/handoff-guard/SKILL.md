@@ -49,6 +49,12 @@ Do not do:
 - Include exact issue/PR numbers and branch names when available.
 - Include the last passing or failing command, not a long log.
 - Mark missing evidence as UNVERIFIED. Empty output is not PASS.
+- Compressed references must keep source pointer, scope, exclusions, and latest
+  verification evidence. If that integrity cannot be checked, mark the
+  compressed reference UNVERIFIED and re-read the source before acting on it.
+- If a repo map, file index, or generated summary is cited, include its refresh trigger
+  or latest generation evidence. Regenerate it after structural changes or mark it stale
+  before using it to steer work.
 - Never use a stale handoff to overwrite newer local or GitHub evidence.
 - On resume, read the handoff, then verify current git/GitHub state before
   acting.

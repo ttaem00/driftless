@@ -142,3 +142,29 @@ prompt, hot-rule, or instruction change must automatically check whether the
 improvement belongs in an existing asset, the shared tier, a tool-specific
 profile, a wrapper/alias, a narrower trigger, or a gate before adding a new
 surface.
+
+---
+
+## 9. Context engineering discipline
+
+Context is an operating budget, not a place to store everything an agent might
+need. Shared workflows keep enough state to resume correctly while keeping hot
+context small, verifiable, and current.
+
+- **Context budget.** Keep always-loaded instructions short. Put long
+  procedures, examples, raw logs, research notes, and transient evidence in
+  on-demand docs, skills, scripts, or artifacts. Add a new always-loaded rule
+  only when it prevents more repeated work, token cost, manager intervention, or
+  safety risk than it adds.
+- **Compressed reference integrity.** A compressed prompt, handoff, or summary
+  must preserve the source pointer, scope, important exclusions, and latest
+  verification evidence. If the source cannot be re-read or the compression was
+  not checked, mark the reference `UNVERIFIED` instead of treating the summary as
+  the source of truth.
+- **Repo map freshness.** If a repo map, file index, generated summary, or
+  hand-built pipeline map steers work, it must state how it was produced and
+  when it must be refreshed. After structural changes, regenerate it or mark it
+  stale; trusting a stale map is worse than scanning live.
+- **Action/evidence ledger.** Long, resumed, or delegated work needs a current
+  ledger of actions, evidence, unresolved items, and the next executable action.
+  Old issue comments, stale handoffs, or "done" claims do not replace current command or tool evidence.

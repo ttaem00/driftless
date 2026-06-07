@@ -63,6 +63,19 @@ trigger), **REJECT** (with a reason), or **UNVERIFIED** (with what was not seen)
 The verdict is appended to `docs/external-repo-review.md` so the same repo is
 never re-litigated from scratch.
 
+Before the agent treats an external skill, repo, plugin-like packet, or MCP
+setup as adoption-ready, it also runs the public pre-adoption gate:
+
+```powershell
+powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ExternalAdoptionSafetyGate.ps1 -CandidatePath path\to\candidate
+```
+
+That gate blocks direct adoption when static triage sees unresolved arbitrary
+execution, download-pipe-exec, host-global or secret references,
+credential/cloud/billing/MCP surfaces, daemon startup, or a missing pilot
+closeout decision. It does not install anything and it is not a malware detector;
+it is the "stop before adopting" check.
+
 ## Where the proof lives
 
 If the agent does adopt something, it proves the fence held by running the

@@ -53,6 +53,19 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\Test-RepoContext
 The validator builds a fresh test wiki and checks source traceability, graph
 shape, search behavior, and generated wikilinks.
 
+## Benchmark Before Installing Code-Intelligence Tools
+
+Driftless also includes a public-safe benchmark gate:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\Test-CodeIntelligenceBenchmark.ps1 -Root .
+```
+
+The benchmark compares broad baseline discovery against the compiled wiki on
+fixed Driftless tasks. It gates average recall, token-estimate direction, and
+source-traceability validation before any external code-intelligence dependency
+is treated as adoption-ready.
+
 ## Why This Fits Driftless
 
 Driftless is about lowering maintainer burden without turning the maintainer

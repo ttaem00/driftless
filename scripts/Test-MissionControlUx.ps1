@@ -55,6 +55,31 @@ foreach ($term in $requiredTerms) {
   Add-Result -Results $results -Check "mission-control contract includes: $term" -Status (Get-PassFail ($skillText.Contains($term))) -Evidence $skill -NextAction "Restore the mission-control contract term: $term"
 }
 
+$epicPrepTerms = @(
+  'Epic Preparation',
+  'Ticket Creation Is Not Done',
+  'experiment/probe lane',
+  'guardian',
+  'parent close gate',
+  'manager-only',
+  'subsession_unavailable',
+  'EPIC_PREP_READY',
+  'BLOCKED_NEEDS_MANAGER_DECISION'
+)
+
+foreach ($term in $epicPrepTerms) {
+  Add-Result -Results $results -Check "mission-control epic prep contract includes: $term" -Status (Get-PassFail ($skillText.Contains($term))) -Evidence $skill -NextAction "Restore the shared Epic Preparation Mode contract term: $term"
+}
+
+Add-Result -Results $results -Check 'browser extension risk probes are required before plan-only closeout' -Status (Get-PassFail (
+  $skillText.Contains('cross-origin iframe control') -and
+  $skillText.Contains('third-party') -and
+  $skillText.Contains('content script isolated world') -and
+  $skillText.Contains('keyboard shortcut/player automation') -and
+  $skillText.Contains('top-level overlay feasibility') -and
+  $skillText.Contains('Do not ask the user whether to open plan sessions')
+)) -Evidence $skill -NextAction 'Mission-control must create probe and plan/serial lanes automatically for browser-extension workspace epics.'
+
 $oldId = 'student' + '-autopilot'
 $oldTitle = 'Student ' + 'Autopilot'
 $trackedRaw = & git -C $repo ls-files profiles scripts .github 2>$null

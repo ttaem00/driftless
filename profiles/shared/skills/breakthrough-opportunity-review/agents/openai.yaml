@@ -1,0 +1,4 @@
+interface:
+  display_name: "Breakthrough Opportunity Review"
+  short_description: "Hunt for the hidden breakthrough answer"
+  default_prompt: "Use $breakthrough-opportunity-review. Assume a powerful hidden improvement definitely exists inside the requested scope, then hunt across planning, UX/UI, architecture/code, technology, new features, and workflow to identify the sharpest candidate."

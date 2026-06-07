@@ -59,6 +59,8 @@ Do not ask the user to pick from this table. The agent applies it.
 | Situation | Internal workflow |
 |---|---|
 | Goal or completion criteria are vague | `root-goal-check`, then `work-ledger` |
+| Non-simple product, feature, extension, architecture, or verification goal | Epic Preparation mode |
+| User asks for mission control, epic/child tickets, proof experiments, plan sessions, or goal companion | Epic Preparation mode |
 | Non-trivial repository work | `ticket-issue` before editing |
 | Single task can be completed in one lane | `finish-to-done` |
 | Long run, context pressure, resume risk | `handoff-guard` |
@@ -81,20 +83,105 @@ For large work, follow this order:
 
 1. Charter: restate the outcome, completion line, manager-only decisions, and
    safety boundaries.
-2. Ticket: create or reuse a visible issue for non-trivial work.
-3. Split: decide whether the work is a single lane, parallel plan, or overnight
+2. Epic Preparation: for non-simple product, feature, extension, architecture,
+   or verification work, run Epic Preparation Mode before implementation.
+3. Ticket: create or reuse a visible issue for non-trivial work.
+4. Split: decide whether the work is a single lane, parallel plan, or overnight
    coordinator run.
-4. Attach: add goal companion/checkpoint handling when drift, context, or Done
+5. Attach: add goal companion/checkpoint handling when drift, context, or Done
    honesty risk is high.
-5. Dispatch: create child sessions or paste-ready worker prompts only when the
+6. Dispatch: create child sessions or paste-ready worker prompts only when the
    work is separable.
-6. Monitor: track worker heartbeat, blockers, checkpoints, and context pressure.
-7. Arbitrate: inspect worker evidence. A worker saying "done" is not final Done.
-8. Integrate: resolve conflicts, missing evidence, duplicate work, and weak data.
-9. Validate: run tests, browser/user-path checks, PR checks, mergeability, and
+7. Monitor: track worker heartbeat, blockers, checkpoints, and context pressure.
+8. Arbitrate: inspect worker evidence. A worker saying "done" is not final Done.
+9. Integrate: resolve conflicts, missing evidence, duplicate work, and weak data.
+10. Validate: run tests, browser/user-path checks, PR checks, mergeability, and
    review gates as appropriate.
-10. Learn: run Gradient Closeout before final report.
-11. Report: explain user-visible result and next decision in plain language.
+11. Learn: run Gradient Closeout before final report.
+12. Report: explain user-visible result and next decision in plain language.
+
+## Epic Preparation Mode
+
+This mode is mandatory when the user asks for mission control, an epic, child
+tickets, end-to-end preparation, experiments/proof, plan sessions, or goal
+companion handling. Also use it for non-simple product, feature, extension,
+architecture, or verification goals even when the user does not name those
+mechanics.
+
+The main session must prepare the epic before implementation starts:
+
+- Write a one-sentence charter for the parent goal: outcome class, visible
+  product result, manager-only decisions, and safety boundaries.
+- Inspect existing issue/PR/branch/worktree state for duplicate work. Reuse or
+  promote an existing parent issue to the epic instead of creating a competing
+  parent.
+- Split uncertain feasibility into an experiment/probe lane before detailed
+  planning. Examples include cross-origin iframe control, third-party
+  login/session persistence, browser extension content script isolated world
+  limits, external-site DOM automation, keyboard shortcut/player automation,
+  browser permission/security policy, and top-level overlay feasibility.
+- Each experiment/probe lane states the question, allowed local evidence,
+  blocked condition, and next decision: adopt, design around, require an
+  extension, require user credential/login approval, or stop.
+- Create or update the epic, then create child tickets for implementation,
+  UX/product design, evidence/probe, verification harness, onboarding/fallback,
+  packaging/release gate, and parent cleanup when needed.
+- Each child ticket includes scope, acceptance criteria, verification, Done
+  criteria, dependencies, owner lane, and manager-only gates. Manager-only gates
+  such as public store release, credential entry, paid resources, destructive
+  action, user data transfer, or host-global promotion must not be hidden inside
+  agent-solvable acceptance.
+- Register the epic and child tickets in the configured project board when
+  tools allow it. If unavailable, report `project_gate=unavailable` and preserve
+  the order in the parent issue checklist.
+- Update the parent epic with child checklist, execution order, dependency
+  graph, parallel-safe lanes, serialized lanes, experiment/probe lanes, and a
+  parent close gate.
+- Attach a guardian: use goal companion tooling when available; otherwise leave
+  a guardian checklist / stop-signal ledger on the parent issue. The guardian
+  watches for early stop, ticket-only closeout, manager-only vs agent-solvable
+  blocker confusion, child tickets shrinking the parent goal, and evidence-free
+  Done claims.
+- Dispatch plan-mode / sub-session work automatically when tools can create or
+  retarget sessions. Verify created sessions before reporting them active. If
+  tools are unavailable or policy blocks fan-out, state
+  `split_gate=serial_direct` or `subsession_unavailable` and create the same
+  charter, ticket, probe, and close-gate artifacts serially in the current
+  session. Do not ask the user whether to open plan sessions.
+- Final report states what is immediately executable: first lane to start,
+  blocked lane if any, active guardian/ledger, and the parent close gate.
+
+### Ticket Creation Is Not Done
+
+Ticket creation is not Done for an implementation, product, architecture,
+extension, adoption, or release request. It is Epic Preparation output.
+
+- If the current turn only creates or updates epic/child tickets, report
+  `completion line: EPIC_PREP_READY`.
+- Report `completion line: PR_READY` only when a validated branch/PR or parent
+  review packet exists and the remaining gate is review/merge, not first
+  implementation.
+- Report `completion line: MERGED_DONE` only after merge/main-sync evidence.
+- Report `completion line: BLOCKED_NEEDS_MANAGER_DECISION` only for true
+  manager-only gates such as credential/login approval, paid billing, public
+  release, destructive action, user data, or host-global promotion.
+- Never use Done or `PR_READY` for ticket-only output, a plan-only artifact, or
+  an experiment that has not produced its post-probe decision.
+
+### Experiment Before Planning
+
+When feasibility is uncertain, create a small experiment/probe lane before
+committing the detailed plan. This applies to browser and platform boundaries
+such as cross-origin iframes, extension permissions, content script isolated
+worlds, third-party cookie/session policy, external DOM automation,
+keyboard/player control, local unpacked extension limits, and public
+distribution policy.
+
+Agent-solvable probes may use local code, docs, browser evidence, fixtures,
+unpacked extensions, and no-login mocks. Manager-only actions are separate:
+credential entry, account login, paid resources, public release, store
+publication, destructive operations, user data transfer, and host-global
+mutation. A blocked manager-only gate does not block independent local probes.
 
 ## Outcome Contract
 

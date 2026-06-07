@@ -32,6 +32,11 @@ Use this compact shape in an issue, PR body, or local notes:
 | --- | --- | --- | --- |
 | WDL-1 | <command, screenshot, run, or artifact> | <result> | PASS/FAIL/UNVERIFIED |
 
+## Action/Evidence Ledger
+| Action | Evidence | Status | Next action |
+| --- | --- | --- | --- |
+| <current action> | <command, artifact, issue, or PR link> | PASS/FAIL/UNVERIFIED | <one executable next step> |
+
 ## Manager Decision
 None, unless credentials, billing, public release, destructive action,
 host-global promotion, or user data is involved.
@@ -45,6 +50,9 @@ host-global promotion, or user data is involved.
   customer can use the feature unless the task is explicitly docs-only.
 - If a criterion remains UNVERIFIED, create or reuse the smallest follow-up
   issue unless it is a manager-only decision.
+- For long, resumed, or multi-issue work, keep the Action/Evidence Ledger current
+  enough that a fresh agent can name the latest action, evidence, unresolved
+  item, and next executable action without reading raw logs.
 - Keep the ledger short. If it is too long for a manager to scan, split the
   task.
 

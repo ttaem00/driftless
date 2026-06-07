@@ -1,0 +1,45 @@
+{
+  "summaryKind": "handoff",
+  "sourcePointer": {
+    "repoRelativePath": "profiles/shared/contract/SHARED_DESIGN_CONTRACT.md",
+    "anchor": "9. Context engineering discipline"
+  },
+  "scope": {
+    "in": [
+      "compressed context handoff",
+      "deterministic public validation"
+    ],
+    "out": [
+      "tool-specific private runtime details",
+      "credentials or account state"
+    ]
+  },
+  "exclusions": [
+    "no host-global profile mutation",
+    "no long hot-rule expansion"
+  ],
+  "managerOnlyGates": [
+    "credentials",
+    "billing/quota",
+    "public release",
+    "destructive/irreversible actions",
+    "host-global promotion"
+  ],
+  "validationEvidence": [
+    {
+      "command": "powershell.exe -ExecutionPolicy Bypass -File scripts/Test-CompressedHandoffSummaryProtocol.ps1 -Root .",
+      "status": "PASS",
+      "result": "fixture preserves source pointer, scope, exclusions, manager-only gates, validation evidence, stale-map status, and next executable action"
+    }
+  ],
+  "staleMapStatus": {
+    "status": "current",
+    "evidence": "sourcePointer.repoRelativePath exists in the current repo checkout",
+    "nextRefreshAction": "rerun this gate after changing sourcePointer or generated repo-map artifacts"
+  },
+  "nextExecutableAction": {
+    "actor": "agent",
+    "command": "powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ContextEngineeringDiscipline.ps1 -Root .",
+    "successSignal": "RESULT: PASS"
+  }
+}

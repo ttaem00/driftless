@@ -188,6 +188,29 @@ function Add-FileAnchorCheck {
   Add-Result $results $Check $status $true $evidence $NextAction
 }
 
+function Add-ChildGateCheck {
+  param(
+    [string]$Check,
+    [string]$RelPath,
+    [string[]]$Arguments,
+    [string]$NextAction
+  )
+  $path = Join-Path $resolvedRoot ($RelPath -replace '/', [System.IO.Path]::DirectorySeparatorChar)
+  if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+    Add-Result $results $Check 'FAIL' $true "missing=$RelPath" $NextAction
+    return
+  }
+  $powershell = (Get-Command powershell.exe -ErrorAction SilentlyContinue).Source
+  if (-not $powershell) { $powershell = (Get-Command pwsh -ErrorAction Stop).Source }
+  $output = & $powershell -NoProfile -ExecutionPolicy Bypass -File $path @Arguments 2>&1
+  $exit = $LASTEXITCODE
+  $status = if ($exit -eq 0) { 'PASS' } else { 'FAIL' }
+  $detail = (@($output) | ForEach-Object { [string]$_ } | Where-Object { $_ -match '^\[(FAIL|PASS)\]|^RESULT:' } | Select-Object -First 5) -join ' | '
+  $evidence = "exit=$exit"
+  if ($detail) { $evidence += "; $detail" }
+  Add-Result $results $Check $status $true $evidence $NextAction
+}
+
 $st = Invoke-SelfTest
 $selfTestStatus = if ($st.passed) { 'PASS' } else { 'FAIL' }
 Add-Result $results 'Detector self-test' $selfTestStatus $true $st.detail 'Fix the built-in positive/negative fixtures before trusting this gate.'
@@ -221,6 +244,12 @@ Add-FileAnchorCheck `
   -RelPath 'profiles/shared/skills/work-ledger/SKILL.md' `
   -Anchors $workLedgerAnchors `
   -NextAction 'Restore the Action/Evidence Ledger shape for long, resumed, or multi-issue work.'
+
+Add-ChildGateCheck `
+  -Check 'Compressed handoff summary protocol fixture' `
+  -RelPath 'scripts/Test-CompressedHandoffSummaryProtocol.ps1' `
+  -Arguments @('-Root', $resolvedRoot) `
+  -NextAction 'Restore the compressed handoff fixture/protocol so summaries keep source, scope, exclusions, manager-only gates, validation evidence, stale-map status, and next executable action.'
 
 $blockingFailures = @($results | Where-Object { $_.blocking -eq $true -and $_.status -eq 'FAIL' })
 $overall = if ($blockingFailures.Count -gt 0) { 'FAIL' } else { 'PASS' }

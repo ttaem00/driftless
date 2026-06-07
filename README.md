@@ -168,6 +168,7 @@ Watch this repo's history fill in: [commits](https://github.com/mizan0515/driftl
 
 - [What is Driftless](./docs/en/what-is-driftless.md) — the idea in plain language.
 - [Apply it to your own agent](./docs/en/apply-to-your-agent.md) — adopt the pieces you want.
+- [Mission Map](./docs/en/mission-map.md) — public-safe fixture/spec for showing active goal, guardian, PR/check state, blockers, and next action.
 - [Single-source two-profile mirror](./docs/en/single-source-mirror.md) — how one edit updates both.
 - [Guardrails](./docs/en/guardrails.md) — containment, the forbidden surface, and the FAIL test.
 - [Lesson-promotion ladder](./docs/en/lesson-promotion-ladder.md) — memory < skill < hot rule < hook < gate.

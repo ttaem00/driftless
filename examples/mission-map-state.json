@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "mission-map.example.v1",
+  "activeGoal": "Prepare a public-safe Mission Map demo for agent work orchestration",
+  "outcomeClass": "apply",
+  "guardian": {
+    "label": "Goal guardian",
+    "status": "Watching for drift, early stop, and missing evidence",
+    "heartbeat": "Every 10 minutes while work is active"
+  },
+  "lanes": [
+    {
+      "id": "public-fixture",
+      "label": "Public fixture and docs",
+      "state": "active",
+      "ownerArtifact": "examples/mission-map-state.json",
+      "nextAction": "Run the fixture validation gate"
+    }
+  ],
+  "pr": {
+    "label": "Pull request",
+    "state": "UNVERIFIED",
+    "detail": "No PR claim is made by this fixture"
+  },
+  "checks": {
+    "label": "Validation",
+    "state": "UNVERIFIED",
+    "detail": "Run scripts/Test-MissionMapFixture.ps1"
+  },
+  "blockers": {
+    "count": 0,
+    "status": "No blockers in this fixture"
+  },
+  "evidence": [
+    {
+      "label": "Tracking issue",
+      "ref": "https://github.com/mizan0515/driftless/issues/99",
+      "status": "PASS"
+    }
+  ],
+  "nextAction": "Use this public fixture as a UI/spec seed; do not infer real runtime behavior from it"
+}

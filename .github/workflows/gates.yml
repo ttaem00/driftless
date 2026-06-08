@@ -46,6 +46,10 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-CodexSessionClaim.ps1
 
+      - name: Primary checkout hygiene guard (dirty main blocks new work)
+        shell: pwsh
+        run: ./scripts/Test-PrimaryWorktreeClean.ps1 -SelfTest
+
       - name: Hot-context discipline gate (no AGENTS.md bloat by indirection)
         shell: pwsh
         run: ./scripts/Test-HotContextDiscipline.ps1 -Root .

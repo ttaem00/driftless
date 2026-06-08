@@ -40,3 +40,11 @@ reducing setup, git/GitHub, security, validation, and raw-script burden.
   `rg`, a relevant gate, or a real install/use check.
 - Static doc changes do not prove behavior. Behavioral claims need real use or a
   bounded end-to-end test.
+
+## Clean Primary Checkout
+- Do not start non-trivial work in the primary/root checkout. Create an issue
+  worktree first:
+  `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\New-IssueWorktree.ps1 -Issue <number> -Slug <short-name>`.
+- If the primary checkout is already dirty, stop and report it. Do not stash,
+  reset, clean, or keep editing the dirty primary checkout without manager
+  approval.

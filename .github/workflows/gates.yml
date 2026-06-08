@@ -10,6 +10,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: gates-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   windows-gates:
     runs-on: windows-latest
@@ -37,6 +41,10 @@ jobs:
       - name: Work-discipline gate (no unresolved placeholder shipped as a rule)
         shell: pwsh
         run: ./scripts/Test-WorkDiscipline.ps1 -Root .
+
+      - name: Session claim guard (duplicate issue/branch/worktree/surface blocks)
+        shell: pwsh
+        run: ./scripts/Test-CodexSessionClaim.ps1
 
       - name: Hot-context discipline gate (no AGENTS.md bloat by indirection)
         shell: pwsh

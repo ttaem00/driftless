@@ -27,7 +27,7 @@
   ],
   "validationEvidence": [
     {
-      "command": "powershell.exe -ExecutionPolicy Bypass -File scripts/Test-CompressedHandoffSummaryProtocol.ps1 -Root .",
+      "command": "pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-CompressedHandoffSummaryProtocol.ps1 -Root .",
       "status": "PASS",
       "result": "fixture preserves source pointer, scope, exclusions, manager-only gates, validation evidence, stale-map status, and next executable action"
     }
@@ -39,7 +39,7 @@
   },
   "nextExecutableAction": {
     "actor": "agent",
-    "command": "powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ContextEngineeringDiscipline.ps1 -Root .",
+    "command": "pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ContextEngineeringDiscipline.ps1 -Root .",
     "successSignal": "RESULT: PASS"
   }
 }

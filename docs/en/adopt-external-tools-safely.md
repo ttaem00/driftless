@@ -67,7 +67,7 @@ Before the agent treats an external skill, repo, plugin-like packet, or MCP
 setup as adoption-ready, it also runs the public pre-adoption gate:
 
 ```powershell
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ExternalAdoptionSafetyGate.ps1 -CandidatePath path\to\candidate
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ExternalAdoptionSafetyGate.ps1 -CandidatePath path\to\candidate
 ```
 
 That gate blocks direct adoption when static triage sees unresolved arbitrary

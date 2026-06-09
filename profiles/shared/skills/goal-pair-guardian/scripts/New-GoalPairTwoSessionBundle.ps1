@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Create manager-friendly paired prompts for a goal session and a goal-pair session.

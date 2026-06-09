@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Driftless context-engineering discipline gate.
@@ -14,7 +16,7 @@
   and that this gate runs in CI.
 
   Read-only. No network, no secrets, no peer AI, no host-global access.
-  ASCII-only so the gate parses under Windows PowerShell 5.1.
+  ASCII-only so the gate parses under PowerShell 7.
 #>
 param(
   [string]$Root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path,
@@ -200,9 +202,9 @@ function Add-ChildGateCheck {
     Add-Result $results $Check 'FAIL' $true "missing=$RelPath" $NextAction
     return
   }
-  $powershell = (Get-Command powershell.exe -ErrorAction SilentlyContinue).Source
+  $powershell = (Get-Command pwsh.exe -ErrorAction SilentlyContinue).Source
   if (-not $powershell) { $powershell = (Get-Command pwsh -ErrorAction Stop).Source }
-  $output = & $powershell -NoProfile -ExecutionPolicy Bypass -File $path @Arguments 2>&1
+  $output = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $path @Arguments 2>&1
   $exit = $LASTEXITCODE
   $status = if ($exit -eq 0) { 'PASS' } else { 'FAIL' }
   $detail = (@($output) | ForEach-Object { [string]$_ } | Where-Object { $_ -match '^\[(FAIL|PASS)\]|^RESULT:' } | Select-Object -First 5) -join ' | '

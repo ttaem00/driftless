@@ -73,7 +73,7 @@ FAILs, so the isolation can never be quietly bypassed.
 Windows. The maintainer is not allowed to ship one. A gate checks every script
 and FAILs if it finds a character that Windows can misread.
 
-**Why this matters.** Windows PowerShell 5.1 and `cmd.exe` read a BOM-less UTF-8
+**Why this matters.** PowerShell 7 and `cmd.exe` read a BOM-less UTF-8
 file as the legacy CP1252 codepage. A stray em dash, a curly quote, or any
 non-Latin character corrupts the bytes and breaks the parse — and the failure
 only shows up later, on someone else's machine. The gate catches it up front. It
@@ -206,16 +206,16 @@ no secrets, no host-global access — and they run the same on Windows PowerShel
 
 ```powershell
 # Containment: scan the working-tree diff and untracked files (the pre-commit default)
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1
 
 # Containment: scan every tracked file (full audit)
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -AllFiles
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -AllFiles
 
 # Windows text safety: every tracked .ps1 / .bat / .cmd
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-WindowsTextSafety.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-WindowsTextSafety.ps1
 
 # Work discipline: no unresolved placeholder ships inside a tracked rule file
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-WorkDiscipline.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-WorkDiscipline.ps1
 ```
 
 Add `-Json` to either gate for a machine-readable summary. Exit codes: `0` = PASS,

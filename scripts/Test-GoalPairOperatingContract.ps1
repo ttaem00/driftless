@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 param(
   [string]$Root = (Split-Path -Parent $PSScriptRoot)
 )

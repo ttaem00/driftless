@@ -19,7 +19,7 @@ speed layer generated under `.runtime/context-wiki`.
 ## Build
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\Build-RepoContextWiki.ps1
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts\Build-RepoContextWiki.ps1
 ```
 
 The output is Obsidian-friendly markdown:
@@ -39,7 +39,7 @@ The output is Obsidian-friendly markdown:
 ## Search
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\Search-RepoContextWiki.ps1 -Query "Codex profile" -BuildIfMissing
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts\Search-RepoContextWiki.ps1 -Query "Codex profile" -BuildIfMissing
 ```
 
 Each match cites the real source file and generated wiki page.
@@ -47,7 +47,7 @@ Each match cites the real source file and generated wiki page.
 ## Validate
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\Test-RepoContextWiki.ps1
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts\Test-RepoContextWiki.ps1
 ```
 
 The validator builds a fresh test wiki and checks source traceability, graph
@@ -58,7 +58,7 @@ shape, search behavior, and generated wikilinks.
 Driftless also includes a public-safe benchmark gate:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\Test-CodeIntelligenceBenchmark.ps1 -Root .
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts\Test-CodeIntelligenceBenchmark.ps1 -Root .
 ```
 
 The benchmark compares broad baseline discovery against the compiled wiki on

@@ -159,7 +159,7 @@ Goal-pair companion thread prompt content:
 Fallback bundle command:
 
 ```powershell
-powershell.exe -ExecutionPolicy Bypass -File "<skill>\scripts\New-GoalPairTwoSessionBundle.ps1" `
+pwsh.exe -ExecutionPolicy Bypass -File "<skill>\scripts\New-GoalPairTwoSessionBundle.ps1" `
   -TargetRepo "<repo>" `
   -Goal "<manager goal>" `
   -SuccessCriteria "<verifiable done criteria>" `
@@ -322,7 +322,7 @@ time, money, or recurrence risk.
 Use the script when the companion needs a durable state record:
 
 ```powershell
-powershell.exe -ExecutionPolicy Bypass -File "<skill>\scripts\New-GoalPairCheckpoint.ps1" `
+pwsh.exe -ExecutionPolicy Bypass -File "<skill>\scripts\New-GoalPairCheckpoint.ps1" `
   -TargetRepo "<repo>" `
   -RunId "<run-id>" `
   -Goal "<root intent>" `

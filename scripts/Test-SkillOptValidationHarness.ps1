@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Driftless SkillOpt validation harness (LLM-zero, static).
@@ -50,7 +52,7 @@
 .OUTPUTS
   A human report (or JSON with -Json). Exit 0 when every checked pair matched its
   expectation; exit 1 otherwise. ASCII-only, no BOM, so the gate passes its own
-  Windows text-safety rule under Windows PowerShell 5.1.
+  Windows text-safety rule under PowerShell 7.
 #>
 param(
   [string]$Spec = '',

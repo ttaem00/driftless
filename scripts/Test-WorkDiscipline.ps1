@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Driftless work-discipline gate. Mechanically enforces that no unresolved
@@ -38,7 +40,7 @@
   clean fixture PASSes - no temp files, no git mutation, ASCII-only.
 
   Read-only. No network, no secrets, no peer AI, no host-global access. ASCII
-  only so the gate cannot fail its own text-safety rule under PowerShell 5.1.
+  only so the gate cannot fail its own text-safety rule under PowerShell 7.
 
 .PARAMETER Root
   Repo root. Defaults to the parent of this script's folder.
@@ -63,7 +65,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 # Decode git stdout as UTF-8 so non-ASCII tracked paths (with core.quotepath=false)
-# are read correctly under Windows PowerShell 5.1, and keep our own output UTF-8.
+# are read correctly under PowerShell 7, and keep our own output UTF-8.
 try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch { }
 $OutputEncoding = [System.Text.Encoding]::UTF8
 

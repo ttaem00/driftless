@@ -20,6 +20,17 @@ Paste one prompt before bed. Wake up to merged pull requests. You never have to 
 > verified on which OS is stated honestly in the
 > [host evidence matrix](./docs/en/host-evidence-matrix.md).
 
+## Requirements
+
+- PowerShell 7+
+- Run scripts with pwsh.exe, not Windows PowerShell
+
+Install:
+
+```pwsh
+winget install --id Microsoft.PowerShell --source winget
+```
+
 ## 60-second proof
 
 *(See a real captured run: [examples/demo-transcript.txt](./examples/demo-transcript.txt) — clone -> install dry-run -> gates PASS.)*

@@ -61,7 +61,7 @@ human approves the merge. Issues -> branches -> PRs -> merges, repeated overnigh
    no `.runtime/` state:
 
    ```powershell
-   powershell.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -AllFiles
+   pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -AllFiles
    ```
 
 4. Run the skill-optimization validation harness against its fixtures to

@@ -47,7 +47,7 @@ change small and gate-green, and open a PR that links the issue.
 ## Conventions
 
 - **Scripts** (`.ps1` / `.bat` / `.cmd`) must be **ASCII + no BOM** so Windows
-  PowerShell 5.1 parses them. Put non-ASCII prose in Markdown, not scripts.
+  PowerShell 7 parses them. Put non-ASCII prose in Markdown, not scripts.
 - **Shared before tool-specific.** If a skill or rule applies to both Claude and
   Codex, put it once under `profiles/shared/` so one edit improves both profiles.
   Tool-specific work goes under the owning profile.

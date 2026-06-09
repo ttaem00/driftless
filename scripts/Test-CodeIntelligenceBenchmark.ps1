@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Public-safe code-intelligence benchmark for Driftless.
@@ -134,7 +136,7 @@ $builder = Join-Path $repoRoot 'scripts/Build-RepoContextWiki.ps1'
 $wikiGate = Join-Path $repoRoot 'scripts/Test-RepoContextWiki.ps1'
 $tracked = Get-TrackedFiles -RepoRoot $repoRoot
 
-$buildJson = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $builder -Root $repoRoot -OutputPath $out -Clean -Json
+$buildJson = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $builder -Root $repoRoot -OutputPath $out -Clean -Json
 $build = $buildJson | ConvertFrom-Json
 $rows = @((Get-Content -LiteralPath (Join-Path $out 'index/search-index.json') -Raw -Encoding UTF8 | ConvertFrom-Json).rows)
 
@@ -184,7 +186,7 @@ $taskResults = foreach ($task in $tasks) {
   }
 }
 
-$wikiGateOutput = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $wikiGate -Root $repoRoot 2>&1
+$wikiGateOutput = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $wikiGate -Root $repoRoot 2>&1
 $wikiGateExit = $LASTEXITCODE
 $avgRecall = [Math]::Round((@($taskResults | ForEach-Object { $_.wiki.recall }) | Measure-Object -Average).Average, 3)
 $avgReduction = [Math]::Round((@($taskResults | ForEach-Object { $_.tokenReduction }) | Measure-Object -Average).Average, 3)

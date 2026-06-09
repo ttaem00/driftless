@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Driftless mirror-parity gate. FAILs when the single shared tier drifts out of
@@ -15,7 +17,7 @@
   NOT compare two copies for byte equality -- the shared tier is consumed in
   place by relative path, so there is only ONE copy of each shared asset. Instead
   it runs three complementary, host-robust signals (all valid on Windows
-  PowerShell 5.1):
+  PowerShell 7):
 
     SIGNAL A -- SHARED-TIER EXISTENCE (always runs):
       For each sharedAsset in the allowlist, its file must exist under the shared
@@ -48,7 +50,7 @@
   independently -- that is ecosystem leverage, not divergence.
 
   Read-only: no network, no secrets, no peer AI, no host-global access. ASCII-only
-  so the gate cannot fail its own Windows text-safety rule under PowerShell 5.1.
+  so the gate cannot fail its own Windows text-safety rule under PowerShell 7.
 
 .PARAMETER Root
   Repo root (or a fixture root that contains the two profile trees plus the shared

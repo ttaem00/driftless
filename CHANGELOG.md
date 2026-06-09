@@ -78,7 +78,7 @@ from one source of truth.
 - **Mirror-parity gate** (`scripts/Test-ProfileMirrorParity.ps1`) — FAILs when
   the two profiles drift apart, so they never silently diverge.
 - **Windows text-safety gate** (`scripts/Test-WindowsTextSafety.ps1`) — enforces
-  ASCII + no-BOM on `.ps1` / `.bat` / `.cmd` so Windows PowerShell 5.1 parses them.
+  ASCII + no-BOM on `.ps1` / `.bat` / `.cmd` so PowerShell 7 parses them.
 - **Skill-optimization validation harness** (`scripts/Test-SkillOptValidationHarness.ps1`)
   — static, no-paid-LLM 5-axis (tokens / manager-intervention / time / money /
   performance) baseline-vs-candidate scoring that REJECTS regressions.
@@ -94,7 +94,7 @@ from one source of truth.
 - MIT license, containment-first `.gitignore`, CRLF policy for Windows scripts.
 
 ### Honest status
-- Windows PowerShell 5.1: all gates verified PASS (and FAIL on negative fixtures).
+- PowerShell 7: all gates verified PASS (and FAIL on negative fixtures).
 - macOS / Linux: the POSIX `install.sh` path runs; the PowerShell gates require
   PowerShell — see `docs/en/host-evidence-matrix.md`. Anything not yet run on a
   host is labeled UNVERIFIED rather than claimed.

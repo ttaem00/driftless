@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Driftless improvement-principle discipline gate.
@@ -18,7 +20,7 @@
   workflow evidence.
 
   Read-only. No network, no secrets, no peer AI, no host-global access.
-  ASCII-only so the gate parses under Windows PowerShell 5.1.
+  ASCII-only so the gate parses under PowerShell 7.
 #>
 param(
   [string]$Root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path,

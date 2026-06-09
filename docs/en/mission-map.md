@@ -36,7 +36,7 @@ contains no private path, account, thread, browser profile, credential, or
 runtime-specific session id. Validate it with:
 
 ```powershell
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-MissionMapFixture.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-MissionMapFixture.ps1
 ```
 
 Use this fixture as a demo/spec seed. Runtime-specific adapters should live in

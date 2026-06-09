@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Driftless public-safe pre-adoption gate for external skills, repos, and MCP packets.
@@ -116,7 +118,7 @@ function Invoke-CloseoutJson {
   $saved = $ErrorActionPreference
   try {
     $ErrorActionPreference = "Continue"
-    $out = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath -Path $LedgerPath -FinalCloseout -Json 2>&1
+    $out = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $ScriptPath -Path $LedgerPath -FinalCloseout -Json 2>&1
     $exit = $LASTEXITCODE
   } finally {
     $ErrorActionPreference = $saved

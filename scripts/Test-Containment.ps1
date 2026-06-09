@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Driftless containment gate. Proves the repo never reads or writes a forbidden
@@ -39,7 +41,7 @@
   a file whose own path is forbidden is flagged WITHOUT being read.
 
   Read-only. No network, no peer AI, no host-global access. ASCII-only so the gate
-  cannot fail its own text-safety rule under Windows PowerShell 5.1.
+  cannot fail its own text-safety rule under PowerShell 7.
 
 .PARAMETER Path
   Folder to scan from (defaults to the current directory). Resolved to the git
@@ -79,7 +81,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 # Decode git stdout as UTF-8 so non-ASCII paths (with core.quotepath=false) are
-# read correctly under Windows PowerShell 5.1 (whose default OEM codepage would
+# read correctly under PowerShell 7 (whose default OEM codepage would
 # mangle them). Output is also UTF-8 so PASS/FAIL lines stay clean.
 try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch { }
 $OutputEncoding = [System.Text.Encoding]::UTF8

@@ -43,7 +43,7 @@ manual guesswork.
    - needs manager approval;
    - blocked because it would touch the forbidden surface.
 3. Run the smallest available safety evidence:
-   - `powershell.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -AllFiles`
+   - `pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -AllFiles`
    - plus any repo-specific gate named in the issue or PR.
 4. If the task needs credentials, billing, public release, destructive action,
    host-global promotion, or user-data transfer, stop and ask one plain-language

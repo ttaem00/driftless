@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Driftless Windows text-safety gate. Keeps Windows-fragile scripts ASCII-only
@@ -7,14 +9,14 @@
   Guards against a recurring class of Windows shell/parse failures:
 
     1. Script text safety - every tracked *.ps1 / *.bat / *.cmd must be ASCII-only
-       and have no UTF-8 BOM. Windows PowerShell 5.1 and cmd.exe read a BOM-less
+       and have no UTF-8 BOM. PowerShell 7 and cmd.exe read a BOM-less
        UTF-8 file as the legacy CP1252 codepage, so a stray em dash, curly quote,
        or non-Latin character corrupts the bytes and breaks the parse. A leading
        BOM upstream of param() has also broken 5.1 parsing, so .ps1 fails the BOM
        check too.
 
     2. PS 5.1-fragile cmdlets - some cmdlets are NOT reliably present in the
-       constrained Windows PowerShell 5.1 host (for example Get-FileHash can be
+       constrained PowerShell 7 host (for example Get-FileHash can be
        absent and throw CommandNotFoundException only at runtime). A LIVE use
        (not a comment) of such a cmdlet in any tracked *.ps1 is flagged so it
        cannot be reintroduced and silently fail later.
@@ -24,7 +26,7 @@
        hook paths collapse on Windows and can freeze the desktop agent host.
 
   Read-only. No network, no secrets, no peer AI, no host-global access. ASCII-only
-  so the gate cannot fail its own rule under PowerShell 5.1.
+  so the gate cannot fail its own rule under PowerShell 7.
 
 .PARAMETER Root
   Repo root. Defaults to the parent of this script's folder.
@@ -44,7 +46,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 # Decode git stdout as UTF-8 so non-ASCII tracked paths (with core.quotepath=false)
-# are read correctly under Windows PowerShell 5.1, and keep our own output UTF-8.
+# are read correctly under PowerShell 7, and keep our own output UTF-8.
 try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch { }
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
@@ -146,7 +148,7 @@ if ($fragile.Count -eq 0) {
 
 # ---------------------------------------------------------------------------
 # Check 1b: PS 5.1-fragile cmdlets. Flag a LIVE use (not a comment) of a cmdlet
-# that is not reliably present in the constrained Windows PowerShell 5.1 host.
+# that is not reliably present in the constrained PowerShell 7 host.
 # Extend $fragileCmdlets if another absent cmdlet is found.
 # ---------------------------------------------------------------------------
 $fragileCmdlets = @('Get-FileHash')
@@ -183,12 +185,12 @@ foreach ($f in $ps1Files) {
   }
 }
 if ($ps1Files.Count -eq 0) {
-  $results.Add([pscustomobject]@{ check = 'PS5.1-fragile cmdlets (no Get-FileHash etc.)'; status = 'SKIP'; blocking = $false; evidence = 'no *.ps1 found'; next_action = '' }) | Out-Null
+  $results.Add([pscustomobject]@{ check = 'PowerShell 7-fragile cmdlets (no Get-FileHash etc.)'; status = 'SKIP'; blocking = $false; evidence = 'no *.ps1 found'; next_action = '' }) | Out-Null
 } else {
   $status = if ($cmdletViolations.Count -eq 0) { 'PASS' } else { 'FAIL' }
   $evidence = "ps1=$($ps1Files.Count); fragile-cmdlet-uses=$($cmdletViolations.Count)"
   if ($cmdletViolations.Count -gt 0) { $evidence += '; ' + ($cmdletViolations -join '; ') }
-  $results.Add([pscustomobject]@{ check = 'PS5.1-fragile cmdlets (no Get-FileHash etc.)'; status = $status; blocking = $true; evidence = $evidence; next_action = 'Get-FileHash can be absent in the CI PowerShell 5.1 host; replace it with a raw-byte compare ([System.IO.File]::ReadAllBytes + length precheck) or another version-independent approach.' }) | Out-Null
+  $results.Add([pscustomobject]@{ check = 'PowerShell 7-fragile cmdlets (no Get-FileHash etc.)'; status = $status; blocking = $true; evidence = $evidence; next_action = 'Get-FileHash can be absent in the CI PowerShell 7 host; replace it with a raw-byte compare ([System.IO.File]::ReadAllBytes + length precheck) or another version-independent approach.' }) | Out-Null
 }
 
 # ---------------------------------------------------------------------------

@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Driftless agent-runtime health gate. Catches broken Codex recovery lanes before

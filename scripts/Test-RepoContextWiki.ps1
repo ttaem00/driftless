@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Validate the repo-local compiled context wiki build.
@@ -38,7 +40,7 @@ $builder = Join-Path $scriptDir 'Build-RepoContextWiki.ps1'
 $search = Join-Path $scriptDir 'Search-RepoContextWiki.ps1'
 $results = [System.Collections.Generic.List[object]]::new()
 
-$buildJson = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $builder -Root $repoRoot -OutputPath $out -Clean -Json
+$buildJson = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $builder -Root $repoRoot -OutputPath $out -Clean -Json
 $build = $buildJson | ConvertFrom-Json
 if ($build.status -eq 'PASS' -and $build.sources -ge 8) {
   Add-Result $results 'fresh build' 'PASS' "sources=$($build.sources); edges=$($build.graphEdges)"
@@ -67,7 +69,7 @@ if (@($graph.nodes).Count -ge @($manifest.sources).Count -and @($graph.edges).Co
   Add-Result $results 'graph index' 'FAIL' "nodes=$(@($graph.nodes).Count); edges=$(@($graph.edges).Count)" 'Graph needs nodes, edges, and community summaries.'
 }
 
-$searchJson = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $search -Root $repoRoot -WikiPath $out -Query 'Codex profile' -Json
+$searchJson = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $search -Root $repoRoot -WikiPath $out -Query 'Codex profile' -Json
 $searchResult = $searchJson | ConvertFrom-Json
 if ($searchResult.status -eq 'MATCH' -and @($searchResult.results).Count -gt 0) {
   Add-Result $results 'compiled search' 'PASS' "results=$(@($searchResult.results).Count)"

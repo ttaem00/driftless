@@ -71,17 +71,17 @@ sh ./install.sh
 
 ```powershell
 # See the plan first (changes nothing):
-powershell.exe -ExecutionPolicy Bypass -File install.ps1 -DryRun
+pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -DryRun
 
 # Set up both profiles:
-powershell.exe -ExecutionPolicy Bypass -File install.ps1 -Tool both
+pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool both
 
 # Or just one:
-powershell.exe -ExecutionPolicy Bypass -File install.ps1 -Tool claude
-powershell.exe -ExecutionPolicy Bypass -File install.ps1 -Tool codex
+pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool claude
+pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool codex
 
 # Interactive (it asks which tool):
-powershell.exe -ExecutionPolicy Bypass -File install.ps1
+pwsh.exe -ExecutionPolicy Bypass -File install.ps1
 ```
 
 That is the whole install. Run it again any time — it is **idempotent**: it
@@ -132,7 +132,7 @@ appearing on your machine. You decide, every time.
 이 폴더에서 터미널을 열고 아래 한 줄만 실행하세요.
 
 - macOS / Linux: `sh ./install.sh --both`
-- Windows: `powershell.exe -ExecutionPolicy Bypass -File install.ps1 -Tool both`
+- Windows: `pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool both`
 - 먼저 계획만 보고 싶다면 끝에 `--dry-run`(Windows는 `-DryRun`)을 붙이세요.
 
 두 방법 모두 **격리 홈**을 이 저장소 안 `./.runtime/` 폴더에만 만듭니다.
@@ -184,13 +184,13 @@ var IS the isolation. Then:
   containment gate:
 
   ```powershell
-  powershell.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1
+  pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1
   ```
 
 - To confirm every shipped script is Windows-safe (ASCII, no BOM), run:
 
   ```powershell
-  powershell.exe -ExecutionPolicy Bypass -File scripts/Test-WindowsTextSafety.ps1
+  pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-WindowsTextSafety.ps1
   ```
 
 Both gates are read-only: no network, no secrets, no host-global access.

@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Validate compressed handoff/protocol summaries keep load-bearing context.
@@ -8,7 +10,7 @@
   and the next executable action. This gate checks a tiny fixture and includes a
   negative self-test proving missing required fields fail.
 
-  Read-only except -SelfTest temp fixtures. ASCII-only for Windows PowerShell 5.1.
+  Read-only except -SelfTest temp fixtures. ASCII-only for PowerShell 7.
 #>
 [CmdletBinding()]
 param(

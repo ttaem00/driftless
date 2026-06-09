@@ -30,7 +30,7 @@ Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as
 1. **도구 감지.** 지금 도는 게 Claude Code인지 Codex인지 판단한다(불확실하면 사용자에게 1·2·3=둘 다 중 고르게 한다).
 2. **드라이런 먼저(부작용 0).** 무엇을 할지 보여준다:
    - macOS/Linux: `sh ./install.sh --dry-run --both` (또는 `--claude`/`--codex`)
-   - Windows: `powershell -ExecutionPolicy Bypass -File .\install.ps1 -DryRun -Tool both`
+   - Windows: `pwsh.exe -ExecutionPolicy Bypass -File .\install.ps1 -DryRun -Tool both`
    계획(어떤 격리 홈이 `.runtime/` 아래 어디에 생기는지)을 평이하게 요약한다.
 3. **실제 설치.** 사용자가 진행에 동의하면 `--dry-run`을 빼고 같은 명령을 실행한다. 설치기는 격리 홈을 materialize하고, 추가 설치 항목은 각각 "아니오" 기본으로 묻는다 — 그 프롬프트를 그대로 사용자에게 전달한다.
 4. **검증(증거 필수, 추측 금지).** 설치 후 실제로 확인한다:

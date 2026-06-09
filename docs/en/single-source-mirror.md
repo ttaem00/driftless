@@ -109,20 +109,20 @@ When a base ref cannot be resolved (offline or a shallow clone), Signal C report
 still gate. A missing or unparseable allowlist reports `BLOCKED`, never a vacuous
 PASS. The gate is read-only: no network, no secrets, no host-global access. It is
 ASCII-only and BOM-free so it passes the Windows text-safety gate (it cannot fail
-its own rule on Windows PowerShell 5.1).
+its own rule on PowerShell 7).
 
 Run it:
 
 ```powershell
 # Default: structural + consumer signals always gate; git one-sidedness runs
 # against origin/main when that base resolves.
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ProfileMirrorParity.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ProfileMirrorParity.ps1
 
 # Structural-only run (no git history needed):
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ProfileMirrorParity.ps1 -SkipGitDiff
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ProfileMirrorParity.ps1 -SkipGitDiff
 
 # Machine-readable summary:
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ProfileMirrorParity.ps1 -Json
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ProfileMirrorParity.ps1 -Json
 ```
 
 Exit codes: `0` = PASS, `1` = FAIL (drift), `2` = BLOCKED (missing or unparseable

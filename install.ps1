@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Driftless installer (Windows PowerShell). Sets up an isolated home for Claude,
@@ -16,7 +18,7 @@
 
   Idempotent: re-running re-uses the existing isolated home and only fills in
   what is missing. ASCII-only and written without a BOM so it parses identically
-  on Windows PowerShell 5.1.
+  on PowerShell 7.
 
 .PARAMETER Tool
   Which profile(s) to set up: 'claude', 'codex', or 'both'. Omit for an
@@ -29,10 +31,10 @@
   Accept the default tool choice ('both') without prompting.
 
 .EXAMPLE
-  powershell.exe -ExecutionPolicy Bypass -File install.ps1
+  pwsh.exe -ExecutionPolicy Bypass -File install.ps1
 
 .EXAMPLE
-  powershell.exe -ExecutionPolicy Bypass -File install.ps1 -Tool both -DryRun
+  pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool both -DryRun
 #>
 [CmdletBinding()]
 param(

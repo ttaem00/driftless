@@ -27,8 +27,8 @@ we did not earn.
 
 | Capability | Windows | macOS | Linux |
 |---|---|---|---|
-| **Containment gate** (`Test-Containment.ps1`) | **PASS** — verified on Windows PowerShell 5.1 and PowerShell 7 | UNVERIFIED | **PASS** — runs in CI on an Ubuntu runner (`pwsh`) on every push/PR |
-| **Windows text-safety gate** (`Test-WindowsTextSafety.ps1`) | **PASS** — verified on Windows PowerShell 5.1 and PowerShell 7 | UNVERIFIED (the *rule* is Windows-specific, but the gate would still need a run to confirm it executes) | UNVERIFIED |
+| **Containment gate** (`Test-Containment.ps1`) | **PASS** — verified on PowerShell 7 and PowerShell 7 | UNVERIFIED | **PASS** — runs in CI on an Ubuntu runner (`pwsh`) on every push/PR |
+| **Windows text-safety gate** (`Test-WindowsTextSafety.ps1`) | **PASS** — verified on PowerShell 7 and PowerShell 7 | UNVERIFIED (the *rule* is Windows-specific, but the gate would still need a run to confirm it executes) | UNVERIFIED |
 | **Profile mirror-parity gate** | **PASS** on Windows | UNVERIFIED | UNVERIFIED |
 | **Env-var launch** (`CLAUDE_CONFIG_DIR` / `CODEX_HOME` -> isolated home; no `Start-*.ps1` launcher ships) | UNVERIFIED — the installer prints the command (`apply-to-your-agent.md` Step 3); a real session start is not yet e2e-measured | UNVERIFIED — same | UNVERIFIED — same |
 | **Cross-platform install path** (`install.sh` / `install.ps1`) | UNVERIFIED — `install.ps1` is the Windows entry point; dry-run works, a full run is not yet measured | UNVERIFIED — intended path, not yet measured | **PASS** — CI runs `install.sh --both --yes` on Ubuntu, asserts the isolated homes materialize under `.runtime/` and host-global `~/.claude` is untouched |
@@ -40,7 +40,7 @@ we did not earn.
 The Windows column is green because the gates were **run** on a real Windows host
 and produced passing evidence — not because the source looks correct. Specifically:
 
-- The gates are authored to parse identically under **Windows PowerShell 5.1**
+- The gates are authored to parse identically under **PowerShell 7**
   (the constrained legacy host that CI uses) **and PowerShell 7**, and were
   verified under both.
 - The gate scripts are themselves ASCII-only and BOM-free, so each one passes its

@@ -1,3 +1,5 @@
+#requires -Version 7.0
+#requires -PSEdition Core
 <#
 .SYNOPSIS
   Search the repo-local compiled context wiki.
@@ -42,10 +44,10 @@ $indexPath = Join-Path $WikiPath 'index/search-index.json'
 if (-not (Test-Path -LiteralPath $indexPath -PathType Leaf)) {
   if ($BuildIfMissing) {
     $builder = Join-Path $scriptDir 'Build-RepoContextWiki.ps1'
-    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $builder -Root $repoRoot -OutputPath $WikiPath -Clean *> $null
+    & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $builder -Root $repoRoot -OutputPath $WikiPath -Clean *> $null
   } else {
     Write-Output 'CONTEXT_WIKI_MISSING'
-    Write-Output ("Run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/Build-RepoContextWiki.ps1 -Root `"{0}`"" -f $repoRoot)
+    Write-Output ("Run: pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts/Build-RepoContextWiki.ps1 -Root `"{0}`"" -f $repoRoot)
     exit 0
   }
 }

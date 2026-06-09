@@ -4,12 +4,12 @@ Two small, self-contained PowerShell gates that prove Driftless is
 **containment-first**: the repo never reads or writes a forbidden path, never
 leaks a credential, and never ships a Windows-fragile script. They are read-only
 (no network, no secrets, no host-global access) and run the same on Windows
-PowerShell 5.1 and PowerShell 7.
+PowerShell 7 and PowerShell 7.
 
 | Gate | What it proves | FAILs when |
 | --- | --- | --- |
 | `Test-Containment.ps1` | The code base never touches a forbidden path or leaks a secret. | A scanned file's own path is forbidden, references a forbidden path, or contains a credential token. |
-| `Test-WindowsTextSafety.ps1` | Every shippable script parses identically on Windows PowerShell 5.1. | Any `.ps1` / `.bat` / `.cmd` has a non-ASCII byte or a UTF-8 BOM. |
+| `Test-WindowsTextSafety.ps1` | Every shippable script parses identically on PowerShell 7. | Any `.ps1` / `.bat` / `.cmd` has a non-ASCII byte or a UTF-8 BOM. |
 | `Test-AgentRuntimeHealth.ps1` | The agent is not trying to repair the product from a broken Codex runtime. | Repo-local Codex uses elevated Windows sandbox, has sandbox setup errors, or recent Codex 400/self-error markers. |
 | `Test-ImprovementPrincipleDiscipline.ps1` | The shared root-cause / principle-based / no-overfit rule remains present and wired into shipped skills, learning-loop, finish-to-done, CI, and PR guidance. | A rule/skill surface drops the improvement principle, or the gate stops being part of normal review. |
 | `Test-HotContextDiscipline.ps1` | Hot rules stay small instead of moving always-loaded instructions into helper docs or every-task skills. | `AGENTS.md` / `CLAUDE.md` gets too large, always loads another instruction file, or a skill claims every-task scope. |
@@ -23,40 +23,40 @@ PowerShell 5.1 and PowerShell 7.
 
 ```powershell
 # Containment: scan the working-tree diff and untracked files (pre-commit default)
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1
 
 # Containment: scan every tracked file (full audit)
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -AllFiles
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -AllFiles
 
 # Containment: prove detection on a single fixture file (no exemptions applied)
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -File path\to\fixture.txt
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1 -File path\to\fixture.txt
 
 # Windows text safety: every tracked .ps1 / .bat / .cmd
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-WindowsTextSafety.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-WindowsTextSafety.ps1
 
 # Agent runtime health: stop early if the agent itself is broken
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-AgentRuntimeHealth.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-AgentRuntimeHealth.ps1
 
 # Improvement principle: keep root-cause/no-overfit discipline in shared guidance and shipped workflow surfaces
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ImprovementPrincipleDiscipline.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ImprovementPrincipleDiscipline.ps1
 
 # Hot context: prevent AGENTS.md/CLAUDE.md bloat by indirection
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-HotContextDiscipline.ps1 -Root .
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-HotContextDiscipline.ps1 -Root .
 
 # Context engineering: keep compressed/resumed work verifiable
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ContextEngineeringDiscipline.ps1 -Root .
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ContextEngineeringDiscipline.ps1 -Root .
 
 # Code intelligence: benchmark compiled wiki usefulness before external tool adoption
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-CodeIntelligenceBenchmark.ps1 -Root .
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-CodeIntelligenceBenchmark.ps1 -Root .
 
 # Compressed handoff protocol fixture: prove resumable summaries keep executable context
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-CompressedHandoffSummaryProtocol.ps1 -Root .
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-CompressedHandoffSummaryProtocol.ps1 -Root .
 
 # Mission Map: validate the public-safe orchestration UI fixture
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-MissionMapFixture.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-MissionMapFixture.ps1
 
 # External adoption safety: prove the public-safe pre-adoption gate has teeth
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ExternalAdoptionSafetyGate.ps1 -SelfTest
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ExternalAdoptionSafetyGate.ps1 -SelfTest
 ```
 
 Add `-Json` to any gate that supports it for a machine-readable summary.
@@ -117,7 +117,7 @@ as "we tried it" without adopt/scale/watch/reject/block/manager-only closeout.
 Use it before direct adoption:
 
 ```powershell
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-ExternalAdoptionSafetyGate.ps1 -CandidatePath path\to\candidate
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ExternalAdoptionSafetyGate.ps1 -CandidatePath path\to\candidate
 ```
 
 Static PASS is not a behavioral safety claim. It means the bounded pre-adoption
@@ -164,7 +164,7 @@ content reference to the host-global `~/.claude` / `~/.codex` still FAILs.
 ## What `Test-WindowsTextSafety.ps1` checks
 
 1. **ASCII + no BOM** for every tracked `.ps1` / `.bat` / `.cmd`. Windows
-   PowerShell 5.1 and `cmd.exe` read a BOM-less UTF-8 file as legacy CP1252, so a
+   PowerShell 7 and `cmd.exe` read a BOM-less UTF-8 file as legacy CP1252, so a
    stray em dash, curly quote, or non-Latin character corrupts the bytes and
    breaks the parse.
 2. **No PS 5.1-fragile cmdlets** -- a live (non-comment) use of a cmdlet that can

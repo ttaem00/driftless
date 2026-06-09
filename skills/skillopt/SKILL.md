@@ -82,13 +82,13 @@ dropped protected term is an automatic reject even if every axis score rose.
 
 ```powershell
 # Self-test: three built-in pairs prove the gate in BOTH directions
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1
 
 # Score your own baseline/candidate pair
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1 -Spec path\to\spec.json
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1 -Spec path\to\spec.json
 
 # Machine-readable
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1 -Json
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1 -Json
 ```
 
 The built-in self-test ships three pairs so a fresh clone proves discrimination

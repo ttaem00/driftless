@@ -72,7 +72,7 @@ repo's own self-maintaining graph (linked from [loop-log.md](./loop-log.md)).
 | 92 | 2026-05-30 | feat(#67): FULL codex skill port (44 covered, 0 residual) + hooks + dynamic router + coverage guard |
 | 94 | 2026-05-30 | feat(#67): hooks coverage + classify all 244 scripts + extend coverage guard |
 | 95 | 2026-05-30 | docs(decisions): A10 completeness-gate for full-port |
-| 96 | 2026-05-30 | feat: gate against reintroducing Get-FileHash (PS5.1-fragile cmdlet guard) |
+| 96 | 2026-05-30 | feat: gate against reintroducing Get-FileHash (PowerShell 7-fragile cmdlet guard) |
 | 98 | 2026-05-30 | feat(#97): 오버나이트 '끝까지 해결' 구조적 강제 (Exhaustion Ledger 게이트) |
 | 100 | 2026-05-30 | fix(#99): 8개 agent-solvable 카테고리 전부 커버 + 구조적 강제 (#97 후속) |
 | 102 | 2026-05-30 | docs: empty-tool-output=UNVERIFIED gate + rtk adoption eval (pending manager) |

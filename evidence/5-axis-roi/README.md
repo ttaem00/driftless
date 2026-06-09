@@ -68,10 +68,10 @@ be adopted. That deterministic verdict is what makes a before/after skill delta
 
 ```powershell
 # Reproduce a skill before/after verdict against the committed fixtures
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1
 
 # Validate a single candidate spec
-powershell.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1 -SpecPath path/to/spec.json
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-SkillOptValidationHarness.ps1 -SpecPath path/to/spec.json
 ```
 
 Exit `0` = the candidate is valid (the fixture expectations are met); exit `1`

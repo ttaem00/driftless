@@ -106,6 +106,26 @@ strategy, and development process. Do not stop at README/package metadata or one
 safe subset; transform useful surfaces into local-safe gates, schemas, skills,
 UI status, docs, or fixture pilots.
 
+## High-Judgment Adoption Gate
+
+Lightweight workers, lower-effort lanes, or separate sessions may gather bounded
+evidence for a candidate, but their output is evidence only. A final adoption,
+rejection, pilot, public-safe propagation, runtime dependency, architecture, or
+security-boundary verdict must be made by the lead/coordinator or another
+high-quality synthesis lane that understands both the current system and the
+target system.
+
+Before closing the adoption decision, separate:
+
+- `Observed locally`: repo commands, local probes, tests, or fixture evidence;
+- `Observed upstream`: source repo/docs/releases/issues checked with date;
+- `Inferred`: reasoned fit from observed facts;
+- `UNVERIFIED`: anything not checked or not enough evidence.
+
+If context pressure or model capacity prevents that synthesis, checkpoint the
+evidence and continue in a fresh coordinator lane. Do not accept a worker's
+verdict as the final adoption decision.
+
 ## Post-Pilot Decision Gate
 
 PILOT_ONLY is not Done when the pilot merely ran. Before Done, record the

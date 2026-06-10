@@ -56,3 +56,31 @@ Remove or revert the recorded change if it causes over-triggering or false posit
 
 ### Status
 implemented
+
+## 2026-06-11 - Public-safe workflows must reserve high-judgment decisions for lead review
+
+### Observed Pattern
+Low-model or lightweight worker fallback is useful for bounded evidence recovery, but unsafe as the sole authority for architecture, security, adoption, release, or public-safe propagation decisions. Shared Driftless skills need the public-safe principle so broad system decisions remain with lead/coordinator synthesis.
+
+### Evidence
+- UNVERIFIED
+
+### Lesson
+Low-model or lightweight worker fallback is useful for bounded evidence recovery, but unsafe as the sole authority for architecture, security, adoption, release, or public-safe propagation decisions. Shared Driftless skills need the public-safe principle so broad system decisions remain with lead/coordinator synthesis.
+
+### Recommended Change
+Add shared skill guidance and validation: lightweight workers may gather bounded evidence, but high-judgment decisions require lead/coordinator or high-quality synthesis with explicit observed/inferred/unverified boundaries.
+
+### Promotion
+- status: implementation_needed
+- placement: skill workflow
+- next action: Apply the smallest repo-local/current-isolated-profile prevention now, then validate it. If the target is an instruction doc, run caveman-compress.
+
+### Scope
+repo-local
+
+### Rollback
+Remove or revert the recorded change if it causes over-triggering or false positives.
+
+### Status
+implementation_required

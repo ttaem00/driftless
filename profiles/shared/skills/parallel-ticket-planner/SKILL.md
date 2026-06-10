@@ -120,6 +120,13 @@ under-adopt 해서다: 열린 PR, 미머지 draft, 낡은 claim, reopened issue,
   호출이나 다른 CLI 브리지 명령 금지.
 - 워커 출력은 blocked가 아니면 `REVIEW_READY`에서 끝난다. 최종 merge, issue closure,
   Project 완료를 주장하지 않는다.
+- Lightweight/low-effort worker output is evidence only for high-judgment
+  decisions. Architecture, security/credential boundaries, external adoption,
+  release/merge readiness, public-safe propagation, irreversible actions, and
+  any decision requiring both current-system and target-system understanding
+  must be adopted by the coordinator through high-quality synthesis with
+  `Observed locally`, `Observed upstream`, `Inferred`, and `UNVERIFIED`
+  boundaries.
 - 기존 파일을 편집하는 patch 작업은 격리 worktree(`<runtime>/worktrees/<task-id>`)를 쓴다
   (활성 레포 규칙이 더 엄격한 경로를 지정하지 않는 한). **예외(load-bearing):** 새 파일을
   CREATE 하는 lane은 worktree를 쓰지 않는다(disjoint 경로로 격리 — 위 "병렬화 메커니즘 선택"

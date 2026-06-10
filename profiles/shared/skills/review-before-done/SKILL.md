@@ -24,6 +24,10 @@ Prioritize:
 - missing verification for the user-visible claim;
 - broken installer, launcher, or profile behavior;
 - false "done" claims where behavior is only documented or hidden.
+- lightweight-worker or low-effort output used as the final authority for
+  architecture, security, external adoption, release/merge readiness,
+  public-safe propagation, or other high-judgment decisions instead of
+  lead/coordinator synthesis.
 
 Ignore style-only comments unless they hide a real usability or safety issue.
 

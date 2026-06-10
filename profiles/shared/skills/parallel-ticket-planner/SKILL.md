@@ -127,6 +127,12 @@ under-adopt 해서다: 열린 PR, 미머지 draft, 낡은 claim, reopened issue,
   must be adopted by the coordinator through high-quality synthesis with
   `Observed locally`, `Observed upstream`, `Inferred`, and `UNVERIFIED`
   boundaries.
+- Worker capacity/context/partial failures are recovery states, not closeout.
+  The coordinator classifies every lane as `COMPLETE`,
+  `PARTIAL_RETRY_REQUIRED`, `MODEL_CAPACITY_RETRY`,
+  `CONTEXT_ROLLOVER_RETRY`, `FAILED`, or `BLOCKED`, records
+  `worker_recovery_inventory`, and retries reversible work through a fresh
+  context/fallback route before any next phase or Done claim.
 - 기존 파일을 편집하는 patch 작업은 격리 worktree(`<runtime>/worktrees/<task-id>`)를 쓴다
   (활성 레포 규칙이 더 엄격한 경로를 지정하지 않는 한). **예외(load-bearing):** 새 파일을
   CREATE 하는 lane은 worktree를 쓰지 않는다(disjoint 경로로 격리 — 위 "병렬화 메커니즘 선택"

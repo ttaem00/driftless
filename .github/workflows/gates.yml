@@ -58,6 +58,10 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-ContextEngineeringDiscipline.ps1 -Root .
 
+      - name: Worker failure recovery contract gate
+        shell: pwsh
+        run: ./scripts/Test-WorkerFailureRecoveryContract.ps1 -Root .
+
       - name: Code-intelligence benchmark gate (compiled wiki usefulness)
         shell: pwsh
         run: ./scripts/Test-CodeIntelligenceBenchmark.ps1 -Root .

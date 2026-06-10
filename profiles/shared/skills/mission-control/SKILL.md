@@ -102,6 +102,21 @@ lead/coordinator must re-synthesize it with explicit `Observed locally`,
 cannot do that in the current context, checkpoint and continue in a fresh
 coordinator lane instead of accepting the worker verdict.
 
+## Worker Failure Recovery
+
+Before Done, PR-ready, adoption, or public-safe propagation, verify every worker,
+guardian, and fallback artifact. Classify each lane as `COMPLETE`,
+`PARTIAL_RETRY_REQUIRED`, `MODEL_CAPACITY_RETRY`, `CONTEXT_ROLLOVER_RETRY`,
+`FAILED`, or `BLOCKED`.
+
+Model-capacity, service-unavailable, context-window, missing-closeout, and
+partial-output failures are recovery states, not completion. The coordinator
+must preserve compact evidence, retry reversible work through a fresh
+context/fallback route, and keep a `worker_recovery_inventory`. Nonzero
+`MODEL_CAPACITY_RETRY`, `CONTEXT_ROLLOVER_RETRY`, `PARTIAL_RETRY_REQUIRED`, or
+agent-solvable `FAILED` blocks final Done until retried, completed, or converted
+to an explicit not-Done tracker with the next retry condition.
+
 ## Control Tower Loop
 
 For large work, follow this order:

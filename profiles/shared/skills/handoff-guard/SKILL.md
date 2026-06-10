@@ -39,6 +39,7 @@ Completed:
 Evidence:
 Open decisions:
 Blocked/unverified:
+worker_recovery_inventory:
 Next action:
 Do not do:
 ```
@@ -49,6 +50,10 @@ Do not do:
 - Include exact issue/PR numbers and branch names when available.
 - Include the last passing or failing command, not a long log.
 - Mark missing evidence as UNVERIFIED. Empty output is not PASS.
+- If a worker failed from model capacity, service unavailability, context-window
+  pressure, or partial output, include the worker id, compact failure summary,
+  `MODEL_CAPACITY_RETRY`/`CONTEXT_ROLLOVER_RETRY`/`PARTIAL_RETRY_REQUIRED`
+  state, reversible-safety status, retry route, and exact next action.
 - Compressed references must keep source pointer, scope, exclusions, and latest
   verification evidence. If that integrity cannot be checked, mark the
   compressed reference UNVERIFIED and re-read the source before acting on it.

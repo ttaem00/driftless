@@ -57,3 +57,29 @@ Remove or revert the recorded change if it causes over-triggering or false posit
 
 ### Status
 proposal
+## 2026-06-11 - Recover capacity/context-failed worker lanes before Done
+
+### Proposal
+Add public-safe worker failure recovery guidance to shared multi-worker-capable skills and extend existing validation gates to preserve recovery state vocabulary and parent closeout inventory.
+
+### Why Now
+Public shared skills can coordinate worker, goal, or subagent lanes, but a lane may fail from model capacity or context pressure before returning a usable report. The coordinator needs a public-safe recovery contract: classify, compact, retry safely when reversible, and refuse Done until every lane is complete, retried, or explicitly blocked.
+
+### Placement Decision
+1. Intended scope: repo-local
+2. Chosen location: skill workflow
+3. Why this scope is correct: The lesson changes conditional agent behavior best loaded only when the skill triggers.
+4. Hot vs on-demand: on-demand skill.
+5. Rejected alternatives: AGENTS.md: too hot for conditional behavior. Hook: no blocking condition is defined.
+
+### Validation
+- Run skill validation and one representative invocation.
+
+### Next Action
+Apply the smallest repo-local/current-isolated-profile prevention now, then validate it. If the target is an instruction doc, run caveman-compress.
+
+### Rollback
+Remove or revert the recorded change if it causes over-triggering or false positives.
+
+### Status
+proposal

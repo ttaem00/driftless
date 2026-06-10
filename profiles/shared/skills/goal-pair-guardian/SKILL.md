@@ -173,6 +173,10 @@ The 목표동행 companion owns these checks:
 - whether the latest work still serves the goal;
 - whether any agent-solvable work was deferred to "later";
 - whether context compaction lost the goal, state, or next action;
+- whether worker model-capacity/context/partial failures were recorded in
+  `worker_recovery_inventory` as `MODEL_CAPACITY_RETRY`,
+  `CONTEXT_ROLLOVER_RETRY`, or `PARTIAL_RETRY_REQUIRED` instead of being hidden
+  as Done;
 - whether a different skill should be invoked before more ad-hoc work;
 - whether the current session can continue safely or needs a fresh goal.
 
@@ -187,7 +191,8 @@ Start or re-run the companion check when any signal appears:
 - the session starts solving a nearby but different problem;
 - the same blocker repeats twice;
 - a worker output says `PARENT_REVIEW_READY`, `PR_READY`, `UNVERIFIED`,
-  `NOT_RUN`, `follow-up`, `watch`, `후속`, or `보류`;
+  `NOT_RUN`, `MODEL_CAPACITY_RETRY`, `CONTEXT_ROLLOVER_RETRY`,
+  `PARTIAL_RETRY_REQUIRED`, `follow-up`, `watch`, `후속`, or `보류`;
 - the task grows into multiple independent write surfaces;
 - the manager asks for overnight/all tickets, parallel sessions, or no-stop work;
 - a skill/prompt/hook/doc change should become cheaper or more reliable over

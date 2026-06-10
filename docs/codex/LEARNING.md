@@ -84,3 +84,30 @@ Remove or revert the recorded change if it causes over-triggering or false posit
 
 ### Status
 implementation_required
+## 2026-06-11 - Recover capacity/context-failed worker lanes before Done
+
+### Observed Pattern
+Public shared skills can coordinate worker, goal, or subagent lanes, but a lane may fail from model capacity or context pressure before returning a usable report. The coordinator needs a public-safe recovery contract: classify, compact, retry safely when reversible, and refuse Done until every lane is complete, retried, or explicitly blocked.
+
+### Evidence
+- UNVERIFIED
+
+### Lesson
+Public shared skills can coordinate worker, goal, or subagent lanes, but a lane may fail from model capacity or context pressure before returning a usable report. The coordinator needs a public-safe recovery contract: classify, compact, retry safely when reversible, and refuse Done until every lane is complete, retried, or explicitly blocked.
+
+### Recommended Change
+Add public-safe worker failure recovery guidance to shared multi-worker-capable skills and extend existing validation gates to preserve recovery state vocabulary and parent closeout inventory.
+
+### Promotion
+- status: implementation_needed
+- placement: skill workflow
+- next action: Apply the smallest repo-local/current-isolated-profile prevention now, then validate it. If the target is an instruction doc, run caveman-compress.
+
+### Scope
+repo-local
+
+### Rollback
+Remove or revert the recorded change if it causes over-triggering or false positives.
+
+### Status
+implementation_required

@@ -77,6 +77,31 @@ Tool-specific launch mechanics stay in the tool profile. This skill may route
 to a Claude workflow or Codex goal prompt, but it does not copy tool-specific
 instructions into the shared tier.
 
+## Model And Judgment Routing
+
+Use lightweight workers, lower-effort lanes, or separate sessions only for
+bounded evidence and execution: file scans, small patches, UI/test runs, source
+summaries, and contained probes. They must not be the sole final judge for
+decisions that require understanding both the current system and the target
+system.
+
+Keep high-judgment decisions in the lead/coordinator or another high-quality
+synthesis lane:
+
+- architecture, runtime dependency, and multi-worker/process model choices;
+- credential, secret, host-global, browser-profile, cloud, billing, and other
+  security boundaries;
+- external adoption verdicts, post-pilot decisions, release/merge/readiness
+  calls, irreversible/destructive actions, and public-safe propagation;
+- conflicts between worker reports, scope reductions, or manager-facing final
+  recommendations.
+
+Worker output for those lanes is evidence only. Before closeout, the
+lead/coordinator must re-synthesize it with explicit `Observed locally`,
+`Observed upstream`, `Inferred`, and `UNVERIFIED` boundaries. If the coordinator
+cannot do that in the current context, checkpoint and continue in a fresh
+coordinator lane instead of accepting the worker verdict.
+
 ## Control Tower Loop
 
 For large work, follow this order:

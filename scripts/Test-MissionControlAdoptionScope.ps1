@@ -55,6 +55,28 @@ if ($failures.Count -eq 0) {
   }
 
   foreach ($pattern in @(
+    "## Model And Judgment Routing",
+    "bounded evidence and execution",
+    "sole final judge",
+    "current system",
+    "target",
+    "system",
+    "lead/coordinator",
+    "high-quality",
+    "external adoption verdicts",
+    "release/merge/readiness",
+    "public-safe propagation",
+    "Observed locally",
+    "Observed upstream",
+    "Inferred",
+    "UNVERIFIED"
+  )) {
+    if ($mission -notmatch [regex]::Escape($pattern)) {
+      Add-Failure $failures "mission-control missing required model-judgment routing text: $pattern"
+    }
+  }
+
+  foreach ($pattern in @(
     "## Adoption Surface Ledger",
     "install vs reject",
     "final closeout state",
@@ -83,6 +105,26 @@ if ($failures.Count -eq 0) {
   )) {
     if ($adopt -notmatch [regex]::Escape($pattern)) {
       Add-Failure $failures "adopt-external-tool missing required adoption-ledger text: $pattern"
+    }
+  }
+
+  foreach ($pattern in @(
+    "## High-Judgment Adoption Gate",
+    "their output is evidence only",
+    "final adoption",
+    "public-safe propagation",
+    "security-boundary verdict",
+    "lead/coordinator",
+    "high-quality",
+    "current system and the",
+    "target system",
+    "Observed locally",
+    "Observed upstream",
+    "Inferred",
+    "UNVERIFIED"
+  )) {
+    if ($adopt -notmatch [regex]::Escape($pattern)) {
+      Add-Failure $failures "adopt-external-tool missing required high-judgment adoption text: $pattern"
     }
   }
 }

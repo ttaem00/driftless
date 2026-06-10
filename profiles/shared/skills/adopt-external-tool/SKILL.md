@@ -126,6 +126,13 @@ If context pressure or model capacity prevents that synthesis, checkpoint the
 evidence and continue in a fresh coordinator lane. Do not accept a worker's
 verdict as the final adoption decision.
 
+If candidate-review workers hit model capacity, service unavailability,
+context-window overflow, missing closeout, or partial output, classify the lane
+in `worker_recovery_inventory` as `MODEL_CAPACITY_RETRY`,
+`CONTEXT_ROLLOVER_RETRY`, `PARTIAL_RETRY_REQUIRED`, or `FAILED`; retry
+reversible evidence collection before any final adopt/watch/reject/block
+decision.
+
 ## Post-Pilot Decision Gate
 
 PILOT_ONLY is not Done when the pilot merely ran. Before Done, record the

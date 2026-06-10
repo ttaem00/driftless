@@ -162,6 +162,12 @@ $sharedRoot   = if ($manifest.sharedRoot)        { [string]$manifest.sharedRoot 
 $claudeRoot   = if ($manifest.claudeProfileRoot) { [string]$manifest.claudeProfileRoot } else { 'profiles/claude' }
 $codexRoot    = if ($manifest.codexProfileRoot)  { [string]$manifest.codexProfileRoot }  else { 'profiles/codex' }
 $sharedAssets = @($manifest.sharedAssets)
+$toolSpecificExemptPaths = @{}
+foreach ($entry in @($manifest.toolSpecificExempt)) {
+  if ($entry.file) {
+    $toolSpecificExemptPaths[(([string]$entry.file) -replace '\\', '/')] = $true
+  }
+}
 
 if ($sharedAssets.Count -eq 0) {
   New-Result $results 'Shared assets declared' 'BLOCKED' $true 'allowlist.sharedAssets is empty; nothing to enforce parity on' 'Populate sharedAssets with the shared-tier files BOTH profiles consume.'
@@ -285,8 +291,12 @@ if ($SkipGitDiff) {
         foreach ($row in $assetRows) {
           $leaf = ($row.rel -split '/')[-1]
           $sharedTouched = $changedSet.ContainsKey($row.rel)
-          $claudeLocal = @($changedSet.Keys | Where-Object { $_.StartsWith($claudePrefix) -and (($_ -split '/')[-1] -eq $leaf) })
-          $codexLocal  = @($changedSet.Keys | Where-Object { $_.StartsWith($codexPrefix)  -and (($_ -split '/')[-1] -eq $leaf) })
+          $claudeLocal = @($changedSet.Keys | Where-Object {
+            $_.StartsWith($claudePrefix) -and (($_ -split '/')[-1] -eq $leaf) -and -not $toolSpecificExemptPaths.ContainsKey($_)
+          })
+          $codexLocal  = @($changedSet.Keys | Where-Object {
+            $_.StartsWith($codexPrefix) -and (($_ -split '/')[-1] -eq $leaf) -and -not $toolSpecificExemptPaths.ContainsKey($_)
+          })
           if ((($claudeLocal.Count -gt 0) -xor ($codexLocal.Count -gt 0)) -and -not $sharedTouched) {
             $only = if ($claudeLocal.Count -gt 0) { 'claude' } else { 'codex' }
             $path = if ($claudeLocal.Count -gt 0) { $claudeLocal[0] } else { $codexLocal[0] }

@@ -57,6 +57,12 @@ manager-only / hard-external만 남을 때까지 반복한다. (6) follow-up이 
 Manager-only -> 짧은 한국어 질문 하나. Hard external -> 사용 불가한 의존성 +
 명령 증거 + 다음 재시도 조건을 정확히 보고.
 
+Worker-assisted `finish-to-done` inherits the same closeout gate. If any worker
+was used, Done requires `worker_recovery_inventory`; `MODEL_CAPACITY_RETRY`,
+`CONTEXT_ROLLOVER_RETRY`, `PARTIAL_RETRY_REQUIRED`, and agent-solvable `FAILED`
+must be retried from compact evidence or left as an explicit not-Done tracker
+with a retry condition.
+
 English enforcement anchor: run the root-cause follow-up in the same session,
 then retry the original ticket/gate. Completion requires original goal
 validation, or a verified manager-only / hard-external blocker with a not-Done

@@ -53,6 +53,37 @@ Ask these in order:
    runs it? It belongs to the **shared** tier (one edit, both profiles - this is
    the mirror that keeps the two tool profiles driftless). Specific to one tool?
    It lives in that tool's tier.
+6. **Propagation reach.** Must the rule hold in **every project on the machine**,
+   not just the repo where it was learned? Then a repo's always-loaded
+   instruction file is the *wrong* home - a global-worthy rule written only into
+   one repo's `CLAUDE.md`/`AGENTS.md` is structurally **trapped folder-local**
+   and never reaches the other projects. It must live on a surface your global
+   connector actually propagates: a **universal rules file** imported by the
+   global instruction file, a **universal hook** declared in a single manifest,
+   or a **plugin skill** loaded through a junction/symlink. Editing those
+   in-repo *is* the global update (the link layer reflects it live), so it needs
+   no risky direct edit of the global config home - which should stay a **thin
+   link layer** with no content of its own. Watch the always-on surfaces' size
+   budget: if a prose rule does not fit, deliver it through the always-on hook
+   channel instead. The misrouting trap to avoid: confusing propagation *reach*
+   (how far the rule must apply) with *mutation target* (which file you edit) -
+   "this must apply globally" almost never means "edit the global home by hand".
+
+## The reverse direction: a cross-project learning inbox
+
+Routing rule 6 covers rules flowing *out* to every project. The opposite flow
+needs a channel too: a session working in some *other* project learns a
+reusable, project-agnostic lesson - and with no channel, that lesson dies in
+that project's local memory and the runtime kit never improves. The proven
+smallest form (private companion deployment, June 2026): ship a tiny
+**append-only inbox helper** beside the globally-linked profile (so every
+project's session can reach it through the same link layer), have it append one
+JSON line per lesson into the runtime repo's ignored scratch area, remind every
+session of the channel via an always-on universal rule, and have the runtime
+repo's learning loop **triage** the inbox on its next session - classify each
+entry by tier and reach, promote it up this ladder, and record skipped entries
+with a reason. Capture must be one command; triage must be owned by the runtime
+repo, not the capturing session.
 
 ## Memory must never be the *only* home for a high-stakes lesson
 

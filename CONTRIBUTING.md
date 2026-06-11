@@ -44,6 +44,18 @@ Most of this repo's own work is done by the overnight autonomous loop it ships:
 You can contribute the same way by hand: open an issue, branch from it, keep the
 change small and gate-green, and open a PR that links the issue.
 
+## Where improvements come from
+
+Driftless is exercised daily by a private development runtime (the companion
+deployment referenced across the docs). Lessons, optimization principles, UX
+fixes, and automation patterns proven there are **generalized before they land
+here**: machine paths, internal links, account names, and operational secrets
+are stripped, and a candidate that cannot be made public-safe is skipped with a
+recorded reason instead of being half-published. Inbound candidates arrive as
+ordinary issues/PRs and pass the same gates as any contribution. If a doc cites
+"a private companion deployment", that is this pipeline - treat the *shape* of
+such evidence as the lesson, not the specific digits.
+
 ## Conventions
 
 - **Scripts** (`.ps1` / `.bat` / `.cmd`) must be **ASCII + no BOM** so Windows

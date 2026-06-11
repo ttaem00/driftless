@@ -20,12 +20,14 @@ parentheses where a Korean mirror exists.
 ## Safety
 
 - **[Guardrails](./en/guardrails.md)** (한국어: [안전장치](./ko/안전장치.md)) — containment, ask-before-install, human-only escalation.
+- **[Untrusted content → LLM, safely](./en/untrusted-content-llm-safety.md)** (한국어: [비신뢰 콘텐츠 LLM 안전](./ko/비신뢰콘텐츠LLM안전.md)) — the hardening checklist for headless LLM calls over fetched web content: no tools, sandbox cwd, injection fencing, SSRF and webhook guards.
 - **[Host evidence matrix](./en/host-evidence-matrix.md)** — exactly what is verified on which OS (honest UNVERIFIED labels).
 - **[SECURITY.md](../SECURITY.md)** — how to report a vulnerability; the containment guarantee.
 
 ## Extend
 
 - **[Adopt an external tool safely](./en/adopt-external-tools-safely.md)** (한국어: [외부 도구 안전 도입](./ko/외부도구안전도입.md)) — vet a repo before applying it.
+- **[The insight-inbox pattern](./en/insight-inbox-pattern.md)** (한국어: [인사이트 인박스 패턴](./ko/인사이트인박스패턴.md)) — a messenger channel as a cross-device capture inbox, a two-stage cost-gated review pipeline behind it, and a decision ledger at the end.
 - **[12-Factor Agents, read through Driftless](./en/twelve-factors-driftless.md)** (한국어: [12요소로 본 드리프트리스](./ko/12요소.md)) — an honest factor-by-factor adoption of the HumanLayer 12-factor principles: what Driftless already does well vs. partially.
 - **[CONTRIBUTING](../CONTRIBUTING.md)** — the one rule: every change passes the gates.
 

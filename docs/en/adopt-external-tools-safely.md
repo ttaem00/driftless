@@ -63,6 +63,11 @@ trigger), **REJECT** (with a reason), or **UNVERIFIED** (with what was not seen)
 The verdict is appended to `docs/external-repo-review.md` so the same repo is
 never re-litigated from scratch.
 
+If candidates arrive as a *stream* — links shared from your phone all week —
+the [insight-inbox pattern](./insight-inbox-pattern.md) industrializes this
+same vet: a messenger channel as the capture inbox, a cheap batched triage in
+front of the expensive deep review, and every verdict recorded in a ledger.
+
 Before the agent treats an external skill, repo, plugin-like packet, or MCP
 setup as adoption-ready, it also runs the public pre-adoption gate:
 

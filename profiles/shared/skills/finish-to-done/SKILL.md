@@ -37,11 +37,31 @@ Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as
 agent-solvable blocker에 대한 첫 반응으로 쓰면 안 된다. 먼저 아래 Autonomous
 Blocker Resolution을 돌리고 그 증거를 보고한다.
 
+## PR Check Closeout Loop
+
+PR check states are evidence, not human homework. `WAITING_CHECKS`,
+`IN_PROGRESS`, missing check rollups, and failed validation are agent-solvable by
+default when the next action is to inspect CI logs, fix a gate, rerun local
+validation, poll status, or retry mergeability / auto-merge.
+
+Before any final report:
+
+1. Read the failing or pending PR state with the repo's normal GitHub helper or
+   `gh pr view`.
+2. If a check failed, inspect CI logs and reproduce locally when the repo has a
+   merge-ref reproduction helper.
+3. Fix the root cause, not only the latest log line.
+4. Rerun the relevant local gate, then poll until checks complete.
+5. Retry mergeability and routine auto-merge when the repo supports it.
+
+Stop before this loop only for true manager-only or hard-external blockers.
+
 ## Autonomous Blocker Resolution
 완료에 도달하지 못한 모든 상태를 다음으로 분류한다:
 - **Agent-solvable:** 누락된 테스트, 실패한 검증, dirty checkout, mergeability
-  불명, 리뷰 실행 오류, 스크립트 버그, 문서 갭, 숨어 있는 사용자-노출 진입점,
-  UI/UX 배치 갭, 새로 만들거나 재사용할 수 있는 follow-up 이슈.
+  불명, `WAITING_CHECKS`, `IN_PROGRESS`, failed PR validation, missing check
+  rollup, 리뷰 실행 오류, 스크립트 버그, 문서 갭, 숨어 있는 사용자-노출
+  진입점, UI/UX 배치 갭, 새로 만들거나 재사용할 수 있는 follow-up 이슈.
 - **Manager-only:** 제품/우선순위 결정, 자격증명, 결제/쿼터, 공개 배포,
   파괴적·비가역 작업, 사용자 환경 전역으로의 승격, 사용자 데이터 이전, 강제 푸시,
   히스토리 리셋.

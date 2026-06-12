@@ -62,6 +62,7 @@ profile and the Codex profile:
   sessions, goal companions, data quality, validation, learning, PR/merge, and gradient optimization.
 - `ticket-issue/` — the issue-before-edit gate for non-trivial repo work.
 - `learning-loop/` — record recurring problems and promote only the proven ones into rules.
+- `insight-inbox-starter/` — adapt the public insight-inbox pattern as a manual queue, review contract, and decision ledger without implying Driftless ships the private app or live integrations.
 - `safety-guard/` — keep secrets, host-global profiles, credentials, billing,
   public release, destructive action, and user data behind clear gates.
 - `review-before-done/` — review changes before PR_READY, merge, issue close, or

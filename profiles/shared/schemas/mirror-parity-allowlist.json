@@ -78,6 +78,12 @@
       "why": "Tool-agnostic UI/UX design guidance skill. Authored once in the shared tier so both profiles read target repo docs/design/DESIGN.md first, fall back to the installed Driftless default guide when needed, and never encode machine-specific design paths."
     },
     {
+      "name": "skill-insight-inbox-starter",
+      "file": "skills/insight-inbox-starter/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic public-safe insight-inbox starter skill. Authored once in the shared tier so both profiles can adapt the pattern as a manual queue, review contract, and ledger without claiming Driftless ships the private app or live integrations."
+    },
+    {
       "name": "skill-apply-driftless",
       "file": "skills/apply-driftless/SKILL.md",
       "consumedBy": ["claude", "codex"],

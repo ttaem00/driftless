@@ -133,8 +133,8 @@ allowlist, or nothing to enforce — reported BLOCKED, never a silent PASS).
 ## The 39-vs-34 skill count is INTENTIONAL, not drift
 
 > Counts here are from the **private development runtime** Driftless grew from,
-> where the pattern was proven at scale. **This public kit ships 14 profile starter skills**
-> (1 Claude-specific, 1 Codex-specific, 12 shared) — `find profiles -name SKILL.md
+> where the pattern was proven at scale. **This public kit ships 20 profile starter skills**
+> (1 Claude-specific, 1 Codex-specific, 18 shared) — `find profiles -name SKILL.md
 > | wc -l` confirms. The parity logic below governs both.
 
 In the development runtime the Claude profile carries **39 skills** and the Codex

@@ -166,6 +166,11 @@ $learningLoopAnchors = @(
 
 $finishToDoneAnchors = @(
   'Autonomous Blocker Resolution',
+  'PR Check Closeout Loop',
+  'WAITING_CHECKS',
+  'IN_PROGRESS',
+  'failed validation',
+  'CI logs',
   'No Substitute Done',
   'root-cause',
   'same session',

@@ -86,6 +86,10 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-MissionControlUx.ps1 -Root .
 
+      - name: Insight-inbox starter public-safety gate
+        shell: pwsh
+        run: ./scripts/Test-InsightInboxStarterPublicSafety.ps1 -Root .
+
   linux-smoke:
     # Proves the cross-platform claim off Windows: the POSIX installer runs and
     # actually materializes the isolated home, and the containment gate (pwsh is

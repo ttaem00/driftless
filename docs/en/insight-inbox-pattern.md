@@ -17,6 +17,30 @@ for your own projects in the smallest form that fits. The safety half of the
 same design lives in
 [Feeding untrusted web content to an LLM, safely](./untrusted-content-llm-safety.md).
 
+## Public starter vs private companion service
+
+Driftless ships the pattern, the public starter, and the safety gates. It does
+not ship the private app, private service launcher, real Discord integration,
+Chrome extension, local tray, live tokens, or production queue. Public users
+should start from
+[`examples/insight-inbox-starter/`](../../examples/insight-inbox-starter/) and
+the shared
+[`insight-inbox-starter`](../../profiles/shared/skills/insight-inbox-starter/SKILL.md)
+skill.
+
+The starter is deliberately small: a manual markdown queue, a review prompt
+contract, and an append-only decision ledger. That is enough to prove the
+load-bearing lifecycle before adding private integrations:
+
+- captured links are visible;
+- wrong captures can be removed from active processing and restored later;
+- partial reads and fetch failures are not hidden;
+- skipped or rejected links still produce a ledger decision.
+
+Any real messaging, browser, local service, credential, or public release lane
+belongs outside this public starter until a manager explicitly approves that
+private implementation work.
+
 ---
 
 ## The root cause: capture was never the friction

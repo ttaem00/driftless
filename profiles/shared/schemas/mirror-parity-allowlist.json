@@ -1,5 +1,5 @@
 {
-  "$comment": "Declares the single shared tier and how each profile consumes it. The mirror-parity gate (scripts/Test-ProfileMirrorParity.ps1) reads this file. A 'sharedAsset' is one shared-tier file that BOTH profiles consume by relative path -- editing it must update both profiles, never one. A 'toolSpecificExempt' asset is a deliberately tool-specific part (a Claude-only or Codex-only skill, a launcher mechanic, a hot-rules filename) that is NEVER required to mirror. The 39-vs-34 Claude/Codex skill-count delta is the SUM of these exempt entries, not drift.",
+  "$comment": "Declares the single shared tier and how each profile consumes it. The mirror-parity gate (scripts/Test-ProfileMirrorParity.ps1) reads this file. A 'sharedAsset' is one shared-tier file that BOTH profiles consume by relative path -- editing it must update both profiles, never one. A 'toolSpecificExempt' asset is a deliberately tool-specific part (a Claude-only or Codex-only skill, a launcher mechanic, a hot-rules filename) that is NEVER required to mirror. If both profile-local skill roots contain the same skill name, the gate treats it as shared by default unless listed in profileLocalSameNameExempt with a tool-specific reason. The 39-vs-34 Claude/Codex skill-count delta is the SUM of these exempt entries, not drift.",
   "sharedRoot": "profiles/shared",
   "claudeProfileRoot": "profiles/claude",
   "codexProfileRoot": "profiles/codex",
@@ -165,6 +165,8 @@
       "why": "CLAUDE_CONFIG_DIR (Claude) vs CODEX_HOME (Codex). Different isolation env var, same isolation principle. Intentionally tool-specific per the contract section 7."
     }
   ],
+
+  "profileLocalSameNameExempt": [],
 
   "skillCountDelta": {
     "$comment": "The Claude profile ships 39 skills; the Codex profile ships 34. This 5-delta is the difference between the two toolSpecificExempt skill buckets above. It is INTENTIONAL tool-specific specialization, not drift. The gate enforces parity on the SHARED tier only; it never forces the two skill counts to match.",

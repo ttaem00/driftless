@@ -76,6 +76,7 @@
   no resolvable shared assets = BLOCKED, never a vacuous PASS.
 #>
 param(
+  [Alias('Path')]
   [string]$Root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path,
   [string]$Allowlist,
   [string]$Base = 'origin/main',
@@ -180,6 +181,44 @@ function Resolve-RepoPath {
   return (Join-Path $RepoRoot $native)
 }
 
+function Get-SkillNames {
+  param([string]$SkillsRoot)
+  if (-not (Test-Path -LiteralPath $SkillsRoot -PathType Container)) {
+    return @()
+  }
+  return @(
+    Get-ChildItem -LiteralPath $SkillsRoot -Directory |
+      Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md') -PathType Leaf } |
+      ForEach-Object { $_.Name } |
+      Sort-Object -Unique
+  )
+}
+
+function Get-SharedSkillNames {
+  param([object[]]$Assets)
+  $names = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+  foreach ($asset in @($Assets)) {
+    $file = ([string]$asset.file) -replace '\\', '/'
+    if ($file -match '^skills/([^/]+)/SKILL\.md$') {
+      $null = $names.Add($Matches[1])
+    }
+  }
+  return ,$names
+}
+
+function Get-SameNameExemptions {
+  param([object]$Manifest)
+  $exempt = @{}
+  foreach ($entry in @($Manifest.profileLocalSameNameExempt)) {
+    $name = [string]$entry.name
+    $why = [string]$entry.why
+    if ($name -and $why) {
+      $exempt[$name] = $why
+    }
+  }
+  return $exempt
+}
+
 # Build the shared-asset rows (repo-relative + absolute paths).
 $assetRows = [System.Collections.Generic.List[object]]::new()
 foreach ($a in $sharedAssets) {
@@ -219,7 +258,36 @@ foreach ($row in $assetRows) {
 }
 
 # ---------------------------------------------------------------------------
-# SIGNAL B: each profile still POINTS AT the shared tier (no forked copy).
+# SIGNAL B: dynamic same-name profile-local skills.
+# Same-name skill directories in BOTH profile-local skill roots are shared by
+# default. They must be authored in the shared tier, or explicitly exempted with
+# a tool-specific reason. This catches shared optimization drift that manual
+# sharedAssets allowlists miss.
+# ---------------------------------------------------------------------------
+$claudeSkillNames = Get-SkillNames -SkillsRoot (Resolve-RepoPath -RepoRoot $resolvedRoot -RelPath ($claudeRoot.TrimEnd('/','\') + '/skills'))
+$codexSkillNames = Get-SkillNames -SkillsRoot (Resolve-RepoPath -RepoRoot $resolvedRoot -RelPath ($codexRoot.TrimEnd('/','\') + '/skills'))
+$codexSkillSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+foreach ($name in @($codexSkillNames)) { $null = $codexSkillSet.Add($name) }
+$sameNameProfileSkills = @($claudeSkillNames | Where-Object { $codexSkillSet.Contains($_) } | Sort-Object -Unique)
+$sharedSkillNames = Get-SharedSkillNames -Assets $sharedAssets
+$sameNameExemptions = Get-SameNameExemptions -Manifest $manifest
+$sameNameUnclassified = [System.Collections.Generic.List[string]]::new()
+foreach ($name in @($sameNameProfileSkills)) {
+  if ($sharedSkillNames.Contains($name)) { continue }
+  if ($sameNameExemptions.ContainsKey($name)) { continue }
+  $sameNameUnclassified.Add($name) | Out-Null
+}
+
+if ($sameNameUnclassified.Count -gt 0) {
+  $detail = ($sameNameUnclassified | Select-Object -First 12) -join ', '
+  New-Result $results 'Dynamic same-name profile skills' 'FAIL' $true "unclassified same-name profile-local skill(s): $detail" 'Same-name skills in both profiles are shared by default. Move the common skill to profiles/shared/skills and declare it in sharedAssets, or add profileLocalSameNameExempt with a specific tool-difference reason.'
+} else {
+  $exemptCount = @($sameNameProfileSkills | Where-Object { $sameNameExemptions.ContainsKey($_) }).Count
+  New-Result $results 'Dynamic same-name profile skills' 'PASS' $true "same-name profile-local skills=$($sameNameProfileSkills.Count); shared=$(@($sameNameProfileSkills | Where-Object { $sharedSkillNames.Contains($_) }).Count); exempt=$exemptCount; unclassified=0"
+}
+
+# ---------------------------------------------------------------------------
+# SIGNAL C: each profile still POINTS AT the shared tier (no forked copy).
 # ---------------------------------------------------------------------------
 $consumerFails = [System.Collections.Generic.List[string]]::new()
 $consumerProof = $manifest.profileConsumerProof
@@ -334,6 +402,8 @@ $summary = [pscustomobject]@{
   base             = $Base
   shared_assets    = $assetRows.Count
   exempt_count     = @($manifest.toolSpecificExempt).Count
+  same_name_profile_skills = @($sameNameProfileSkills).Count
+  same_name_unclassified   = @($sameNameUnclassified)
   skill_delta_note = $skillNote
   overall          = $overall
   total            = $results.Count

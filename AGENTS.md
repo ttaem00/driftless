@@ -48,3 +48,14 @@ reducing setup, git/GitHub, security, validation, and raw-script burden.
 - If the primary checkout is already dirty, stop and report it. Do not stash,
   reset, clean, or keep editing the dirty primary checkout without manager
   approval.
+
+## PowerShell Shell Contract
+
+Default repo tasks:
+`pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\task.ps1 <task>`.
+
+Do not guess between `powershell.exe` and `pwsh.exe`; check edition/version.
+`powershell.exe` = Windows PowerShell 5.1/Desktop; use only for documented
+compatibility gates or `scripts/winps51/`. No Bash heredoc in PowerShell; use a
+PowerShell here-string or a checked-in script file. Details:
+`docs/powershell-shell-contract.md`.

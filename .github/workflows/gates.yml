@@ -34,6 +34,10 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-ProfileMirrorParity.ps1 -Path .
 
+      - name: Mirror-parity dynamic same-name fixtures
+        shell: pwsh
+        run: ./scripts/Test-ProfileMirrorParityDynamicFixtures.ps1
+
       - name: Skill-optimization validation harness (static, no paid LLM)
         shell: pwsh
         run: ./scripts/Test-SkillOptValidationHarness.ps1

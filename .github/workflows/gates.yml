@@ -30,6 +30,10 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-WindowsTextSafety.ps1 -Root .
 
+      - name: PowerShell shell contract gate
+        shell: pwsh
+        run: ./scripts/Test-PowerShellShellContract.ps1 -Root .
+
       - name: Mirror-parity gate (the two profiles never drift)
         shell: pwsh
         run: ./scripts/Test-ProfileMirrorParity.ps1 -Path .

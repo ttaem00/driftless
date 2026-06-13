@@ -2,7 +2,7 @@
 #requires -PSEdition Core
 <#
 .SYNOPSIS
-  Driftless installer (Windows PowerShell). Sets up an isolated home for Claude,
+  Driftless installer (PowerShell 7). Sets up an isolated home for Claude,
   Codex, or both -- a config folder that lives INSIDE this repository, so the
   agent never touches your machine's global Claude or Codex settings.
 

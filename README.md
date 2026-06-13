@@ -23,7 +23,7 @@ Paste one prompt before bed. Wake up to merged pull requests. You never have to 
 ## Requirements
 
 - PowerShell 7+
-- Run scripts with pwsh.exe, not Windows PowerShell
+- Run scripts with `pwsh.exe`.
 
 Install:
 
@@ -50,7 +50,7 @@ sh ./install.sh        # macOS / Linux  (interactive: Claude, Codex, or both)
 ```powershell
 git clone https://github.com/mizan0515/driftless
 cd driftless
-.\install.ps1          # Windows PowerShell
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
 The installer builds an isolated agent home **inside this repository**. It never

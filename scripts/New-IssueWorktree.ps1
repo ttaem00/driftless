@@ -68,7 +68,7 @@ if (-not (Test-Path -LiteralPath $scriptPath)) {
     throw "Missing guard script: $scriptPath"
 }
 
-$guardOutput = & powershell -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Root $repo 2>&1
+$guardOutput = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $scriptPath -Root $repo 2>&1
 $guardExit = $LASTEXITCODE
 if ($guardExit -ne 0) {
     if ($Json) {
@@ -122,7 +122,7 @@ if (-not $DryRun) {
 
     $claimHelper = Join-Path $repo "scripts\New-CodexSessionClaim.ps1"
     if (Test-Path -LiteralPath $claimHelper) {
-        $claim = & powershell -NoProfile -ExecutionPolicy Bypass -File $claimHelper `
+        $claim = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $claimHelper `
             -Mode Acquire `
             -RepoPath $worktree `
             -Issue $issueNumber `

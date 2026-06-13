@@ -9,7 +9,7 @@ that keep it lean, safe, and non-developer-friendly are welcome.
 gates CI runs, and you can run them locally:
 
 ```powershell
-# Windows PowerShell
+# PowerShell 7
 .\scripts\Test-Containment.ps1 -Path . -AllFiles      # never touches forbidden paths / no leaked secret
 .\scripts\Test-WindowsTextSafety.ps1 -Root .          # .ps1/.bat/.cmd stay ASCII + no BOM
 .\scripts\Test-ProfileMirrorParity.ps1 -Path .        # the two profiles never drift

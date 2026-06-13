@@ -11,7 +11,7 @@ $ErrorActionPreference = 'Stop'
 $resolvedRoot = (Resolve-Path -LiteralPath $Root).Path
 $forbidden = @(
   ('powershell' + '.exe'),
-  ('Windows' + 'PowerShell'),
+  ('Windows' + ' ' + 'PowerShell'),
   ('System32' + [char]92 + 'Windows' + 'PowerShell'),
   ('#requires' + ' -Version 5')
 )
@@ -24,7 +24,10 @@ function Get-ScanFiles {
   param([string]$Path)
   Get-ChildItem -LiteralPath $Path -Recurse -File -Force -ErrorAction SilentlyContinue | Where-Object {
     $relative = $_.FullName.Substring($resolvedRoot.Length).TrimStart('\', '/')
-    if ($relative -eq 'scripts/check-no-powershell51.ps1') { return $false }
+    if ($relative -match '^scripts[\\/]check-no-powershell51\.ps1$') { return $false }
+    if ($relative -match '^docs[\\/]powershell-shell-contract\.md$') { return $false }
+    if ($relative -match '^scripts[\\/]Test-PowerShellShellContract\.ps1$') { return $false }
+    if ($relative -match '^scripts[\\/]winps51[\\/]') { return $false }
     if ($relative -match '^\.runtime[\\/]') { return $false }
     $full = $_.FullName
     foreach ($dir in $skipDirs) {

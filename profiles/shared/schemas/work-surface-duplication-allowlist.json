@@ -1,0 +1,14 @@
+{
+  "$schema_note": "Work-surface duplication allowlist CONSUMED by scripts/Test-WorkSurfaceDuplication.ps1 (issue #137). Rule: one name, one shipping surface. The shared tier (profiles/shared/skills) is consumed in place by BOTH profiles, so a SAME-NAME skill twin under profiles/claude/skills, profiles/codex/skills, or the repo-level skills/ root is redundant by construction and becomes a drift/merge-conflict magnet. The same rule covers scripts: one script basename, one home - either a declared scriptRoot (top-level *.ps1, non-recursive) or exactly one skill-embedded <skill>/scripts folder (derived automatically from skillRoots). Subdirectories of a scriptRoot are deliberately NOT surfaces: a dedicated legacy-shell compatibility folder (if present) holds runtime variants of a task, not duplicate work. The gate FAILs on any cross-surface same-name pair NOT listed in allowedDuplicates with a non-empty reason (entries: {kind: skill|script, name, reason}; kind defaults to skill; a reason-less entry is ignored and FAILs the gate). Missing or unparseable allowlist = BLOCKED (exit 2), never a vacuous PASS.",
+  "manifestVersion": "1.0",
+  "skillRoots": [
+    "profiles/shared/skills",
+    "profiles/claude/skills",
+    "profiles/codex/skills",
+    "skills"
+  ],
+  "scriptRoots": [
+    "scripts"
+  ],
+  "allowedDuplicates": []
+}

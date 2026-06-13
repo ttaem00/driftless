@@ -7,6 +7,11 @@
 runtime-home/
 *-home/
 
+# Session-claim stores (operational coordination state; never committed)
+.agent-work/
+.claude-work/
+.codex-work/
+
 # Secrets / credentials / keys
 .env
 .env.*

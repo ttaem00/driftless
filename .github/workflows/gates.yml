@@ -58,6 +58,14 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-CodexSessionClaim.ps1
 
+      - name: Session claim helper, tool-agnostic core (cross-store conflict scan)
+        shell: pwsh
+        run: ./scripts/Test-SessionClaim.ps1
+
+      - name: Work-surface duplication gate (one name, one shipping surface)
+        shell: pwsh
+        run: ./scripts/Test-WorkSurfaceDuplication.ps1 -Root .
+
       - name: Primary checkout hygiene guard (dirty main blocks new work)
         shell: pwsh
         run: ./scripts/Test-PrimaryWorktreeClean.ps1 -SelfTest

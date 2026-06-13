@@ -120,7 +120,9 @@ if (-not $DryRun) {
     Invoke-Git -Cwd $repo -Arguments @("fetch", "origin", $Base) | Out-Null
     Invoke-Git -Cwd $repo -Arguments @("worktree", "add", "-b", $branch, $worktree, "origin/$Base") | Out-Null
 
-    $claimHelper = Join-Path $repo "scripts\New-CodexSessionClaim.ps1"
+    # Tool-agnostic claim helper (issue #137): writes the .agent-work store and
+    # cross-scans the legacy per-tool stores for conflicts (arbitration rule R3).
+    $claimHelper = Join-Path $repo "scripts\New-SessionClaim.ps1"
     if (Test-Path -LiteralPath $claimHelper) {
         $claim = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $claimHelper `
             -Mode Acquire `

@@ -11,7 +11,7 @@ function Assert-True([bool]$Condition, [string]$Message) {
 }
 
 function Invoke-ClaimHelperJson([string[]]$Arguments, [int[]]$ExpectedExitCodes = @(0)) {
-    $output = & powershell -NoProfile -ExecutionPolicy Bypass -File $script:Helper @Arguments
+    $output = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $script:Helper @Arguments
     $exitCode = $LASTEXITCODE
     Assert-True ($ExpectedExitCodes -contains $exitCode) "Unexpected exit code $exitCode for args: $($Arguments -join ' ')`n$output"
     $jsonText = ($output -join "`n")
@@ -33,7 +33,7 @@ try {
     $previousErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
     try {
-        $nonGitOutput = & powershell -NoProfile -ExecutionPolicy Bypass -File $script:Helper `
+        $nonGitOutput = & pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $script:Helper `
             -Mode Check `
             -RepoPath $nonGitRoot `
             -OwnerSurface "scripts\alpha.ps1" `

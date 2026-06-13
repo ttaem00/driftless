@@ -44,7 +44,7 @@ reducing setup, git/GitHub, security, validation, and raw-script burden.
 ## Clean Primary Checkout
 - Do not start non-trivial work in the primary/root checkout. Create an issue
   worktree first:
-  `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\New-IssueWorktree.ps1 -Issue <number> -Slug <short-name>`.
+  `pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\New-IssueWorktree.ps1 -Issue <number> -Slug <short-name>`.
 - If the primary checkout is already dirty, stop and report it. Do not stash,
   reset, clean, or keep editing the dirty primary checkout without manager
   approval.
@@ -52,10 +52,9 @@ reducing setup, git/GitHub, security, validation, and raw-script burden.
 ## PowerShell Shell Contract
 
 Default repo tasks:
-`pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\task.ps1 <task>`.
+`pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\task.ps1 <task>`.
 
-Do not guess between `powershell.exe` and `pwsh.exe`; check edition/version.
-`powershell.exe` = Windows PowerShell 5.1/Desktop; use only for documented
-compatibility gates or `scripts/winps51/`. No Bash heredoc in PowerShell; use a
-PowerShell here-string or a checked-in script file. Details:
-`docs/powershell-shell-contract.md`.
+Normal agent and manager work uses PowerShell 7 through `pwsh.exe` only.
+Legacy compatibility probes stay isolated under `scripts/winps51/` and are not
+the default task route. No Bash heredoc in PowerShell; use a PowerShell
+here-string or a checked-in script file. Details: `docs/powershell-shell-contract.md`.

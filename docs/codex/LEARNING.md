@@ -84,6 +84,50 @@ Remove or revert the recorded change if it causes over-triggering or false posit
 
 ### Status
 implementation_required
+
+## 2026-06-13 - Default agent workflows must not expose legacy PowerShell launchers
+
+### Observed Pattern
+Real Windows use showed agent shell drift recurring across projects: default
+agent instructions and helper scripts could still show or call legacy PowerShell
+launcher routes even when the intended runtime contract was PowerShell 7.
+
+### Evidence
+- Issue #146 opened from the recurrence report.
+- Local scan before the fix found default Driftless surfaces pointing normal
+  worktree/session-claim flows at the legacy launcher route.
+- Local validation after the fix: `check-no-powershell51.ps1`, shell-contract
+  gate, `task.ps1 test`, and CI-equivalent Windows gates passed.
+
+### Lesson
+For public shared workflows, a compatibility path is not enough to prevent
+drift. The default manager/agent path must show and execute only the PowerShell
+7 command contract; legacy compatibility probes must stay isolated and excluded
+from default instruction surfaces.
+
+### Recommended Change
+Keep default worktree helpers, quickstarts, README commands, and CI gates on
+`pwsh.exe -NoProfile -ExecutionPolicy Bypass -File`. Keep any legacy probe under
+an explicit isolated compatibility path, and gate default surfaces for launcher
+cues.
+
+### Promotion
+- status: implementation_needed
+- placement: AGENTS.md, default helper scripts, README/quickstart docs, and CI
+  no-legacy-launcher gate
+- next action: Implemented in issue #146; keep the cue gate in CI so recurrence
+  fails before merge.
+
+### Scope
+shared tier
+
+### Rollback
+Revert issue #146 if the cue gate blocks valid public installation paths; keep
+the PowerShell 7 default route and narrow the exception instead of removing the
+gate.
+
+### Status
+implemented
 ## 2026-06-11 - Recover capacity/context-failed worker lanes before Done
 
 ### Observed Pattern

@@ -34,6 +34,10 @@ jobs:
         shell: pwsh
         run: ./scripts/Test-PowerShellShellContract.ps1 -Root .
 
+      - name: No legacy PowerShell launcher cues in default surfaces
+        shell: pwsh
+        run: ./scripts/check-no-powershell51.ps1 -Root .
+
       - name: Mirror-parity gate (the two profiles never drift)
         shell: pwsh
         run: ./scripts/Test-ProfileMirrorParity.ps1 -Path .

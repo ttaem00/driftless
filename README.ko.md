@@ -109,7 +109,7 @@ sh ./install.sh        # macOS / Linux  (Claude / Codex / 둘 다 중 물어봄)
 ```powershell
 git clone https://github.com/mizan0515/driftless
 cd driftless
-.\install.ps1          # Windows PowerShell
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
 설치는 작은 모듈 조각들을 여러분의 저장소에 놓아 줍니다. 무거운 프레임워크가 아니라

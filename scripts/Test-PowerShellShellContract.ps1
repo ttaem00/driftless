@@ -3,7 +3,7 @@
   Lightweight gate for the repo PowerShell Shell Contract.
 
 .DESCRIPTION
-  Read-only static checks. Runs under Windows PowerShell 5.1 and pwsh 7.
+  Read-only static checks. Runs under the repo PowerShell 7 contract.
 #>
 param(
   [string]$Root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path,
@@ -150,7 +150,7 @@ if (Test-Contains $agentsText '(?m)^## PowerShell Shell Contract\s*$') {
   Add-Result $results 'AGENTS.md shell-contract section' 'FAIL' $true 'section missing' 'Add a short PowerShell Shell Contract section to AGENTS.md.'
 }
 
-$defaultCommandPattern = [regex]::Escape('pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\task.ps1 <task>')
+$defaultCommandPattern = [regex]::Escape('pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\task.ps1 <task>')
 if (Test-Contains $agentsText $defaultCommandPattern) {
   Add-Result $results 'Default pwsh task command documented' 'PASS' $true 'command present' 'Document the exact default pwsh task command in AGENTS.md.'
 } else {
@@ -208,9 +208,9 @@ if ($taskText) {
   }
 }
 if ($taskBarePowerShell.Count -eq 0) {
-  Add-Result $results 'No ambiguous bare powershell in default entrypoint' 'PASS' $true 'checked scripts/task.ps1' 'Use pwsh or powershell.exe explicitly.'
+  Add-Result $results 'No ambiguous bare powershell in default entrypoint' 'PASS' $true 'checked scripts/task.ps1' 'Use pwsh.exe for default routes; keep legacy probes behind explicit wrappers.'
 } else {
-  Add-Result $results 'No ambiguous bare powershell in default entrypoint' 'FAIL' $true ($taskBarePowerShell -join ', ') 'Use pwsh or powershell.exe explicitly.'
+  Add-Result $results 'No ambiguous bare powershell in default entrypoint' 'FAIL' $true ($taskBarePowerShell -join ', ') 'Use pwsh.exe for default routes; keep legacy probes behind explicit wrappers.'
 }
 
 $aliasHits = @()
@@ -240,9 +240,9 @@ foreach ($wf in $workflowFiles) {
   }
 }
 if ($workflowProblems.Count -eq 0) {
-  Add-Result $results 'GitHub Actions PowerShell steps declare shell' 'PASS' $true "workflows=$($workflowFiles.Count)" 'Add shell: pwsh or shell: powershell to PowerShell workflow steps.'
+  Add-Result $results 'GitHub Actions PowerShell steps declare shell' 'PASS' $true "workflows=$($workflowFiles.Count)" 'Add shell: pwsh to default PowerShell workflow steps.'
 } else {
-  Add-Result $results 'GitHub Actions PowerShell steps declare shell' 'FAIL' $true ($workflowProblems -join ', ') 'Add shell: pwsh or shell: powershell to PowerShell workflow steps.'
+  Add-Result $results 'GitHub Actions PowerShell steps declare shell' 'FAIL' $true ($workflowProblems -join ', ') 'Add shell: pwsh to default PowerShell workflow steps.'
 }
 
 $psFiles = @(Get-PowerShellFiles -RepoRoot $resolvedRoot)

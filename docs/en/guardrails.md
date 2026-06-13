@@ -201,7 +201,7 @@ the job done. Driftless closes that loophole:
 ## Run the gates yourself
 
 The two load-bearing gates are small, read-only PowerShell scripts — no network,
-no secrets, no host-global access — and they run the same on Windows PowerShell
+no secrets, no host-global access — and they run the same on PowerShell 7
 5.1 and PowerShell 7.
 
 ```powershell

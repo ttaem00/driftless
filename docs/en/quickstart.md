@@ -27,7 +27,7 @@ extra, and the answer defaults to **no**.
 sh ./install.sh         # macOS / Linux  (asks: Claude, Codex, or both)
 ```
 ```powershell
-.\install.ps1           # Windows PowerShell
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
 Try `sh ./install.sh --dry-run --both` first if you want to see the plan without

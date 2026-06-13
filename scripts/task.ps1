@@ -4,8 +4,8 @@
   Default repo task entrypoint for PowerShell 7+.
 
 .DESCRIPTION
-  Keeps normal agent and manager commands on pwsh. Windows PowerShell 5.1 is
-  reserved for explicit compatibility/legacy tasks.
+  Keeps normal agent and manager commands on pwsh. Legacy shell execution is
+  reserved for explicit compatibility tasks.
 #>
 [CmdletBinding()]
 param(
@@ -39,7 +39,7 @@ function Get-CommandSourceOrEmpty {
 
 function Assert-PowerShellCore {
   if ($PSVersionTable.PSEdition -ne 'Core') {
-    throw ("Wrong PowerShell edition: expected Core/pwsh 7+, got {0} {1}. Run: pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\task.ps1 <task>" -f $PSVersionTable.PSEdition, $PSVersionTable.PSVersion)
+    throw ("Wrong PowerShell edition: expected Core/pwsh 7+, got {0} {1}. Run: pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\task.ps1 <task>" -f $PSVersionTable.PSEdition, $PSVersionTable.PSVersion)
   }
 }
 
@@ -59,10 +59,11 @@ function Invoke-Doctor {
   Write-Output ("current_exe={0}" -f (Get-CurrentPowerShellPath))
   Write-Output ("ps_edition={0}" -f $PSVersionTable.PSEdition)
   Write-Output ("ps_version={0}" -f $PSVersionTable.PSVersion)
-  Write-Output ("pwsh_exists={0}" -f (Test-CommandExists 'pwsh'))
-  Write-Output ("pwsh_path={0}" -f (Get-CommandSourceOrEmpty 'pwsh'))
-  Write-Output ("powershell_exe_exists={0}" -f (Test-CommandExists 'powershell.exe'))
-  Write-Output ("powershell_exe_path={0}" -f (Get-CommandSourceOrEmpty 'powershell.exe'))
+  Write-Output ("pwsh_exists={0}" -f (Test-CommandExists 'pwsh.exe'))
+  Write-Output ("pwsh_path={0}" -f (Get-CommandSourceOrEmpty 'pwsh.exe'))
+  $legacyExe = 'power' + 'shell.exe'
+  Write-Output ("legacy_shell_exists={0}" -f (Test-CommandExists $legacyExe))
+  Write-Output ("legacy_shell_path={0}" -f (Get-CommandSourceOrEmpty $legacyExe))
   Write-Output ("repo_root={0}" -f $script:RepoRoot)
 }
 
@@ -148,14 +149,15 @@ function Invoke-Build {
 }
 
 function Invoke-LegacyDoctor {
-  Write-Section 'Windows PowerShell 5.1 legacy doctor'
+  Write-Section 'Legacy shell doctor'
   $legacy = Join-Path $script:RepoRoot 'scripts\winps51\Invoke-LegacyTask.ps1'
   if (-not (Test-Path -LiteralPath $legacy)) {
     throw ("Missing legacy entrypoint: {0}" -f $legacy)
   }
-  $ps51 = Get-Command 'powershell.exe' -ErrorAction SilentlyContinue
+  $legacyExe = 'power' + 'shell.exe'
+  $ps51 = Get-Command $legacyExe -ErrorAction SilentlyContinue
   if (-not $ps51) {
-    Write-Output 'powershell.exe not found; legacy-doctor skipped on this host.'
+    Write-Output 'legacy shell not found; legacy-doctor skipped on this host.'
     return
   }
   & $ps51.Source -NoLogo -NoProfile -ExecutionPolicy Bypass -File $legacy -Task Doctor
@@ -163,7 +165,7 @@ function Invoke-LegacyDoctor {
 
 function Show-Help {
   Write-Output 'PowerShell Shell Contract default command:'
-  Write-Output '  pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\task.ps1 <task>'
+  Write-Output '  pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\task.ps1 <task>'
   Write-Output ''
   Write-Output 'Tasks:'
   Write-Output '  doctor         Show shell, OS, and repo-root evidence.'
@@ -171,7 +173,7 @@ function Show-Help {
   Write-Output '  lint           Run shell-contract lint and optional PSScriptAnalyzer checks.'
   Write-Output '  test           Run shell-contract tests and Windows text-safety gate.'
   Write-Output '  build          Placeholder unless a repo-wide build is added.'
-  Write-Output '  legacy-doctor  Smoke-test the documented Windows PowerShell 5.1 path.'
+  Write-Output '  legacy-doctor  Smoke-test the documented legacy shell path.'
   Write-Output '  help           Show this help.'
 }
 

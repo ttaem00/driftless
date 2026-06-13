@@ -58,3 +58,13 @@ Normal agent and manager work uses PowerShell 7 through `pwsh.exe` only.
 Legacy compatibility probes stay isolated under `scripts/winps51/` and are not
 the default task route. No Bash heredoc in PowerShell; use a PowerShell
 here-string or a checked-in script file. Details: `docs/powershell-shell-contract.md`.
+
+## Session Claims and Conflict Arbitration
+- `New-IssueWorktree.ps1` acquires a session claim automatically. For any other
+  non-trivial start, claim first:
+  `pwsh -NoProfile -ExecutionPolicy Bypass -File .\scripts\New-SessionClaim.ps1 -Mode Acquire -Issue <n> -Branch <branch>`;
+  Release it when the work merges or stops.
+- On a claim conflict or duplicate-work finding, follow
+  `docs/cross-agent-work-arbitration.md`: deterministic rules R1-R5 first, then
+  one short manager question. Keep one asset name on one surface
+  (`Test-WorkSurfaceDuplication.ps1` enforces this in CI).

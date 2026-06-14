@@ -15,9 +15,9 @@
   This is structural evidence, not behavioral proof. It prevents later prompt
   compression, profile porting, or doc cleanup from silently dropping the rule.
   It also checks the behavior-shaping public surfaces that make the rule fire:
-  shipped skills, learning-loop promotion, finish-to-done closeout, CI, docs,
-  and the pull request template. Behavioral improvement claims still need real
-  workflow evidence.
+  shipped skills, learning-loop promotion, finish-to-done closeout, local gate
+  docs, and the pull request template. Behavioral improvement claims still need
+  real workflow evidence.
 
   Read-only. No network, no secrets, no peer AI, no host-global access.
   ASCII-only so the gate parses under PowerShell 7.
@@ -170,17 +170,12 @@ $finishToDoneAnchors = @(
   'WAITING_CHECKS',
   'IN_PROGRESS',
   'failed validation',
-  'CI logs',
+  'remote check logs',
   'No Substitute Done',
   'root-cause',
   'same session',
   'original',
   'validation'
-)
-
-$ciAnchors = @(
-  'Test-ImprovementPrincipleDiscipline.ps1',
-  'Improvement-principle'
 )
 
 $prTemplateAnchors = @(
@@ -267,12 +262,6 @@ Add-FileAnchorCheck `
   -NextAction 'Restore autonomous blocker resolution and No Substitute Done so recording a limitation cannot be reported as completion.'
 
 Add-FileAnchorCheck `
-  -Check 'CI invokes improvement-principle gate' `
-  -RelPath '.github/workflows/gates.yml' `
-  -Anchors $ciAnchors `
-  -NextAction 'Run Test-ImprovementPrincipleDiscipline.ps1 in CI so the rule is not only documented.'
-
-Add-FileAnchorCheck `
   -Check 'PR template asks for principle evidence on rule/skill changes' `
   -RelPath '.github/PULL_REQUEST_TEMPLATE.md' `
   -Anchors $prTemplateAnchors `
@@ -281,7 +270,7 @@ Add-FileAnchorCheck `
 Add-FileAnchorCheck `
   -Check 'Scripts README documents strengthened gate' `
   -RelPath 'scripts/README.md' `
-  -Anchors @('shipped SKILL.md', 'learning-loop', 'finish-to-done', 'CI') `
+  -Anchors @('shipped SKILL.md', 'learning-loop', 'finish-to-done', 'local gate') `
   -NextAction 'Document what the strengthened improvement-principle gate checks.'
 
 $blockingFailures = @($results | Where-Object { $_.blocking -eq $true -and $_.status -eq 'FAIL' })

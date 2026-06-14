@@ -67,4 +67,4 @@ here-string or a checked-in script file. Details: `docs/powershell-shell-contrac
 - On a claim conflict or duplicate-work finding, follow
   `docs/cross-agent-work-arbitration.md`: deterministic rules R1-R5 first, then
   one short manager question. Keep one asset name on one surface
-  (`Test-WorkSurfaceDuplication.ps1` enforces this in CI).
+  (`Test-WorkSurfaceDuplication.ps1` enforces this in local gates).

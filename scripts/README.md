@@ -11,9 +11,9 @@ PowerShell 7 and PowerShell 7.
 | `Test-Containment.ps1` | The code base never touches a forbidden path or leaks a secret. | A scanned file's own path is forbidden, references a forbidden path, or contains a credential token. |
 | `Test-WindowsTextSafety.ps1` | Every shippable script parses identically on PowerShell 7. | Any `.ps1` / `.bat` / `.cmd` has a non-ASCII byte or a UTF-8 BOM. |
 | `Test-AgentRuntimeHealth.ps1` | The agent is not trying to repair the product from a broken Codex runtime. | Repo-local Codex uses elevated Windows sandbox, has sandbox setup errors, or recent Codex 400/self-error markers. |
-| `Test-ImprovementPrincipleDiscipline.ps1` | The shared root-cause / principle-based / no-overfit rule remains present and wired into shipped skills, learning-loop, finish-to-done, CI, and PR guidance. | A rule/skill surface drops the improvement principle, or the gate stops being part of normal review. |
+| `Test-ImprovementPrincipleDiscipline.ps1` | The shared root-cause / principle-based / no-overfit rule remains present and wired into shipped skills, learning-loop, finish-to-done, local gate docs, and PR guidance. | A rule/skill surface drops the improvement principle, or the gate stops being part of normal review. |
 | `Test-HotContextDiscipline.ps1` | Hot rules stay small instead of moving always-loaded instructions into helper docs or every-task skills. | `AGENTS.md` / `CLAUDE.md` gets too large, always loads another instruction file, or a skill claims every-task scope. |
-| `Test-ContextEngineeringDiscipline.ps1` | The shared context budget, compressed reference integrity, repo map freshness, and action/evidence ledger contract remains present, skill-wired, and CI-wired. | The shared contract, handoff/ledger skills, gate docs, or CI workflow drops those context-management anchors. |
+| `Test-ContextEngineeringDiscipline.ps1` | The shared context budget, compressed reference integrity, repo map freshness, and action/evidence ledger contract remains present, skill-wired, and documented as a local closeout gate. | The shared contract, handoff/ledger skills, or local gate docs drop those context-management anchors. |
 | `Test-WorkerFailureRecoveryContract.ps1` | Multi-lane skills keep worker capacity, context-window, and partial-output failures as recovery states, not Done. | A shared worker skill drops `worker_recovery_inventory` or the retry states needed before closeout. |
 | `Test-CodeIntelligenceBenchmark.ps1` | The compiled context wiki remains useful enough to test code-intelligence ideas before installing external tools. | The wiki cannot build, average recall falls below the floor, token direction regresses, or source-traceability validation fails. |
 | `Test-SkillAudit.ps1` | Shipped SKILL.md files are discoverable and their runnable repo-local `.ps1` command references exist. | A skill has broken frontmatter, a name/folder mismatch, no trigger signal, or a runnable command pointing at a missing repo-local script. |
@@ -73,9 +73,10 @@ root-cause / principle-based / no-overfit rule and that `AGENTS.md` still points
 agents at it. It also checks the behavior-shaping surfaces that make the rule
 fire in normal work: every shipped SKILL.md has the compact Improvement
 Principle section, learning-loop still promotes recurring lessons to the
-smallest public-safe surface, finish-to-done still blocks substitute Done, CI
-still runs the gate, and the PR template asks for root-cause/principle evidence
-when rules, skills, prompts, scripts, hooks, or docs change.
+smallest public-safe surface, finish-to-done still blocks substitute Done, local
+gate docs keep the command visible, and the PR template asks for
+root-cause/principle evidence when rules, skills, prompts, scripts, hooks, or
+docs change.
 
 It is structural evidence only; behavioral improvement claims still need real
 workflow evidence.
@@ -92,9 +93,9 @@ UI work, read `docs/design/DESIGN.md`" remain valid on-demand routing.
 This read-only gate verifies that the shared contract still contains four public
 context-management disciplines: context budget, compressed reference integrity,
 repo map freshness, and action/evidence ledger. It also verifies that handoff
-and work-ledger skills carry the operational guidance, this gate is documented
-here, and it runs in CI. It is structural evidence only; a workflow claim still
-needs current command or tool evidence.
+and work-ledger skills carry the operational guidance, and this gate is
+documented here as a local closeout command. It is structural evidence only; a
+workflow claim still needs current command or tool evidence.
 
 ## What `Test-CodeIntelligenceBenchmark.ps1` checks
 

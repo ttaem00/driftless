@@ -240,9 +240,9 @@ foreach ($wf in $workflowFiles) {
   }
 }
 if ($workflowProblems.Count -eq 0) {
-  Add-Result $results 'GitHub Actions PowerShell steps declare shell' 'PASS' $true "workflows=$($workflowFiles.Count)" 'Add shell: pwsh to default PowerShell workflow steps.'
+  Add-Result $results 'Optional GitHub Actions PowerShell steps declare shell' 'PASS' $true "workflows=$($workflowFiles.Count)" 'If workflows are reintroduced, add shell: pwsh to default PowerShell workflow steps.'
 } else {
-  Add-Result $results 'GitHub Actions PowerShell steps declare shell' 'FAIL' $true ($workflowProblems -join ', ') 'Add shell: pwsh to default PowerShell workflow steps.'
+  Add-Result $results 'Optional GitHub Actions PowerShell steps declare shell' 'FAIL' $true ($workflowProblems -join ', ') 'If workflows are reintroduced, add shell: pwsh to default PowerShell workflow steps.'
 }
 
 $psFiles = @(Get-PowerShellFiles -RepoRoot $resolvedRoot)

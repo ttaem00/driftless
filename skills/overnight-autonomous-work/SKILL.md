@@ -138,7 +138,7 @@ Bake these into the parent bundle and into every worker instruction.
   Static, parse, JSON, fixture, or unit-only checks are supporting evidence and
   leave behavior `UNVERIFIED`. Never report `UNVERIFIED` as `PASS`.
 - Verify gates/scripts **in the environment they actually run in** (for example,
-  the CI runner's shell — not only your local shell or language runtime).
+  the local closeout shell — not only a convenience shell or language runtime).
 - External or borrowed code is not "proven" until built and run here.
 - Evidence from one tool / shell / environment / repo is not a PASS for a
   different target.
@@ -174,8 +174,8 @@ Bake these into the parent bundle and into every worker instruction.
 ### G4 — Ticket / git discipline
 
 - Non-trivial change: open an issue first, register it on the project board,
-  branch (for example `agent/issue-<n>-<slug>`), open a PR, get CI green, then
-  squash-merge. No direct push to the default branch. No reset / stash / clean /
+  branch (for example `agent/issue-<n>-<slug>`), open a PR, get local gates green,
+  then squash-merge. No direct push to the default branch. No reset / stash / clean /
   force-push / history rewrite.
 - Durable state (decisions, evidence, next actions) lives in the **issue/PR
   body** under a dated update section — not in throwaway comments. Keep a small
@@ -224,7 +224,7 @@ versions, required toolchain present).
 
 Write this from Phase 0 evidence. Tie conclusions to observations, not guesses.
 Signals to weigh: recurring themes, long-neglected core tickets, where recent
-PRs cluster, currently failing CI, high-user-impact bugs, anything blocking a
+PRs cluster, failing local gates or remote checks, high-user-impact bugs, anything blocking a
 release, doc/code mismatch, phrasing the human emphasized before (in the repo's
 instruction files or issue bodies), and work that keeps getting deferred.
 
@@ -582,8 +582,8 @@ Run Phases 0 to 6b of the overnight-autonomous-work skill exactly:
 Absolute rules: behavioral PASS only from real execution (static = UNVERIFIED).
 Verify gates in the shell they actually run under. Containment/safety check PASS
 before Done. Keep automation scripts ASCII and BOM-free. Non-trivial change:
-issue -> board -> branch -> PR -> CI green -> squash. No direct push to the
-default branch. Durable state in the issue/PR body.
+issue -> board -> branch -> PR -> local gates green -> squash. No direct push to
+the default branch. Durable state in the issue/PR body.
 
 You own routine git / host / verification / merge / issue / board work. Escalate
 ONLY genuine human decisions: product/priority, credentials, paid credits,

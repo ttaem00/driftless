@@ -13,7 +13,7 @@
 
   The gate is structural evidence. It does not claim a workflow behaved well; it
   proves the shared public contract still contains the four context disciplines
-  and that this gate runs in CI.
+  and that this gate is documented as a local closeout gate.
 
   Read-only. No network, no secrets, no peer AI, no host-global access.
   ASCII-only so the gate parses under PowerShell 7.
@@ -147,10 +147,6 @@ $readmeAnchors = @(
   'action/evidence ledger'
 )
 
-$workflowAnchors = @(
-  'Test-ContextEngineeringDiscipline.ps1'
-)
-
 $handoffGuardAnchors = @(
   'Compressed references',
   'source pointer',
@@ -228,12 +224,6 @@ Add-FileAnchorCheck `
   -RelPath 'scripts/README.md' `
   -Anchors $readmeAnchors `
   -NextAction 'Document how maintainers run Test-ContextEngineeringDiscipline.ps1 and what it protects.'
-
-Add-FileAnchorCheck `
-  -Check 'CI runs the context-engineering gate' `
-  -RelPath '.github/workflows/gates.yml' `
-  -Anchors $workflowAnchors `
-  -NextAction 'Add Test-ContextEngineeringDiscipline.ps1 to the gates workflow.'
 
 Add-FileAnchorCheck `
   -Check 'Handoff guard preserves compressed references and repo-map freshness' `

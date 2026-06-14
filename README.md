@@ -4,7 +4,6 @@
 
 > [한국어 README](./README.ko.md) · [English (this page)]
 
-[![CI](https://github.com/mizan0515/driftless/actions/workflows/gates.yml/badge.svg)](https://github.com/mizan0515/driftless/actions/workflows/gates.yml)
 [![containment](https://img.shields.io/badge/containment-PASS-2ea44f)](./docs/en/guardrails.md)
 [![mirror-parity](https://img.shields.io/badge/mirror--parity-PASS-2ea44f)](./docs/en/single-source-mirror.md)
 [![version](https://img.shields.io/badge/version-v0.1.0-blue)](#changelog)

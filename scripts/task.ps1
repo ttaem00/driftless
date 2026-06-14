@@ -135,6 +135,11 @@ function Invoke-Test {
   & $contractScript -Root $script:RepoRoot
   if ($LASTEXITCODE -ne 0) { throw ("Shell contract gate failed: exit={0}" -f $LASTEXITCODE) }
 
+  $noActions = Join-Path $script:RepoRoot 'scripts\Test-NoGitHubActionsWorkflows.ps1'
+  $global:LASTEXITCODE = 0
+  & $noActions -Root $script:RepoRoot
+  if ($LASTEXITCODE -ne 0) { throw ("GitHub Actions workflow gate failed: exit={0}" -f $LASTEXITCODE) }
+
   $textSafety = Join-Path $script:RepoRoot 'scripts\Test-WindowsTextSafety.ps1'
   if (Test-Path -LiteralPath $textSafety) {
     $global:LASTEXITCODE = 0

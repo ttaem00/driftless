@@ -16,6 +16,7 @@ PowerShell 7 and PowerShell 7.
 | `Test-ContextEngineeringDiscipline.ps1` | The shared context budget, compressed reference integrity, repo map freshness, and action/evidence ledger contract remains present, skill-wired, and CI-wired. | The shared contract, handoff/ledger skills, gate docs, or CI workflow drops those context-management anchors. |
 | `Test-WorkerFailureRecoveryContract.ps1` | Multi-lane skills keep worker capacity, context-window, and partial-output failures as recovery states, not Done. | A shared worker skill drops `worker_recovery_inventory` or the retry states needed before closeout. |
 | `Test-CodeIntelligenceBenchmark.ps1` | The compiled context wiki remains useful enough to test code-intelligence ideas before installing external tools. | The wiki cannot build, average recall falls below the floor, token direction regresses, or source-traceability validation fails. |
+| `Test-SkillAudit.ps1` | Shipped SKILL.md files are discoverable and their runnable repo-local `.ps1` command references exist. | A skill has broken frontmatter, a name/folder mismatch, no trigger signal, or a runnable command pointing at a missing repo-local script. |
 | `Test-CompressedHandoffSummaryProtocol.ps1` | A compressed handoff/protocol summary keeps source pointer, scope, exclusions, manager-only gates, validation evidence, stale-map status, and next executable action. | The fixture drops one of those load-bearing fields, points outside the repo, or carries unusable evidence/action state. |
 | `Test-MissionMapFixture.ps1` | The public Mission Map fixture has the required manager-visible fields and no private path/session/credential markers. | The fixture misses active goal, guardian, PR/check state, blockers, evidence, next action, or includes private runtime markers. |
 | `Test-ExternalAdoptionSafetyGate.ps1` | External skills/repos/MCP packets are not treated as adoption-ready until static danger strings and adoption-lane closeout are checked. | A candidate has unresolved arbitrary exec, download-pipe-exec, host-global/secret refs, credential/cloud/billing/MCP surfaces, daemon startup, a truncated scan, or missing pilot closeout decisions. |
@@ -49,6 +50,9 @@ pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ContextEngineeringDiscipline
 
 # Code intelligence: benchmark compiled wiki usefulness before external tool adoption
 pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-CodeIntelligenceBenchmark.ps1 -Root .
+
+# Skill audit: keep shipped skill routing and runnable repo-local commands honest
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-SkillAudit.ps1 -Root .
 
 # Compressed handoff protocol fixture: prove resumable summaries keep executable context
 pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-CompressedHandoffSummaryProtocol.ps1 -Root .
@@ -104,6 +108,17 @@ It is an adoption guard, not a vendor benchmark. PASS means Driftless has a
 small local measurement path and should keep using the compiled wiki first.
 External tools remain `PILOT_ONLY` or `WATCH_LATER` until they beat this local
 path without adding credential, cloud, daemon, or host-global risk.
+
+## What `Test-SkillAudit.ps1` checks
+
+This read-only gate keeps shipped skills from looking valid while failing at
+runtime. It checks every tracked `SKILL.md` under `profiles/` and `skills/` for
+frontmatter, name/folder match, trigger signal, and runnable repo-local `.ps1`
+command examples under `scripts/`, `profiles/`, `skills/`, or `shared/`.
+
+Plain prose mentions and generated host/runtime paths are out of scope. If a
+workflow is not wired yet, the skill should say that plainly instead of giving a
+runnable command for a missing helper.
 
 ## What `Test-ExternalAdoptionSafetyGate.ps1` checks
 

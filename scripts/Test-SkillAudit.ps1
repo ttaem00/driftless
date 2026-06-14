@@ -5,9 +5,11 @@
   Driftless skill-audit gate. Mechanically checks that every shipped SKILL.md is
   structurally sound before it lands - it has a name and a non-empty description
   with trigger signal, and its name matches its own folder so the skill router
-  can actually find it. Containment already forbids inlined secrets and
-  host-global paths, so this gate deliberately does NOT re-check those: it covers
-  only the skill-hygiene surface that no other gate does.
+  can actually find it. It also checks that shipped skills do not advertise
+  runnable repo-local PowerShell scripts that are absent from the checkout.
+  Containment already forbids inlined secrets and host-global paths, so this
+  gate deliberately does NOT re-check those: it covers only the skill-hygiene
+  surface that no other gate does.
 
 .DESCRIPTION
   driftless ships a starter kit of agent skills and makes "skill gradient
@@ -29,6 +31,10 @@
                one trigger signal (a 'Trigger' marker, OR a quoted phrase, OR a
                'Use when' intent line) so the skill is discoverable rather than
                a blank stub.
+    BLOCKING - Check 4: runnable repo-local .ps1 command references under
+               scripts/, profiles/, skills/, or shared/ point to files that
+               exist. Generated host/runtime paths and plain prose mentions are
+               outside this check.
 
   Honest fairness. Check 3 accepts ANY of the three discoverability signals, so a
   description written purely as a plain "Use when ..." intent line (the
@@ -37,8 +43,8 @@
 
   To prove the checks have teeth, a built-in self-test (-SelfTest) asserts the
   auditor FAILs on planted-bad in-memory fixtures (missing name, name/folder
-  mismatch, empty description) and PASSes on a clean fixture - no temp files, no
-  git mutation.
+  mismatch, empty description, missing command script) and PASSes on clean
+  fixtures - no temp files, no git mutation.
 
   Read-only. No network, no secrets, no peer AI, no host-global access. ASCII
   only so the gate cannot fail its own text-safety rule under PowerShell 7.
@@ -159,6 +165,38 @@ function Get-SkillIssues {
   return $issues
 }
 
+function Get-SkillCommandReferenceIssues {
+  param(
+    [string]$RelPath,
+    [string[]]$Lines,
+    [string]$RepoRoot
+  )
+  $issues = [System.Collections.Generic.List[string]]::new()
+  $roots = 'scripts|profiles|skills|shared'
+  $pattern = "(?i)(?:^|[\s`"`'(&])(?<path>(?:[.][\\/])?(?:$roots)[\\/][^\s`"`'\)\]]+?\.ps1)"
+  for ($i = 0; $i -lt @($Lines).Count; $i++) {
+    $line = $Lines[$i]
+    $runnable = (
+      $line -match '(?i)(^|\s)-File(\s|$)' -or
+      $line -match "^\s*(?:[&.]\s*)?(?:[.][\\/])?(?:$roots)[\\/][^\s`"`']+?\.ps1\b"
+    )
+    if (-not $runnable) { continue }
+    foreach ($match in [regex]::Matches($line, $pattern)) {
+      $raw = $match.Groups['path'].Value
+      if ([string]::IsNullOrWhiteSpace($raw)) { continue }
+      if ($raw -match '[<>$*]') { continue }
+      $trimmed = $raw.TrimEnd([char[]]@('.', ',', ';', ':'))
+      $normalized = $trimmed -replace '^[.][\\/]', ''
+      $normalized = $normalized -replace '/', '\'
+      $full = Join-Path $RepoRoot $normalized
+      if (-not (Test-Path -LiteralPath $full -PathType Leaf)) {
+        $issues.Add(("{0}:{1}: repo-local .ps1 command reference is missing: {2}" -f $RelPath, ($i + 1), $trimmed)) | Out-Null
+      }
+    }
+  }
+  return $issues
+}
+
 # ---------------------------------------------------------------------------
 # Built-in self-test: prove the auditor FAILs on planted-bad fixtures and PASSes
 # clean. In-memory only - no temp files, no git mutation.
@@ -214,11 +252,25 @@ function Invoke-SelfTest {
   $noFmIssues = Get-SkillIssues -RelPath 'skills/z/SKILL.md' -FolderName 'z' -Front $noFmFront
   if (@($noFmIssues).Count -lt 1) { $failures.Add('negative(no frontmatter) NOT detected') | Out-Null }
 
+  $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
+  $existingRefIssues = Get-SkillCommandReferenceIssues -RelPath 'skills/ok/SKILL.md' -Lines @(
+    'pwsh.exe -NoProfile -ExecutionPolicy Bypass -File scripts/Test-SkillAudit.ps1'
+  ) -RepoRoot $repoRoot
+  if (@($existingRefIssues).Count -ne 0) {
+    $failures.Add('clean command reference falsely flagged: ' + (@($existingRefIssues) -join '; ')) | Out-Null
+  }
+  $missingRefIssues = Get-SkillCommandReferenceIssues -RelPath 'skills/missing/SKILL.md' -Lines @(
+    'pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\DefinitelyMissingSkillAuditFixture.ps1'
+  ) -RepoRoot $repoRoot
+  if (@($missingRefIssues).Count -lt 1) {
+    $failures.Add('negative(missing script reference) NOT detected') | Out-Null
+  }
+
   return [pscustomobject]@{
     passed   = (@($failures).Count -eq 0)
     failures = @($failures)
-    detail   = ("clean_issues={0}; neg_name={1}; neg_mismatch={2}; neg_emptydesc={3}; neg_nofm={4}" -f `
-        @($cleanIssues).Count, @($noNameIssues).Count, @($mismatchIssues).Count, @($emptyDescIssues).Count, @($noFmIssues).Count)
+    detail   = ("clean_issues={0}; neg_name={1}; neg_mismatch={2}; neg_emptydesc={3}; neg_nofm={4}; clean_scriptref={5}; neg_missing_scriptref={6}" -f `
+        @($cleanIssues).Count, @($noNameIssues).Count, @($mismatchIssues).Count, @($emptyDescIssues).Count, @($noFmIssues).Count, @($existingRefIssues).Count, @($missingRefIssues).Count)
   }
 }
 
@@ -256,7 +308,7 @@ if ($SelfTest) {
   Write-Output '== Skill-audit gate: built-in self-test =='
   Write-Output ("auditor: {0}" -f $st.detail)
   if ($st.passed) {
-    Write-Output 'RESULT: PASS (auditor FAILs on missing-name / name-folder-mismatch / empty-description / no-frontmatter, PASSes clean)'
+    Write-Output 'RESULT: PASS (auditor FAILs on missing-name / name-folder-mismatch / empty-description / no-frontmatter / missing command script, PASSes clean)'
     if ($Json) {
       [pscustomobject]@{ gate = 'skill-audit'; mode = 'self-test'; overall = 'PASS'; detail = $st.detail } | ConvertTo-Json -Depth 4
     }
@@ -291,6 +343,7 @@ $results.Add([pscustomobject]@{
 # ---------------------------------------------------------------------------
 $skillRels = Get-SkillFiles -RepoRoot $resolvedRoot
 $allIssues = [System.Collections.Generic.List[string]]::new()
+$allCommandIssues = [System.Collections.Generic.List[string]]::new()
 $scanned = 0
 foreach ($rel in $skillRels) {
   $full = Join-Path $resolvedRoot $rel
@@ -304,14 +357,23 @@ foreach ($rel in $skillRels) {
   foreach ($iss in (Get-SkillIssues -RelPath $rel -FolderName $folderName -Front $front)) {
     $allIssues.Add($iss) | Out-Null
   }
+  foreach ($iss in (Get-SkillCommandReferenceIssues -RelPath $rel -Lines $lines -RepoRoot $resolvedRoot)) {
+    $allCommandIssues.Add($iss) | Out-Null
+  }
 }
 if ($scanned -eq 0) {
   $results.Add([pscustomobject]@{ check = 'Every SKILL.md is structurally sound (name+description+trigger, name matches folder)'; status = 'SKIP'; blocking = $false; evidence = 'no tracked SKILL.md found'; next_action = '' }) | Out-Null
+  $results.Add([pscustomobject]@{ check = 'Repo-local .ps1 command references in shipped SKILL.md exist'; status = 'SKIP'; blocking = $false; evidence = 'no tracked SKILL.md found'; next_action = '' }) | Out-Null
 } else {
   $status = if ($allIssues.Count -eq 0) { 'PASS' } else { 'FAIL' }
   $evidence = "scanned=$scanned; issues=$($allIssues.Count)"
   if ($allIssues.Count -gt 0) { $evidence += '; ' + ($allIssues -join '; ') }
   $results.Add([pscustomobject]@{ check = 'Every SKILL.md is structurally sound (name+description+trigger, name matches folder)'; status = $status; blocking = $true; evidence = $evidence; next_action = 'Fix the flagged SKILL.md: add the missing name/description, make name match its folder, or add a trigger signal, so the skill actually fires.' }) | Out-Null
+
+  $commandStatus = if ($allCommandIssues.Count -eq 0) { 'PASS' } else { 'FAIL' }
+  $commandEvidence = "scanned=$scanned; missing_refs=$($allCommandIssues.Count)"
+  if ($allCommandIssues.Count -gt 0) { $commandEvidence += '; ' + ($allCommandIssues -join '; ') }
+  $results.Add([pscustomobject]@{ check = 'Repo-local .ps1 command references in shipped SKILL.md exist'; status = $commandStatus; blocking = $true; evidence = $commandEvidence; next_action = 'Update the skill to use an existing repo-local script, add the missing executable helper, or mark the workflow as not-yet-wired without advertising a runnable command.' }) | Out-Null
 }
 
 # ---------------------------------------------------------------------------
@@ -331,7 +393,7 @@ if ($anyBlockingFail) {
   if ($Json) { [pscustomobject]@{ gate = 'skill-audit'; overall = 'FAIL'; checks = $results } | ConvertTo-Json -Depth 6 }
   exit 1
 } else {
-  Write-Output 'RESULT: PASS (all shipped skills are structurally sound)'
+  Write-Output 'RESULT: PASS (all shipped skills are structurally sound and command references exist)'
   if ($Json) { [pscustomobject]@{ gate = 'skill-audit'; overall = 'PASS'; checks = $results } | ConvertTo-Json -Depth 6 }
   exit 0
 }

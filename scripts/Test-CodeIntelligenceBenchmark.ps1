@@ -131,7 +131,8 @@ function Get-WikiCandidates {
 }
 
 $repoRoot = Resolve-RepoRoot -Path $Root
-$out = Join-Path $repoRoot '.runtime/test-code-intelligence-benchmark/context-wiki'
+$runId = [guid]::NewGuid().ToString('N')
+$out = Join-Path $repoRoot ('.runtime/test-code-intelligence-benchmark/{0}/context-wiki' -f $runId)
 $builder = Join-Path $repoRoot 'scripts/Build-RepoContextWiki.ps1'
 $wikiGate = Join-Path $repoRoot 'scripts/Test-RepoContextWiki.ps1'
 $tracked = Get-TrackedFiles -RepoRoot $repoRoot

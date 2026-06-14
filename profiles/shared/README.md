@@ -56,6 +56,7 @@ profile and the Codex profile:
 
 - `finish-to-done/` — drive a task investigate -> fix -> verify -> done, with evidence.
 - `root-goal-check/` — gate new info/ideas against the project's core goal before adopting.
+- `breakthrough-opportunity-review/` — hunt for a root-goal-critical hidden opportunity and, when requested, write a resumable opportunity report.
 - `easy-briefing/` — explain the current situation to a non-developer manager in plain language.
 - `parallel-ticket-planner/` — split remaining work into low-conflict parallel tickets.
 - `mission-control/` — one main-session control tower for large goals, child

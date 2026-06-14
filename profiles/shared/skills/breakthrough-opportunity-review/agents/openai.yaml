@@ -1,4 +1,4 @@
 interface:
   display_name: "Breakthrough Opportunity Review"
   short_description: "Hunt for the hidden breakthrough answer"
-  default_prompt: "Use $breakthrough-opportunity-review. Assume a powerful hidden improvement definitely exists inside the requested scope, then hunt across planning, UX/UI, architecture/code, technology, new features, and workflow to identify the sharpest candidate."
+  default_prompt: "Use $breakthrough-opportunity-review. Assume a clear hidden opportunity exists that the system has not yet recognized but needs for its root goal; inspect evidence across planning, UX/UI, architecture/code, technology, workflow, security, process, docs/skills, runtime dependencies, and public-safe propagation. If report mode is requested, write docs/breakthrough-opportunity-YYYY-MM-DD.md with priorities, ticket structure, parallel/serial lanes, risks, and resumable next actions."

@@ -41,15 +41,17 @@ Blocker Resolution을 돌리고 그 증거를 보고한다.
 
 PR check states are evidence, not human homework. `WAITING_CHECKS`,
 `IN_PROGRESS`, missing check rollups, and failed validation are agent-solvable by
-default when the next action is to inspect CI logs, fix a gate, rerun local
-validation, poll status, or retry mergeability / auto-merge.
+default when the next action is to inspect remote check logs if the repo still
+has them, fix a gate, rerun local validation, poll status, or retry mergeability
+/ auto-merge.
 
 Before any final report:
 
 1. Read the failing or pending PR state with the repo's normal GitHub helper or
    `gh pr view`.
-2. If a check failed, inspect CI logs and reproduce locally when the repo has a
-   merge-ref reproduction helper.
+2. If validation failed, inspect remote check logs only when the repo still uses
+   them, then reproduce locally when the repo has a merge-ref reproduction
+   helper.
 3. Fix the root cause, not only the latest log line.
 4. Rerun the relevant local gate, then poll until checks complete.
 5. Retry mergeability and routine auto-merge when the repo supports it.

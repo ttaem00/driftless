@@ -5,8 +5,9 @@ that keep it lean, safe, and non-developer-friendly are welcome.
 
 ## The one rule that matters
 
-**Every change passes the safety gates before it merges.** They are the same
-gates CI runs, and you can run them locally:
+**Every change passes the safety gates locally before it merges.** They are
+repo-local commands, so merge readiness does not depend on hosted runner
+availability:
 
 ```powershell
 # PowerShell 7

@@ -1,6 +1,6 @@
 <!--
-Driftless PRs merge only when the safety gates pass (CI runs them on Windows +
-Linux). You can run them locally too — they print plain-language reasons.
+Driftless PRs merge only when the repo-local safety gates pass. Run them before
+ready/merge; they print plain-language reasons.
 -->
 
 ## What this changes / 무엇을 바꾸나
@@ -9,7 +9,7 @@ Linux). You can run them locally too — they print plain-language reasons.
 
 ## Checklist
 
-- [ ] The safety gates pass locally or in CI (containment, text-safety, mirror-parity):
+- [ ] The safety gates pass locally (containment, text-safety, mirror-parity):
       `./scripts/Test-Containment.ps1 -Path . -AllFiles`,
       `./scripts/Test-WindowsTextSafety.ps1 -Root .`,
       `./scripts/Test-ProfileMirrorParity.ps1 -Path .`

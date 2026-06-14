@@ -26,7 +26,7 @@ it (e.g. `$skill-name`) before doing the work ad-hoc, rather than reimplementing
 SUCCESS CRITERIA (verifiable — keep working until these hold, then loop again):
 - Every change merged passed the safety gates (containment, text-safety,
   mirror-parity) with command-proof evidence — no "done" claim without it.
-- The main branch is clean and CI is green; no PR left hanging.
+- The main branch is clean, local safety gates are green, and no PR is left hanging.
 - Each cycle improved at least one of: onboarding, trust, Codex/Claude
   applicability, non-developer ease, tokens/time/money/intervention, recurring-
   mistake prevention, security/openness, or community reach.

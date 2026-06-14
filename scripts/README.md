@@ -8,6 +8,7 @@ PowerShell 7 and PowerShell 7.
 
 | Gate | What it proves | FAILs when |
 | --- | --- | --- |
+| `Test-PrValidationGate.ps1` | One manager-facing local PR validation entry point exists for agents and maintainers. | Any required repo-local gate below fails or the aggregate wrapper cannot run it. |
 | `Test-Containment.ps1` | The code base never touches a forbidden path or leaks a secret. | A scanned file's own path is forbidden, references a forbidden path, or contains a credential token. |
 | `Test-WindowsTextSafety.ps1` | Every shippable script parses identically on PowerShell 7. | Any `.ps1` / `.bat` / `.cmd` has a non-ASCII byte or a UTF-8 BOM. |
 | `Test-AgentRuntimeHealth.ps1` | The agent is not trying to repair the product from a broken Codex runtime. | Repo-local Codex uses elevated Windows sandbox, has sandbox setup errors, or recent Codex 400/self-error markers. |
@@ -24,6 +25,9 @@ PowerShell 7 and PowerShell 7.
 ## Run them
 
 ```powershell
+# Aggregate PR validation: preferred before PR_READY / merge.
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-PrValidationGate.ps1
+
 # Containment: scan the working-tree diff and untracked files (pre-commit default)
 pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-Containment.ps1
 

@@ -5,8 +5,9 @@
   Validate the repo-local compiled context wiki build.
 
 .DESCRIPTION
-  Builds a fresh test wiki under .runtime/test-context-wiki, validates generated
-  JSON, source traceability, graph connectivity, and search behavior.
+  Builds a fresh test wiki under a per-run .runtime/test-context-wiki folder,
+  then validates generated JSON, source traceability, graph connectivity, and
+  search behavior.
 #>
 param(
   [string]$Root = '.',
@@ -35,7 +36,8 @@ function Add-Result {
 }
 
 $repoRoot = (Resolve-Path -LiteralPath $Root).Path
-$out = Join-Path $repoRoot '.runtime/test-context-wiki'
+$runId = [guid]::NewGuid().ToString('N')
+$out = Join-Path $repoRoot ('.runtime/test-context-wiki/{0}' -f $runId)
 $builder = Join-Path $scriptDir 'Build-RepoContextWiki.ps1'
 $search = Join-Path $scriptDir 'Search-RepoContextWiki.ps1'
 $results = [System.Collections.Generic.List[object]]::new()

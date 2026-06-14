@@ -30,6 +30,12 @@
       "why": "Tool-agnostic root-goal-check skill. Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both."
     },
     {
+      "name": "skill-breakthrough-opportunity-review",
+      "file": "skills/breakthrough-opportunity-review/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic hidden-opportunity review skill. Authored once in the shared tier so both profiles can find root-goal-critical opportunities, label evidence, and write resumable opportunity reports without drifting."
+    },
+    {
       "name": "skill-easy-briefing",
       "file": "skills/easy-briefing/SKILL.md",
       "consumedBy": ["claude", "codex"],

@@ -21,6 +21,7 @@ parentheses where a Korean mirror exists.
 ## Safety
 
 - **[Guardrails](./en/guardrails.md)** (한국어: [안전장치](./ko/안전장치.md)) — containment, ask-before-install, human-only escalation.
+- **[Public-safe export classifier](./en/public-safe-export-classifier.md)** — classify private-derived lessons, prompts, notes, and examples before copying them into public Driftless surfaces.
 - **[Untrusted content → LLM, safely](./en/untrusted-content-llm-safety.md)** (한국어: [비신뢰 콘텐츠 LLM 안전](./ko/비신뢰콘텐츠LLM안전.md)) — the hardening checklist for headless LLM calls over fetched web content: no tools, sandbox cwd, injection fencing, SSRF and webhook guards.
 - **[Host evidence matrix](./en/host-evidence-matrix.md)** — exactly what is verified on which OS (honest UNVERIFIED labels).
 - **[SECURITY.md](../SECURITY.md)** — how to report a vulnerability; the containment guarantee.

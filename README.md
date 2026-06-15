@@ -182,6 +182,7 @@ Watch this repo's history fill in: [commits](https://github.com/mizan0515/driftl
 - [Single-source two-profile mirror](./docs/en/single-source-mirror.md) — how one edit updates both.
 - [Guardrails](./docs/en/guardrails.md) — containment, the forbidden surface, and the FAIL test.
 - [Lesson-promotion ladder](./docs/en/lesson-promotion-ladder.md) — memory < skill < hot rule < hook < gate.
+- [Portfolio operating layer](./docs/en/portfolio-operating-layer.md) — split broad agent goals into vision, outcome, opportunity, capability, execution, and governance.
 - [Host evidence matrix](./docs/en/host-evidence-matrix.md) — what is proven on which operating system.
 
 ## Who maintains this

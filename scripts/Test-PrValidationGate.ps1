@@ -100,6 +100,7 @@ $gates = @(
   @{ name = 'Improvement principle discipline'; script = 'scripts\Test-ImprovementPrincipleDiscipline.ps1'; args = @('-Root', $script:RepoRoot); next = 'Restore root-cause / no-overfit guidance on shipped surfaces.' },
   @{ name = 'Hot context discipline'; script = 'scripts\Test-HotContextDiscipline.ps1'; args = @('-Root', $script:RepoRoot); next = 'Keep hot rules small and move conditional workflows into skills/docs.' },
   @{ name = 'Context engineering discipline'; script = 'scripts\Test-ContextEngineeringDiscipline.ps1'; args = @('-Root', $script:RepoRoot); next = 'Restore context budget, handoff, and evidence ledger anchors.' },
+  @{ name = 'Mission-control closeout boundary'; script = 'scripts\Test-MissionControlCloseoutBoundary.ps1'; args = @('-Root', $script:RepoRoot); next = 'Restore parent closeout inventory and long-command evidence guidance before Done claims.' },
   @{ name = 'Code intelligence benchmark'; script = 'scripts\Test-CodeIntelligenceBenchmark.ps1'; args = @('-Root', $script:RepoRoot); next = 'Regenerate/fix the repo context wiki or benchmark evidence.' },
   @{ name = 'Compressed handoff protocol'; script = 'scripts\Test-CompressedHandoffSummaryProtocol.ps1'; args = @('-Root', $script:RepoRoot); next = 'Restore resumable handoff summary fields.' },
   @{ name = 'Mission map fixture'; script = 'scripts\Test-MissionMapFixture.ps1'; args = @(); next = 'Fix public-safe Mission Map fixture fields.' },

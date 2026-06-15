@@ -107,6 +107,20 @@ Agent-solvable 항목을 bounded 접근을 먼저 시도하지 않고 미루는 
 기술 리서치, 오픈소스/도구/데이터-허브 도입 검토, 의존성 프로브, 브라우저 자동화,
 공개 인터넷 / 공개 데이터 / transcript 경로).
 
+Do not convert child completion into parent Done. If a larger goal, epic,
+mission-control run, adoption review, or overnight bundle exists, final closeout
+needs a `parent_closeout_inventory` that lists every lane and its issue/PR,
+evidence, closeout state, and next retry condition. A merged helper PR or a
+closed child issue is progress unless the parent inventory proves every lane is
+merged/main-synced, rejected with evidence, watched with a trigger, or explicitly
+tracked as not-Done.
+
+Long-running validation also needs `long_command_evidence`. A caller timeout,
+empty output, missing log tail, or unknown child-process state is `UNVERIFIED`,
+not PASS or FAIL. Adopt one existing owner run when it exists; otherwise record
+the process id or log path, poll it, capture the final gate, and avoid starting
+a competing validation loop for the same branch.
+
 ## Exhaustion Ledger (이게 없으면 미루지 않는다)
 어떤 실행이 항목을 open / deferred / blocked로 남기면, 그 항목은 Exhaustion Ledger
 항목을 함께 남긴다. Agent-solvable 항목의 경우 그 항목에는 `attemptedApproaches`

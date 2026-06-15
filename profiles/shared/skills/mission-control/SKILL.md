@@ -117,6 +117,23 @@ context/fallback route, and keep a `worker_recovery_inventory`. Nonzero
 agent-solvable `FAILED` blocks final Done until retried, completed, or converted
 to an explicit not-Done tracker with the next retry condition.
 
+## Parent Closeout Boundary
+
+Large-goal closeout is a parent decision, not a child-ticket echo. A child issue,
+PR, probe, or helper merge can be `MERGED_DONE` while the parent remains open.
+Before claiming the parent is Done, mission control keeps a
+`parent_closeout_inventory` with every requested lane, linked issue or PR,
+current state, command evidence, and closeout state. Parent Done requires all
+lanes to be merged/main-synced, rejected with evidence, watched with a trigger,
+or left as an explicit not-Done tracker with the next retry condition.
+
+Long or quiet commands are `long_command_evidence`, not a blank screen to infer
+from. If a command can outlive the caller timeout, the coordinator records the
+process id or log path, polls one owner run, adopts existing output when present,
+and does not start a competing validation loop. Empty output, caller timeout, or
+missing log tail is `UNVERIFIED` until the process is observed complete and its
+result is captured.
+
 ## Control Tower Loop
 
 For large work, follow this order:

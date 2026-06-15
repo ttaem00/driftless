@@ -15,6 +15,7 @@ PowerShell 7 and PowerShell 7.
 | `Test-ImprovementPrincipleDiscipline.ps1` | The shared root-cause / principle-based / no-overfit rule remains present and wired into shipped skills, learning-loop, finish-to-done, local gate docs, and PR guidance. | A rule/skill surface drops the improvement principle, or the gate stops being part of normal review. |
 | `Test-HotContextDiscipline.ps1` | Hot rules stay small instead of moving always-loaded instructions into helper docs or every-task skills. | `AGENTS.md` / `CLAUDE.md` gets too large, always loads another instruction file, or a skill claims every-task scope. |
 | `Test-ContextEngineeringDiscipline.ps1` | The shared context budget, compressed reference integrity, repo map freshness, and action/evidence ledger contract remains present, skill-wired, and documented as a local closeout gate. | The shared contract, handoff/ledger skills, or local gate docs drop those context-management anchors. |
+| `Test-MissionControlCloseoutBoundary.ps1` | Mission-control and finish-to-done preserve parent closeout inventory and long command evidence before Done claims. | A shared closeout skill drops the parent-vs-child Done boundary, long command evidence, or aggregate PR-gate wiring. |
 | `Test-WorkerFailureRecoveryContract.ps1` | Multi-lane skills keep worker capacity, context-window, and partial-output failures as recovery states, not Done. | A shared worker skill drops `worker_recovery_inventory` or the retry states needed before closeout. |
 | `Test-CodeIntelligenceBenchmark.ps1` | The compiled context wiki remains useful enough to test code-intelligence ideas before installing external tools. | The wiki cannot build, average recall falls below the floor, token direction regresses, or source-traceability validation fails. |
 | `Test-SkillAudit.ps1` | Shipped SKILL.md files are discoverable and their runnable repo-local `.ps1` command references exist. | A skill has broken frontmatter, a name/folder mismatch, no trigger signal, or a runnable command pointing at a missing repo-local script. |
@@ -52,6 +53,9 @@ pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-HotContextDiscipline.ps1 -Ro
 
 # Context engineering: keep compressed/resumed work verifiable
 pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ContextEngineeringDiscipline.ps1 -Root .
+
+# Mission-control closeout boundary: keep parent Done separate from child Done and require long command evidence
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-MissionControlCloseoutBoundary.ps1 -Root .
 
 # Code intelligence: benchmark compiled wiki usefulness before external tool adoption
 pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-CodeIntelligenceBenchmark.ps1 -Root .
@@ -104,6 +108,16 @@ repo map freshness, and action/evidence ledger. It also verifies that handoff
 and work-ledger skills carry the operational guidance, and this gate is
 documented here as a local closeout command. It is structural evidence only; a
 workflow claim still needs current command or tool evidence.
+
+## What `Test-MissionControlCloseoutBoundary.ps1` checks
+
+This read-only gate keeps large-goal closeout honest. It verifies that
+mission-control and finish-to-done keep child ticket completion separate from
+parent Done through a parent closeout inventory, and that long or quiet commands
+need long command evidence before they can support PASS, FAIL, merge, or Done.
+
+It is structural evidence only. The parent goal still needs current issue/PR,
+process, validation, and merge evidence before final closeout.
 
 ## What `Test-CodeIntelligenceBenchmark.ps1` checks
 

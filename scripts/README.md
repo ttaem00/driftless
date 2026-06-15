@@ -21,6 +21,7 @@ PowerShell 7 and PowerShell 7.
 | `Test-CompressedHandoffSummaryProtocol.ps1` | A compressed handoff/protocol summary keeps source pointer, scope, exclusions, manager-only gates, validation evidence, stale-map status, and next executable action. | The fixture drops one of those load-bearing fields, points outside the repo, or carries unusable evidence/action state. |
 | `Test-MissionMapFixture.ps1` | The public Mission Map fixture has the required manager-visible fields and no private path/session/credential markers. | The fixture misses active goal, guardian, PR/check state, blockers, evidence, next action, or includes private runtime markers. |
 | `Test-ExternalAdoptionSafetyGate.ps1` | External skills/repos/MCP packets are not treated as adoption-ready until static danger strings and adoption-lane closeout are checked. | A candidate has unresolved arbitrary exec, download-pipe-exec, host-global/secret refs, credential/cloud/billing/MCP surfaces, daemon startup, a truncated scan, or missing pilot closeout decisions. |
+| `Test-PublicExportClassifier.ps1` | Private lessons, prompts, notes, or workflow examples are classified before being copied into public Driftless surfaces. | A candidate is shared-internal, needs sanitizing, is private-only, needs a manager publication decision, is empty, or the classifier self-test regresses. |
 
 ## Run them
 
@@ -66,6 +67,9 @@ pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-MissionMapFixture.ps1
 
 # External adoption safety: prove the public-safe pre-adoption gate has teeth
 pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ExternalAdoptionSafetyGate.ps1 -SelfTest
+
+# Public export classifier: prove private-to-public routing has teeth
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-PublicExportClassifier.ps1 -SelfTest
 ```
 
 Add `-Json` to any gate that supports it for a machine-readable summary.
@@ -143,6 +147,31 @@ pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ExternalAdoptionSafetyGate.p
 
 Static PASS is not a behavioral safety claim. It means the bounded pre-adoption
 gate found no unresolved string/closeout blockers in the scanned surface.
+
+## What `Test-PublicExportClassifier.ps1` checks
+
+This pre-publication classifier is for moving lessons, prompts, notes, issue
+summaries, or workflow examples from private work into Driftless. It scans only
+the explicit text or bounded path you pass and reuses the shared containment
+schema. It classifies candidates as:
+
+- `public-safe` -- no detected private markers; normal review can continue.
+- `shared-internal` -- useful internally, but rewrite for public users first.
+- `sanitize-first` -- remove machine paths, credential labels, or private
+  references, then rerun.
+- `private-only` -- raw logs, transcripts, customer/student data, private
+  policy, or secret-like material; do not publish.
+- `manager-only-decision` -- publication/copy-to-public requests need maintainer
+  approval even when the text is otherwise clean.
+
+Use it before copying private-derived material into public docs:
+
+```powershell
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-PublicExportClassifier.ps1 -Path path\to\candidate.md
+```
+
+Only `public-safe` exits 0. A blocked result is a routing decision, not a
+judgment that the idea is bad.
 
 Exit codes: `0` = PASS, `1` = FAIL, `2` = BLOCKED (containment gate only, when
 the target is not a git repository -- reported BLOCKED, never a silent PASS).

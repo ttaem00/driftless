@@ -203,6 +203,37 @@ pilot and measured; only a measured no-gain result (or real upkeep cost) closes 
 out. Skipping the pilot to wave a big idea away is recorded as the deferral mistake
 it is.
 
+### "A smoke pass got mistaken for route readiness" -> now promotion needs a matrix
+A small live smoke can prove that an integration is reachable, but it does not
+prove the route is useful across real work. A candidate can pass one tiny prompt
+and still return empty content, generic templates, or unsupported metrics when it
+is asked to do planning, review, escalation, or manager-facing explanation.
+**Fix:** route promotion requires a diversified real-use matrix, not a single
+smoke. The matrix records success rate, quality, latency, token use, estimated
+cost, manager intervention, and safety penalties. Unsupported operational
+numbers are penalized, and a route that cannot sustain the matrix stays
+supervised or disabled even if the smoke passed.
+
+### "Fallback order got mistaken for provenance" -> record the winning route
+A fallback list only says what the system planned to try. It does not prove which
+provider, model, endpoint, or credential route actually produced a bad chunk or
+useful answer. Without that per-call trace, later root-cause analysis turns into
+guesswork.
+**Fix:** every generated chunk or worker call that may be cached, scored, or
+used for routing must record the selected provider, selected model, route key,
+attempt status, latency, cost estimate, and error/success code. The log may
+record credential *names* or route aliases, but never secret values.
+
+### "A worker answer was treated as done before the parent judged it" -> close the loop
+A worker can return a technically valid answer and still be useless after the
+parent agent checks it against the real task. If the run is not closed with the
+parent decision, cost, time, quality, and manager-intervention count, the next
+route decision is based on hope instead of observed usefulness.
+**Fix:** every worker call used for routing or future reuse must end with a
+parent closeout record. The closeout records whether the answer was accepted,
+retried, escalated, or rejected, then feeds the gradient report that decides
+whether future runs should keep, demote, escalate, or gather more evidence.
+
 ### "Drove the loop on a clock instead of on finish" -> trigger the next cycle when work ENDS
 The autonomous loop was re-entered by a fixed timer (every few minutes / couple of
 hours). That fires uselessly while idle (wasted tokens) and is *not* "start the

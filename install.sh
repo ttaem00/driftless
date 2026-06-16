@@ -178,13 +178,24 @@ materialize_home() {
     step "$NAME isolated home will be created at: $HOME_DIR"
   fi
 
-  # Copy the tool profile and the shared tier into the isolated home. Copying is
-  # idempotent: existing files are refreshed, nothing outside .runtime is touched.
+  # Copy shared skills into the active skills directory, then copy the tool
+  # profile. Copying is idempotent: existing files are refreshed, nothing outside
+  # .runtime is touched. Tool-specific profile files copy after shared skills so
+  # a deliberate tool-specific skill with the same name wins.
   run_or_plan "create $HOME_DIR" mkdir -p "$HOME_DIR"
+  if [ -d "$_shared/skills" ]; then
+    run_or_plan "copy shared skills into the active skills directory" \
+      sh -c "mkdir -p \"$HOME_DIR/skills\" && cp -R \"$_shared/skills/.\" \"$HOME_DIR/skills/\""
+  fi
   run_or_plan "copy the $NAME profile into the isolated home" sh -c "cp -R \"$_src/.\" \"$HOME_DIR/\""
   if [ -d "$_shared" ]; then
-    run_or_plan "copy the shared tier (contract + safety schemas + shared skills) into the isolated home" \
-      sh -c "mkdir -p \"$HOME_DIR/shared\" && cp -R \"$_shared/.\" \"$HOME_DIR/shared/\""
+    run_or_plan "copy shared contract + safety schemas into the isolated home" \
+      sh -c "mkdir -p \"$HOME_DIR/shared\" && for item in \"$_shared\"/*; do [ \"\$(basename \"\$item\")\" = skills ] && continue; cp -R \"\$item\" \"$HOME_DIR/shared/\"; done"
+  fi
+
+  if [ "$DRY_RUN" -eq 0 ] && [ -d "$HOME_DIR/skills" ]; then
+    _active_count=$(find "$HOME_DIR/skills" -mindepth 2 -maxdepth 2 -name SKILL.md -type f 2>/dev/null | wc -l | tr -d ' ')
+    step "$NAME active skills materialized: $_active_count"
   fi
 
   step "$NAME isolation: starting the agent with $ENV_VAR set to this repo-local home (the command printed at the end) keeps the host-global config untouched."

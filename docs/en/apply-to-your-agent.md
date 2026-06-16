@@ -27,6 +27,11 @@ the installer below for you. It will **stop and ask you** before installing any
 MCP server, plugin, or dependency. If you do not answer, the answer is No, and
 nothing extra is installed.
 
+Do not let a generic skill installer install only the repo-level `skills/`
+folders and call that done. Driftless is installed by this repository's
+`install.ps1` / `install.sh`, which creates the isolated home and materializes
+the shared skills into the active `skills/` directory for the selected agent.
+
 ### What the agent will do for you
 
 1. Find this repository's root (it does not matter which sub-folder you are in).

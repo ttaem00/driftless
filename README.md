@@ -39,6 +39,11 @@ CLI — [Claude Code](https://docs.anthropic.com/claude-code) or
 [OpenAI Codex](https://developers.openai.com/codex) — installed. Driftless drives
 an agent; it does not replace one.
 
+If you ask an AI agent to install Driftless, tell it to run this repository's
+installer. Installing only the repo-level `skills/` folders is not a complete
+Driftless setup; the installer builds the isolated Claude/Codex home and
+materializes the shared skills into that active home.
+
 **1. Get the repo, then apply it** (run these in a terminal):
 
 ```sh

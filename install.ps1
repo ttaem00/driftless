@@ -144,23 +144,44 @@ function Install-IsolatedHome {
 
   if ($DryRun) {
     Step ("[dry-run] would create " + $HomeDir)
+    Step ("[dry-run] would copy shared skills into the active skills directory")
     Step ("[dry-run] would copy the " + $Name + " profile into the isolated home")
     if (Test-Path -LiteralPath $shared -PathType Container) {
-      Step "[dry-run] would copy the shared tier (contract + safety schemas + shared skills) into the isolated home"
+      Step "[dry-run] would copy shared contract + safety schemas into the isolated home"
     }
   } else {
     if (-not (Test-Path -LiteralPath $HomeDir)) {
       New-Item -ItemType Directory -Path $HomeDir -Force | Out-Null
     }
+    $sharedSkills = Join-Path $shared 'skills'
+    if (Test-Path -LiteralPath $sharedSkills -PathType Container) {
+      $skillsDest = Join-Path $HomeDir 'skills'
+      if (-not (Test-Path -LiteralPath $skillsDest)) {
+        New-Item -ItemType Directory -Path $skillsDest -Force | Out-Null
+      }
+      Copy-Item -Path (Join-Path $sharedSkills '*') -Destination $skillsDest -Recurse -Force
+    }
     # Copy is idempotent: existing files are refreshed; nothing outside .runtime
-    # is touched.
+    # is touched. Tool-specific profile files copy after shared skills so a
+    # deliberate tool-specific skill with the same name wins.
     Copy-Item -Path (Join-Path $src '*') -Destination $HomeDir -Recurse -Force
     if (Test-Path -LiteralPath $shared -PathType Container) {
       $sharedDest = Join-Path $HomeDir 'shared'
       if (-not (Test-Path -LiteralPath $sharedDest)) {
         New-Item -ItemType Directory -Path $sharedDest -Force | Out-Null
       }
-      Copy-Item -Path (Join-Path $shared '*') -Destination $sharedDest -Recurse -Force
+      Get-ChildItem -LiteralPath $shared -Force |
+        Where-Object { $_.Name -ne 'skills' } |
+        ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $sharedDest -Recurse -Force }
+    }
+
+    $activeSkills = Join-Path $HomeDir 'skills'
+    if (Test-Path -LiteralPath $activeSkills -PathType Container) {
+      $activeCount = @(
+        Get-ChildItem -LiteralPath $activeSkills -Directory -ErrorAction SilentlyContinue |
+          Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md') -PathType Leaf }
+      ).Count
+      Step ($Name + " active skills materialized: " + $activeCount)
     }
   }
 

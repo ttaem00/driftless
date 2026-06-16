@@ -9,7 +9,7 @@ mistaken for this public repo's own (day-one) graph.
 | | Development runtime (at extraction) | Public Driftless (since day one, live) |
 |---|---|---|
 | **What it is** | The private runtime that Driftless was extracted from. It ran this exact loop on its own backlog for weeks. | This public repository. Its own graph starts at v0.1.0 and fills as the loop runs in the open. |
-| **Can a reviewer click into it?** | No — it is a private, containment-sensitive runtime. The numbers are the method's proof, self-attested. | **Yes.** Every PR, issue, and CI run below is public and clickable. |
+| **Can a reviewer click into it?** | No — it is a private, containment-sensitive runtime. The numbers are the method's proof, self-attested. | **Yes.** The public PR and issue graph is clickable. Local gate evidence is reported per run; hosted CI was retired and is not used as current proof. |
 | **Merged PRs** | 113 — [redacted list of all 113](./development-runtime-prs.md) | grows — see [merged PRs](https://github.com/mizan0515/driftless/pulls?q=is%3Apr+is%3Amerged) |
 | **Issues** | 94 | grows — see [issues](https://github.com/mizan0515/driftless/issues?q=is%3Aissue) |
 | **Commits** | 114 | grows — see [commits](https://github.com/mizan0515/driftless/commits/main) |
@@ -36,7 +36,9 @@ The loop's first public work on this repo:
 - Declared the maintainer role (MAINTAINERS.md + README + CONTRIBUTING) — PR #5.
 - Argued the ecosystem role explicitly — PR #6.
 - Added this loop log — this change.
-- Added a non-Windows CI smoke job — see the Linux job in `.github/workflows/gates.yml`.
+- Added public validation gates. Earlier hosted CI proof is historical; current
+  merge evidence uses repo-local PowerShell gates and the no-Actions workflow
+  gate.
 
 Each was an issue, on its own branch, gate-green, merged via PR. Browse the live
 graph from the links in the table above to watch it continue.

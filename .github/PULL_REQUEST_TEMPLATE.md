@@ -9,10 +9,8 @@ ready/merge; they print plain-language reasons.
 
 ## Checklist
 
-- [ ] The safety gates pass locally (containment, text-safety, mirror-parity):
-      `./scripts/Test-Containment.ps1 -Path . -AllFiles`,
-      `./scripts/Test-WindowsTextSafety.ps1 -Root .`,
-      `./scripts/Test-ProfileMirrorParity.ps1 -Path .`
+- [ ] The aggregate local PR gate passes:
+      `pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Test-PrValidationGate.ps1`
 - [ ] If I changed a shared rule/skill, I changed it **once in the shared tier**
       (one edit → both Claude and Codex profiles), not separately per tool.
 - [ ] No secrets, no host-global agent config, no machine paths — public-safe.

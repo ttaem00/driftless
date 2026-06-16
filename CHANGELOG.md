@@ -50,8 +50,9 @@ a merged PR you can browse). Not tagged as a new version yet.
 ### Changed
 - The single-source mirror is populated with real shared skills; the mirror-parity
   gate now enforces them (13 checks).
-- CI runs the gates on Windows **and** Linux (containment + installer smoke), and
-  the README CI badge reflects live status instead of a hardcoded "passing".
+- Hosted CI evidence was added earlier in the public run and later retired from
+  the current merge path. Current completion evidence is repo-local validation,
+  including the no-Actions workflow gate.
 - **Onboarding parity (EN/KO)** — install commands are ZIP-safe (`sh ./install.sh`),
   the Korean README and quickstart carry the same `git clone` + start-command
   steps as English, and the README points to the full prompt's safety clause.

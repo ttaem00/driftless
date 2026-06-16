@@ -35,9 +35,9 @@ is real, not aspirational.
 ## Honest limits
 
 - Measured on Windows (the host with PowerShell for the gates). The POSIX
-  installer path itself runs on Linux/macOS too (CI proves the Linux installer +
-  containment), but a full non-Windows wall-clock is not separately captured here
-  — see the [host evidence matrix](../docs/en/host-evidence-matrix.md).
+  installer path is intended for Linux/macOS, but hosted CI proof has been
+  retired and a current full non-Windows wall-clock is not separately captured
+  here. See the [host evidence matrix](../docs/en/host-evidence-matrix.md).
 - The number is install + gate setup, not an overnight maintenance run (that
   depends on your repo's backlog size).
 - Re-run it yourself; the steps above are the whole test.

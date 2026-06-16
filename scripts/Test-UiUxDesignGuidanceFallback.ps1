@@ -41,6 +41,8 @@ $files = @(
 )
 
 $forbidden = @(
+  # fixture-only machine-path needles: these strings prove the public shared
+  # skill does not hardcode one maintainer's private checkout or local clone.
   'D:\c-c-isolated-runtime\docs\design\DESIGN.md',
   'D:\\c-c-isolated-runtime\\docs\\design\\DESIGN.md',
   'D:\codex-isolated-runtime\docs\design.md\DESGIN.md',

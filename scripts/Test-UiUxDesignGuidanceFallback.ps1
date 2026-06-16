@@ -31,6 +31,14 @@ function Read-IfPresent {
 
 $resolvedRoot = (Resolve-Path -LiteralPath $Root).Path
 $results = [System.Collections.Generic.List[object]]::new()
+$privateRuntimeRoot = 'D:' + '\c-c-isolated-runtime'
+$legacyCodexRoot = 'D:' + '\codex-' + 'isolated-runtime'
+$legacyDriftlessRoot = 'D:' + '\driftless'
+
+function ConvertTo-EscapedPathFixture {
+  param([Parameter(Mandatory = $true)][string]$Path)
+  return $Path.Replace('\', '\\')
+}
 
 $files = @(
   'docs\design\DESIGN.md',
@@ -43,12 +51,12 @@ $files = @(
 $forbidden = @(
   # fixture-only machine-path needles: these strings prove the public shared
   # skill does not hardcode one maintainer's private checkout or local clone.
-  'D:\c-c-isolated-runtime\docs\design\DESIGN.md',
-  'D:\\c-c-isolated-runtime\\docs\\design\\DESIGN.md',
-  'D:\codex-isolated-runtime\docs\design.md\DESGIN.md',
-  'D:\\codex-isolated-runtime\\docs\\design.md\\DESGIN.md',
-  'D:\driftless\docs\design\DESIGN.md',
-  'D:\\driftless\\docs\\design\\DESIGN.md'
+  (Join-Path $privateRuntimeRoot 'docs\design\DESIGN.md'),
+  (ConvertTo-EscapedPathFixture (Join-Path $privateRuntimeRoot 'docs\design\DESIGN.md')),
+  (Join-Path $legacyCodexRoot 'docs\design.md\DESGIN.md'),
+  (ConvertTo-EscapedPathFixture (Join-Path $legacyCodexRoot 'docs\design.md\DESGIN.md')),
+  (Join-Path $legacyDriftlessRoot 'docs\design\DESIGN.md'),
+  (ConvertTo-EscapedPathFixture (Join-Path $legacyDriftlessRoot 'docs\design\DESIGN.md'))
 )
 
 foreach ($rel in $files) {

@@ -27,7 +27,7 @@ $results = [System.Collections.Generic.List[object]]::new()
 $requirements = @(
   @{
     path = 'profiles\shared\skills\goal-pair-guardian\SKILL.md'
-    needles = @('Session visibility and rollover gate', 'User interaction boundary', 'split_gate=single_lane', 'uncommitted changes', 'early-stop closeout work', 'one meaning-level question')
+    needles = @('Session visibility and rollover gate', 'User interaction boundary', 'split_gate=single_lane', 'uncommitted changes', 'early-stop closeout work', 'one meaning-level question', 'Verify the supervision loop', 'UNVERIFIED_HEARTBEAT_TARGET', 'parent implementation thread')
   },
   @{
     path = 'profiles\shared\skills\mission-control\SKILL.md'

@@ -75,6 +75,13 @@ Session visibility and rollover gate:
   the task is explicitly about that profile.
 - After thread creation or rollover, verify title, role, `cwd`, live ids, and
   heartbeat target before reporting a pair active.
+- Verify the supervision loop, not only the parts. A guardian is active only
+  when the saved heartbeat wakes the companion/guardian thread, that companion
+  knows the parent goal thread it must inspect, and any status board records the
+  same mapping. A heartbeat that targets the parent implementation thread is not
+  a companion guardian, even if the automation is active. If this cannot be
+  verified, report `UNVERIFIED_HEARTBEAT_TARGET` and repair or provide
+  paste-ready prompts instead of claiming the automation is active.
 - A heartbeat prompt update alone is not a rollover. A valid rollover has a
   fresh implementation thread, fresh guardian thread, verified project `cwd`,
   retargeted heartbeat, and stale visible pairs stopped or archived.

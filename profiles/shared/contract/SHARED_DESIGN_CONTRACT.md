@@ -143,6 +143,13 @@ improvement belongs in an existing asset, the shared tier, a tool-specific
 profile, a wrapper/alias, a narrower trigger, or a gate before adding a new
 surface.
 
+Lifecycle cleanup needs context, not just counts. Before calling a quiet skill,
+prompt, script, or hook removable, inspect whether it is rarely needed, hidden by
+trigger wording, referenced by a router or another skill, covered by a wrapper,
+better split into a narrower asset, or only a demo/fixture residue. Manager
+reports should explain that usage context so non-developer maintainers do not
+have to infer it from raw names or logs.
+
 ---
 
 ## 9. Context engineering discipline

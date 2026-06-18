@@ -23,6 +23,12 @@ reducing setup, git/GitHub, security, validation, and raw-script burden.
   splits, and no spec/case overfitting or one-off special-casing unless evidence
   shows the exception lowers user effort, maintainer effort, time, tokens, cost,
   recurrence risk, or maintenance cost.
+- Modular parallel development is the default for broad work: name the owned
+  module surface, write set, read-only surfaces, public contract, validation
+  command, rollback path, and `parallel_safe` state before implementation or
+  worker split. Use the Ponytail ladder as a compact heuristic, but never remove
+  validation, security, privacy, data-loss handling, accessibility,
+  maintainer-visible state, or evidence gates to make a patch smaller.
 - When any project/session exposes a systemic recurrence risk, apply the
   smallest safe repo-local prevention in that same session when scope is clear:
   record it through `learning-loop`, update the relevant skill/hook/script/test,

@@ -72,6 +72,13 @@ Labels: routine -> `auto-created`; backlog/deferred -> `pending` via
 `## 추가/수정 사항` section), not comments. Body-edit blocked -> report
 `Blocked`/`UNVERIFIED`; never comment-only instructions.
 
+When a project has a repo-local issue creation helper or a shared runtime helper,
+probe and use it before raw `gh issue create`. If no helper is available, direct
+issue creation is allowed only with an explicit compact status line such as
+`HELPER_UNAVAILABLE_DIRECT_GH_FALLBACK` or `ISSUE_HELPER_USED`. Missing helper
+paths must be visible in the final report so agents do not silently drift away
+from the ticket gate.
+
 User-visible features, runtime workflows, automations, tool integrations, CLI/
 script launchers, UI flows, cross-host behavior, and manager-facing claims must
 name a real-use / end-to-end acceptance in `Success Criteria`, `Verification`,

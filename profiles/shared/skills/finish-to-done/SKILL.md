@@ -161,6 +161,11 @@ git remote -v
     + manager-risk 게이트 없음 -> auto-merge 실행. 성공하면 `MERGED_DONE`.
 12. 다른 열린 PR이 있으면 그 상태를 매니저 관점으로 분류한다.
 13. 병합 뒤 base pull + 보드/트래커 정리.
+14. 세션이 연 브라우저 / Playwright context / 임시 browser profile / evidence
+    server / worker process가 있으면 완료 전 닫거나, repo-local cleanup
+    manifest에 등록하거나, 아직 필요한 이유와 owner / cleanup trigger를 남긴다.
+    전역 스케줄러가 세션 완료를 추측하게 두지 않는다. 사용자 browser profile,
+    cookies, local storage, session store는 읽지 않는다.
 
 Done 직전에는 사용 중인 프로필의 containment 가드가 PASS여야 한다(격리 경계 위반
 없음). PR/검증 게이트는 저장소 루트의 공유 단일 소스를 쓴다.

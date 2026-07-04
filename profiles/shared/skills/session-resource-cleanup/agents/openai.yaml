@@ -1,0 +1,6 @@
+interface:
+  display_name: "Session Resource Cleanup"
+  short_description: "Close session-owned automation leftovers"
+  default_prompt: "Use $session-resource-cleanup to close browser automation and temporary workers opened by this session."
+policy:
+  allow_implicit_invocation: true

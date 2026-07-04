@@ -46,6 +46,11 @@ reducing setup, git/GitHub, security, validation, and raw-script burden.
   `rg`, a relevant gate, or a real install/use check.
 - Static doc changes do not prove behavior. Behavioral claims need real use or a
   bounded end-to-end test.
+- Local workflow CI/CD is the default authority for routine agent work: use
+  repo-local gates, scripts, harnesses, and local merge-ref validation as
+  completion proof. Do not create or wait on GitHub Actions/workflow CI/CD,
+  hosted checks, or request `workflow` scope unless a current
+  maintainer-approved exceptional issue names it.
 
 ## Clean Primary Checkout
 - Do not start non-trivial work in the primary/root checkout. Create an issue

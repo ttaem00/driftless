@@ -81,6 +81,21 @@ empty -> preflight -> running -> needs_decision -> blocked -> review_ready -> do
 
 ---
 
+## 4.1 Local CI/CD authority
+
+For routine Driftless agent work, local workflow CI/CD is the default completion
+authority. "CI/CD" means repo-local scripts, gates, linters, harnesses, local
+merge-ref validation, and evidence bundles that can run from the checkout
+without hosted runner state. GitHub remote workflow CI/CD, GitHub Actions
+workflow files, hosted checks, and `workflow` OAuth scope are not routine proof
+or routine permission surfaces. They may be used only for a current
+maintainer-approved exceptional issue that names the workflow file or hosted
+runner requirement, rollback, and local fallback. Routine `review_ready`, Done,
+and merge claims must pass the local gate chain and must not wait on or create
+`.github/workflows/**`.
+
+---
+
 ## 5. Isolation boundary
 
 Each profile uses only its own repo-local isolated config home and never the

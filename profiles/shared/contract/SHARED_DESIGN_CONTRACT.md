@@ -165,6 +165,30 @@ better split into a narrower asset, or only a demo/fixture residue. Manager
 reports should explain that usage context so non-developer maintainers do not
 have to infer it from raw names or logs.
 
+Session-owned resource cleanup is part of Done. Automation resources belong to
+the session that opened them. A profile must not depend on a global scheduler to
+guess when browser windows, browser contexts, temporary profiles, worker
+processes, or evidence servers are done. The session that creates a resource
+owns its closeout.
+
+Before `done`, `review_ready`, or a handoff that leaves no active owner, the
+session must do one of these:
+
+- close the browser/page/context/server/process it opened;
+- register it in a repo-local cleanup manifest that a Stop/Exit hook reads; or
+- mark it still needed with a visible owner, purpose, and retry/cleanup trigger.
+
+Cleanup must preserve normal user surfaces. Do not read cookies, local storage,
+browser profiles, passwords, or session stores. Do not close a visible user
+browser or app merely because it is Chrome, Edge, Whale, or another Chromium
+process. Match only resources the session owns or explicitly temporary
+automation profiles, and prefer dry-run/report evidence before deletion or
+process termination.
+
+This is a responsiveness rule as well as a cleanliness rule: orphaned browser
+automation trees and long-lived workers can make desktop input or scrolling lag
+even when CPU and RAM are not saturated.
+
 ---
 
 ## 9. Context engineering discipline

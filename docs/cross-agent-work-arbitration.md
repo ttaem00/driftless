@@ -44,6 +44,28 @@ gitignored operational state, never committed.
   the primary one, so a Claude-side scan still sees a Codex-side claim and
   vice versa (rule R3 depends on this).
 
+## Advisory similar-work discovery
+
+Exact duplicate-work arbitration and advisory similar-work discovery are
+different contracts.
+
+- Exact duplicate-work arbitration is blocking only when objective state shows
+  the same issue, task, branch, worktree, owner surface, or same-name shipping
+  asset is currently contended. It uses the deterministic L1-L3 flow above and
+  the R1-R5 rules below.
+- Advisory similar-work discovery may surface related active work, prior
+  attempts, or nearby lessons so a maintainer can reuse context. It is a search
+  aid only: it may suggest "review this related work" but it does not decide
+  ownership or stop a session by itself.
+- Completed or archived sessions and tasks MUST NOT appear as active blockers
+  by default. Historical material is considered only when the caller explicitly
+  asks for an `include-history` mode, and even then the result is advisory
+  background, not a live conflict verdict.
+- Any vector, embedding, or semantic index used for similar-work discovery MUST
+  be derived only from sanitized `purpose_summary` and `intent_tags` fields.
+  It is advisory only and MUST NOT authorize routing, deletion, merge,
+  messaging, cleanup, claim release, or any other mutation.
+
 ## Decision rules (L3 step 1 - decided by evidence, no discussion)
 
 Apply top-down; the first rule that distinguishes the two sides is the verdict.

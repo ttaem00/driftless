@@ -46,6 +46,27 @@ function Test-ContractText {
       $Text -match 'MUST NOT\s+authorize routing, deletion, merge,\s*messaging, cleanup' -and
       $Text -match 'claim release'
     )
+    'work control-plane section exists' = ($Text -match '(?im)^## Work Control Plane\s*$')
+    'issue tracker is not execution owner' = (
+      $Text -match 'collaboration artifacts' -and
+      $Text -match 'execution control plane' -and
+      $Text -match 'GitHub issue alone is not an owner'
+    )
+    'ready is dependency-aware' = (
+      $Text -match 'Dependency-aware ready' -and
+      $Text -match '(?is)cannot become `ready`' -and
+      $Text -match '(?is)dependency is\s+still running, blocked, stale, or unknown'
+    )
+    'claimed work needs owner and workspace' = (
+      $Text -match 'Single owner claim' -and
+      $Text -match '`claimed` and `running` work need one owner' -and
+      $Text -match 'worktree/scratch lane'
+    )
+    'warnings require remediation and rollback or handoff' = (
+      $Text -match 'Actionable warnings' -and
+      $Text -match '(?is)dry-run or check\s+command' -and
+      $Text -match '(?is)rollback or\s+handoff'
+    )
   }
 
   return $checks
@@ -81,6 +102,16 @@ Any vector, embedding, or semantic index MUST be derived from sanitized
 `purpose_summary` and `intent_tags` fields. It is advisory only and MUST NOT
 authorize routing, deletion, merge, messaging, cleanup, claim release, or any
 other mutation.
+
+## Work Control Plane
+
+Issue trackers, PRs, and project boards are collaboration artifacts. The
+repo-local claim store and gates are the execution control plane. Dependency-
+aware ready means a task cannot become `ready` while a dependency is still
+running, blocked, stale, or unknown. Single owner claim means `claimed` and
+`running` work need one owner plus a worktree/scratch lane. A GitHub issue alone
+is not an owner. Actionable warnings include a dry-run or check command plus a
+rollback or handoff note.
 '@
   $bad = @'
 ## Advisory similar-work discovery

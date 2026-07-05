@@ -44,6 +44,44 @@ gitignored operational state, never committed.
   the primary one, so a Claude-side scan still sees a Codex-side claim and
   vice versa (rule R3 depends on this).
 
+## Work Control Plane
+
+Issue trackers, PRs, and project boards are collaboration artifacts. They are
+not enough to prove which agent owns work right now. The repo-local claim store,
+worktree, local gates, and worker status are the execution control plane.
+
+Use this minimum state discipline for agent-owned work:
+
+- `todo`: recorded but not claimable yet.
+- `ready`: claimable only after dependencies are done or explicitly not
+  required.
+- `claimed`: exactly one owner, issue, branch, and worktree or scratch lane are
+  named.
+- `running`: claimed owner is active and has fresh evidence.
+- `review_ready`: local validation evidence is attached and parent adoption is
+  requested.
+- `done`: result is merged/adopted or the issue is explicitly closed with
+  evidence.
+- `blocked`: blocker class, next action, owner, and rollback or handoff are
+  recorded.
+- `stale`: heartbeat or claim age expired; review before reclaiming or
+  spawning another worker.
+
+Three rules keep the board from creating orphan work:
+
+- Dependency-aware ready: a task cannot become `ready` while a dependency is
+  still running, blocked, stale, or unknown.
+- Single owner claim: `claimed` and `running` work need one owner plus a
+  worktree/scratch lane. A GitHub issue alone is not an owner.
+- Actionable warnings: stale, blocked, or warning rows need a dry-run or check
+  command, a safe apply boundary or manager-only reason, and a rollback or
+  handoff note.
+
+This section is intentionally tool-neutral. Claude workflow lanes, Codex goal
+threads, and future Kanban-style agent boards may keep their native names, but
+the public rule is the same: collaboration state points to the execution
+control plane; it does not replace it.
+
 ## Advisory similar-work discovery
 
 Exact duplicate-work arbitration and advisory similar-work discovery are

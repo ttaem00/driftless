@@ -95,6 +95,7 @@ $gates = @(
   @{ name = 'Containment full scan'; script = 'scripts\Test-Containment.ps1'; args = @('-AllFiles'); next = 'Remove forbidden path or secret references before merge.' },
   @{ name = 'Primary checkout hygiene'; script = 'scripts\Test-PrimaryWorktreeClean.ps1'; args = @('-CheckPrimaryRoot'); next = 'Move issue work into an issue worktree or clean the primary checkout before PR_READY.' },
   @{ name = 'Work discipline'; script = 'scripts\Test-WorkDiscipline.ps1'; args = @(); next = 'Restore work-discipline gate coverage.' },
+  @{ name = 'Cross-agent arbitration contract'; script = 'scripts\Test-CrossAgentWorkArbitrationContract.ps1'; args = @('-Root', $script:RepoRoot); next = 'Restore the public-safe distinction between duplicate-work arbitration and advisory similar-work discovery.' },
   @{ name = 'Public portability evidence'; script = 'scripts\Test-PublicPortabilityEvidence.ps1'; args = @('-Root', $script:RepoRoot); next = 'Keep public evidence repo-relative and do not cite absent hosted CI as current proof.' },
   @{ name = 'Local CI/CD policy'; script = 'scripts\Test-LocalCiCdPolicy.ps1'; args = @('-Root', $script:RepoRoot); next = 'Restore the policy that local scripts, gates, harnesses, and local merge-ref validation are the CI/CD authority; GitHub Actions/workflow CI/CD stays exceptional and maintainer-approved only.' },
   @{ name = 'Public path safety'; script = 'scripts\Test-ProfileNoMachineAbsolutePaths.ps1'; args = @(); next = 'Remove machine-specific absolute paths from public profile surfaces.' },

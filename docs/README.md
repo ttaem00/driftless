@@ -17,6 +17,7 @@ parentheses where a Korean mirror exists.
 - **[Lesson-promotion ladder](./en/lesson-promotion-ladder.md)** — memory < skill < hot rule < hook < gate.
 - **[Mission Map](./en/mission-map.md)** — a public-safe view of active goal, runtime control-plane status, evidence, blockers, and next action.
 - **[Portfolio operating layer](./en/portfolio-operating-layer.md)** — split broad agent goals into vision, outcome, opportunity, capability, execution, and governance before they become issue sprawl.
+- **[Atomic proof planning](./en/atomic-proof-planning.md)** — split broad agent work into proof atoms, classify blockers, and recover stuck work by child proofs.
 - **[Compiled context wiki](./en/compiled-context-wiki.md)** — generate a local markdown wiki for recurring repo context without paid APIs or bundled apps.
 
 ## Safety

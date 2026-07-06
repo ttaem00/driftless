@@ -126,6 +126,35 @@ workers, or profile-specific lanes. The coordinator should:
 5. split agent-solvable blockers into child proofs;
 6. close through parent adoption, validation, and cleanup.
 
+## Parent Closeout Controller Gate
+
+For long-running or multi-session APDM work, a parent coordinator should behave
+like a small controller loop:
+
+- **Desired state:** the APDM board or status file lists proof atoms, owners,
+  dependencies, accepted evidence, and terminal conditions.
+- **Actual state:** current sessions, issue or project state, artifacts, PRs,
+  validation logs, and working tree state.
+- **Reconcile action:** if actual state does not satisfy desired state, the
+  coordinator executes the next small proof, assigns a real owner, splits the
+  blocked proof, or records a true human-only decision.
+
+A parent closeout is not valid when it contains only a plan, prompt, handoff, or
+`next action` while an agent-solvable proof remains. One of these must be true:
+
+- the proof is accepted with evidence and review;
+- the proof has an active owner and freshness signal;
+- the proof is split into child proof atoms with owners;
+- the blocker is explicitly human-only;
+- a fresh continuation controller is already active.
+
+Use an executable gate where possible. A minimal gate checks that the status
+surface has a manager or maintainer entry point, active coordinator, active
+guardian or monitor when required, proof snapshot, owner or dependency for each
+running/rework proof, and no orphan `next action` rows. This gate proves the
+control topology, not product behavior; product behavior still needs its own
+proof evidence.
+
 ## Public-Safe Boundary
 
 This contract is intentionally generic. Do not copy private runtime paths,

@@ -58,6 +58,11 @@ if (-not (Test-Path -LiteralPath $atomicDocPath -PathType Leaf)) {
     'Case-Based Splits',
     'Blocker Classes',
     'Blocked Atom Fission',
+    'Parent Closeout Controller Gate',
+    'Desired state',
+    'Actual state',
+    'Reconcile action',
+    'executable gate',
     'Mission-Control Use',
     'Public-Safe Boundary'
   )) {

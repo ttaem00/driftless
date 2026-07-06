@@ -105,6 +105,7 @@ $gates = @(
   @{ name = 'Hot context discipline'; script = 'scripts\Test-HotContextDiscipline.ps1'; args = @('-Root', $script:RepoRoot); next = 'Keep hot rules small and move conditional workflows into skills/docs.' },
   @{ name = 'Context engineering discipline'; script = 'scripts\Test-ContextEngineeringDiscipline.ps1'; args = @('-Root', $script:RepoRoot); next = 'Restore context budget, handoff, and evidence ledger anchors.' },
   @{ name = 'Mission-control closeout boundary'; script = 'scripts\Test-MissionControlCloseoutBoundary.ps1'; args = @('-Root', $script:RepoRoot); next = 'Restore parent closeout inventory and long-command evidence guidance before Done claims.' },
+  @{ name = 'Orphanless mission-control contract'; script = 'scripts\Test-OrphanlessMissionControlContract.ps1'; args = @('-Root', $script:RepoRoot); next = 'Restore public-safe atomic lane, role graph, and one manager-interface guidance.' },
   @{ name = 'Code intelligence benchmark'; script = 'scripts\Test-CodeIntelligenceBenchmark.ps1'; args = @('-Root', $script:RepoRoot); next = 'Regenerate/fix the repo context wiki or benchmark evidence.' },
   @{ name = 'Compressed handoff protocol'; script = 'scripts\Test-CompressedHandoffSummaryProtocol.ps1'; args = @('-Root', $script:RepoRoot); next = 'Restore resumable handoff summary fields.' },
   @{ name = 'Mission map fixture'; script = 'scripts\Test-MissionMapFixture.ps1'; args = @(); next = 'Fix public-safe Mission Map fixture fields.' },

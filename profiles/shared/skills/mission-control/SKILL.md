@@ -45,6 +45,15 @@ agent workflows without becoming toolchain operators.
 The target UX:
 
 - The user talks to one main session.
+- One user goal becomes an atomic work graph: the coordinator decomposes the
+  goal into small lanes, retrieves the right existing skill/script/profile
+  surface for each lane, and composes the lanes into a dependency-aware plan
+  before launching or asking for help.
+- Every worker/session knows its role, parent coordinator, allowed write
+  surface, evidence contract, and any child-role boundary before it starts.
+- Worker/session results roll up to one manager-facing interface, not several
+  disconnected chats. The user should be able to understand state from one main
+  session, work ledger, dashboard, or equivalent product surface.
 - The main session owns routine ticketing, criteria, branch, validation, review,
   PR, merge, and sync mechanics.
 - Long or drift-prone work gets companion/checkpoint handling only when needed.
@@ -76,6 +85,31 @@ Do not ask the user to pick from this table. The agent applies it.
 Tool-specific launch mechanics stay in the tool profile. This skill may route
 to a Claude workflow or Codex goal prompt, but it does not copy tool-specific
 instructions into the shared tier.
+
+## Orphanless Mission Contract
+
+Use this public-safe contract when a goal spans multiple sessions, tools,
+profiles, workers, or tickets. It adapts the Orphanless/SkillWeaver lesson
+without importing a private runtime or bespoke framework.
+
+1. **Decompose atomically.** Split the manager goal into lanes that each have one
+   owner, one write surface, one acceptance condition, and one evidence path.
+2. **Retrieve existing surfaces first.** Before inventing a new worker prompt,
+   check whether an existing Driftless skill, script, gate, profile rule,
+   prompt, or plugin-like integration already owns that lane.
+3. **Compose a role graph.** Record coordinator, worker, reviewer, guardian, and
+   child-session relationships. A worker can define child roles only inside the
+   boundary assigned by the coordinator.
+4. **Keep one manager interface.** Parallel sessions may exist internally, but
+   their state must roll up to the coordinator and one manager-visible ledger or
+   dashboard-style surface. Do not make the non-developer user inspect multiple
+   raw chats, branches, logs, or PR pages to understand progress.
+5. **Close through the parent.** A worker result is evidence, not Done. Parent
+   Done requires adoption, validation, learning, and cleanup by the coordinator.
+
+This is a product/UX principle, not a private-runtime-only implementation detail: the
+portable idea is "single user goal -> atomic lanes -> role-aware sessions -> one
+manager-visible state surface".
 
 ## Model And Judgment Routing
 

@@ -121,6 +121,11 @@ not PASS or FAIL. Adopt one existing owner run when it exists; otherwise record
 the process id or log path, poll it, capture the final gate, and avoid starting
 a competing validation loop for the same branch.
 
+If aggregate validation is expected to exceed 180 seconds, do not hide it behind
+one opaque foreground gate. Either capture protected `long_command_evidence` for
+one owner run, or split the validation into atomic validation lanes with
+elapsed-time evidence, blocker classification, and parent adoption before Done.
+
 ## Exhaustion Ledger (이게 없으면 미루지 않는다)
 어떤 실행이 항목을 open / deferred / blocked로 남기면, 그 항목은 Exhaustion Ledger
 항목을 함께 남긴다. Agent-solvable 항목의 경우 그 항목에는 `attemptedApproaches`

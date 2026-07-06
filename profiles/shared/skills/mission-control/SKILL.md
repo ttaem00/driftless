@@ -123,6 +123,13 @@ The coordinator first writes the user outcome, then creates proof atoms. Each
 proof atom must be independent, valuable, testable, small, observable,
 rollbackable, and single-purpose before a worker receives it.
 
+If validation is expected to exceed 180 seconds, mission-control treats it as a
+parent validation proof, not one foreground gate. Split it into atomic validation lanes
+with one command/procedure, one owner, one expected result, one durable evidence
+artifact, elapsed-time evidence, blocker classification, and a next action.
+Parent validation closes only after every required lane passes or is explicitly
+classified as blocked, rejected, watched, waived, or not-Done with evidence.
+
 When a proof atom blocks, run **Blocked Atom Fission** instead of hiding it in a
 "later" bucket:
 

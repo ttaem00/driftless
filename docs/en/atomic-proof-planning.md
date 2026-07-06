@@ -41,6 +41,21 @@ A proof atom is ready for execution only when it is:
 
 If a proposed atom fails this gate, split it before dispatching workers.
 
+## Long Validation Gates
+
+A validation gate expected to run longer than 180 seconds is not a single
+foreground proof by default. Treat it as a parent validation proof and split it
+into atomic validation lanes.
+
+Each lane needs one command or procedure, one owner, one expected result, one
+durable evidence artifact, elapsed-time evidence, and blocker classification
+with a next action when it fails, skips, or times out.
+
+The parent validation proof is accepted only after all required child lanes pass,
+or after each unfinished lane is explicitly classified as blocked, rejected,
+watched, waived, or tracked as not-Done with evidence. A timeout, empty output,
+or missing log tail is `UNVERIFIED`, not PASS.
+
 ## Case-Based Splits
 
 | Case | Preferred split | Required proof |

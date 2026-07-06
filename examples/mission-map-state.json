@@ -45,6 +45,81 @@
       "detail": "Public fixture does not claim a live Codex, Claude, Hermes, or other runtime driver."
     }
   },
+  "runtimeCards": [
+    {
+      "id": "goal-card",
+      "label": "Public Mission Map demo",
+      "kind": "intent",
+      "normalizedState": "UNVERIFIED",
+      "authority": "projection-only",
+      "summary": "Shows the active goal without claiming a live worker.",
+      "evidenceRefs": [
+        "docs/en/mission-map.md"
+      ],
+      "nextAction": "Review the fixture and run scripts/Test-MissionMapFixture.ps1"
+    },
+    {
+      "id": "runtime-control-card",
+      "label": "Runtime control-plane projection",
+      "kind": "runtime",
+      "normalizedState": "UNVERIFIED",
+      "authority": "projection-only",
+      "summary": "Mirrors controlPlane.normalizedState and cannot upgrade it to ACTIVE.",
+      "evidenceRefs": [
+        "controlPlane"
+      ],
+      "nextAction": "Attach sanitized runtime evidence before showing ACTIVE"
+    },
+    {
+      "id": "validation-card",
+      "label": "Fixture validation",
+      "kind": "evidence",
+      "normalizedState": "UNVERIFIED",
+      "authority": "projection-only",
+      "summary": "Static fixture validation is required but does not prove a real runtime.",
+      "evidenceRefs": [
+        "scripts/Test-MissionMapFixture.ps1"
+      ],
+      "nextAction": "Run the local fixture gate"
+    }
+  ],
+  "nodeGraph": {
+    "mode": "optional-projection",
+    "authority": "projection-only",
+    "nodes": [
+      {
+        "id": "goal-card",
+        "cardId": "goal-card",
+        "kind": "intent",
+        "label": "Mission Map demo"
+      },
+      {
+        "id": "runtime-control-card",
+        "cardId": "runtime-control-card",
+        "kind": "runtime",
+        "label": "Control-plane projection"
+      },
+      {
+        "id": "validation-card",
+        "cardId": "validation-card",
+        "kind": "evidence",
+        "label": "Fixture validation"
+      }
+    ],
+    "edges": [
+      {
+        "from": "goal-card",
+        "to": "runtime-control-card",
+        "relationship": "summarizes"
+      },
+      {
+        "from": "runtime-control-card",
+        "to": "validation-card",
+        "relationship": "validated-by"
+      }
+    ],
+    "detail": "The graph is optional navigation over public-safe cards; it is not a scheduler, worker queue, lock service, or merge authority."
+  },
   "pr": {
     "label": "Pull request",
     "state": "UNVERIFIED",
@@ -62,7 +137,7 @@
   "evidence": [
     {
       "label": "Tracking issue",
-      "ref": "https://github.com/mizan0515/driftless/issues/99",
+      "ref": "https://github.com/ttaem00/driftless/issues/18",
       "status": "PASS"
     }
   ],

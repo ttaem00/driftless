@@ -38,7 +38,8 @@ function Test-ControlPlaneState {
   $workspaceStatus = [string]$ControlPlane.workspaceRoot.status
   $heartbeatStatus = [string]$ControlPlane.heartbeat.status
   $adoptionStatus = [string]$ControlPlane.adoption.status
-  $evidenceStatuses = @($workspaceStatus, $heartbeatStatus, $adoptionStatus)
+  $driverStatus = [string]$ControlPlane.runtimeDriver.status
+  $evidenceStatuses = @($workspaceStatus, $heartbeatStatus, $adoptionStatus, $driverStatus)
   $allowedEvidenceStatuses = @('PASS', 'FAIL', 'BLOCKED', 'UNVERIFIED', 'PARTIAL')
   foreach ($status in $evidenceStatuses) {
     if ($allowedEvidenceStatuses -notcontains $status) {
@@ -54,6 +55,10 @@ function Test-ControlPlaneState {
 
   $hasNativeWorkId = -not [string]::IsNullOrWhiteSpace([string]$ControlPlane.nativeWorkId)
   $hasPendingWorkId = -not [string]::IsNullOrWhiteSpace([string]$ControlPlane.pendingWorkId)
+  $driverLifecycle = [string]$ControlPlane.runtimeDriver.lifecycle
+  $driverStdinDelivery = [string]$ControlPlane.runtimeDriver.stdinDelivery
+  $driverInFlightWake = [string]$ControlPlane.runtimeDriver.inFlightWake
+  $realProgressEvents = @($ControlPlane.runtimeDriver.realProgressEvents)
   if ($state -eq 'ACTIVE') {
     if (-not $hasNativeWorkId) {
       $failures.Add('ACTIVE requires nativeWorkId') | Out-Null
@@ -66,6 +71,12 @@ function Test-ControlPlaneState {
     }
     if ($adoptionStatus -ne 'PASS') {
       $failures.Add('ACTIVE requires adoption.status PASS') | Out-Null
+    }
+    if ($driverStatus -ne 'PASS') {
+      $failures.Add('ACTIVE requires runtimeDriver.status PASS') | Out-Null
+    }
+    if ([string]::IsNullOrWhiteSpace($driverLifecycle) -or [string]::IsNullOrWhiteSpace($driverStdinDelivery) -or [string]::IsNullOrWhiteSpace($driverInFlightWake) -or $realProgressEvents.Count -eq 0) {
+      $failures.Add('ACTIVE requires runtime driver lifecycle/stdin/wake/progress semantics') | Out-Null
     }
     if ($hasPendingWorkId -and -not $hasNativeWorkId) {
       $failures.Add('pendingWorkId alone cannot be ACTIVE') | Out-Null
@@ -89,7 +100,7 @@ if (-not (Test-Path -LiteralPath $docPath -PathType Leaf)) {
   $results.Add((New-Result 'Mission Map doc exists' 'FAIL' 'docs/en/mission-map.md is missing'))
 } else {
   $doc = Get-Content -LiteralPath $docPath -Raw
-  if ($doc -match 'do(es)? not prove a real\s+runtime' -and $doc -match 'private state files' -and $doc -match 'Control-plane status must fail closed') {
+  if ($doc -match 'do(es)? not prove a real\s+runtime' -and $doc -match 'private state files' -and $doc -match 'Control-plane status must fail closed' -and $doc -match 'runtime driver semantics') {
     $results.Add((New-Result 'Mission Map doc caveat' 'PASS' 'doc separates fixture proof from runtime behavior and requires fail-closed control-plane status'))
   } else {
     $results.Add((New-Result 'Mission Map doc caveat' 'FAIL' 'doc must state fixture/static proof does not prove runtime behavior, private adapters stay private, and control-plane status fails closed'))
@@ -145,6 +156,7 @@ if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
       normalizedState = 'ACTIVE'
       pendingWorkId = 'pending-worktree-123'
       nativeWorkId = $null
+      runtimeDriver = [pscustomobject]@{ status = 'PASS'; lifecycle = 'persistent'; stdinDelivery = 'direct'; inFlightWake = 'steer'; realProgressEvents = @('text') }
       workspaceRoot = [pscustomobject]@{ status = 'PASS'; expectedRootKind = 'repo-a'; observedRootKind = 'repo-a' }
       heartbeat = [pscustomobject]@{ status = 'PASS' }
       adoption = [pscustomobject]@{ status = 'PASS' }
@@ -153,6 +165,7 @@ if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
       normalizedState = 'ACTIVE'
       pendingWorkId = $null
       nativeWorkId = 'worker-123'
+      runtimeDriver = [pscustomobject]@{ status = 'PASS'; lifecycle = 'persistent'; stdinDelivery = 'direct'; inFlightWake = 'steer'; realProgressEvents = @('text') }
       workspaceRoot = [pscustomobject]@{ status = 'PASS'; expectedRootKind = 'repo-a'; observedRootKind = 'repo-b' }
       heartbeat = [pscustomobject]@{ status = 'PASS' }
       adoption = [pscustomobject]@{ status = 'PASS' }
@@ -161,6 +174,7 @@ if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
       normalizedState = 'ACTIVE'
       pendingWorkId = $null
       nativeWorkId = 'worker-123'
+      runtimeDriver = [pscustomobject]@{ status = 'PASS'; lifecycle = 'persistent'; stdinDelivery = 'direct'; inFlightWake = 'steer'; realProgressEvents = @('text') }
       workspaceRoot = [pscustomobject]@{ status = 'PASS'; expectedRootKind = 'repo-a'; observedRootKind = 'repo-a' }
       heartbeat = [pscustomobject]@{ status = 'UNVERIFIED' }
       adoption = [pscustomobject]@{ status = 'PASS' }
@@ -169,14 +183,24 @@ if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
       normalizedState = 'waiting on worker slot'
       pendingWorkId = $null
       nativeWorkId = 'worker-123'
+      runtimeDriver = [pscustomobject]@{ status = 'PASS'; lifecycle = 'persistent'; stdinDelivery = 'direct'; inFlightWake = 'steer'; realProgressEvents = @('text') }
       workspaceRoot = [pscustomobject]@{ status = 'PASS'; expectedRootKind = 'repo-a'; observedRootKind = 'repo-a' }
       heartbeat = [pscustomobject]@{ status = 'PASS' }
       adoption = [pscustomobject]@{ status = 'PASS' }
     }
-    $badCases = @($badPendingActive, $badWrongRootActive, $badUnmonitoredActive, $badUnnormalized)
+    $badMissingDriverActive = [pscustomobject]@{
+      normalizedState = 'ACTIVE'
+      pendingWorkId = $null
+      nativeWorkId = 'worker-123'
+      runtimeDriver = [pscustomobject]@{ status = 'UNVERIFIED'; lifecycle = $null; stdinDelivery = $null; inFlightWake = $null; realProgressEvents = @() }
+      workspaceRoot = [pscustomobject]@{ status = 'PASS'; expectedRootKind = 'repo-a'; observedRootKind = 'repo-a' }
+      heartbeat = [pscustomobject]@{ status = 'PASS' }
+      adoption = [pscustomobject]@{ status = 'PASS' }
+    }
+    $badCases = @($badPendingActive, $badWrongRootActive, $badUnmonitoredActive, $badUnnormalized, $badMissingDriverActive)
     $badCasePasses = @($badCases | Where-Object { @(Test-ControlPlaneState -ControlPlane $_).Count -eq 0 })
     if ($badCasePasses.Count -eq 0) {
-      $results.Add((New-Result 'Mission Map control-plane fail-closed fixtures' 'PASS' 'pending-only, wrong-root, unmonitored, and non-normalized ACTIVE states are rejected'))
+      $results.Add((New-Result 'Mission Map control-plane fail-closed fixtures' 'PASS' 'pending-only, wrong-root, unmonitored, non-normalized, and missing-driver ACTIVE states are rejected'))
     } else {
       $results.Add((New-Result 'Mission Map control-plane fail-closed fixtures' 'FAIL' ('bad cases accepted=' + $badCasePasses.Count)))
     }

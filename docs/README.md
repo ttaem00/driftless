@@ -15,6 +15,7 @@ parentheses where a Korean mirror exists.
 - **[Codex and Claude](./en/codex-and-claude.md)** (한국어: [코덱스와 클로드](./ko/코덱스와클로드.md)) — how each tool uses Driftless, and which tool for which job.
 - **[How Driftless learns](./en/how-driftless-learns.md)** (한국어: [어떻게 학습하나](./ko/드리프트리스는어떻게학습하나.md)) — the lesson-promotion ladder, the five axes, per-tool mistake learning.
 - **[Lesson-promotion ladder](./en/lesson-promotion-ladder.md)** — memory < skill < hot rule < hook < gate.
+- **[Mission Map](./en/mission-map.md)** — a public-safe view of active goal, runtime control-plane status, evidence, blockers, and next action.
 - **[Portfolio operating layer](./en/portfolio-operating-layer.md)** — split broad agent goals into vision, outcome, opportunity, capability, execution, and governance before they become issue sprawl.
 - **[Compiled context wiki](./en/compiled-context-wiki.md)** — generate a local markdown wiki for recurring repo context without paid APIs or bundled apps.
 

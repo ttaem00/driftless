@@ -94,6 +94,8 @@ without importing a private runtime or bespoke framework.
 
 1. **Decompose atomically.** Split the manager goal into lanes that each have one
    owner, one write surface, one acceptance condition, and one evidence path.
+   Use `Outcome -> Proof -> Slice -> Task -> Evidence`: the proof is the atom;
+   tasks only produce the proof.
 2. **Retrieve existing surfaces first.** Before inventing a new worker prompt,
    check whether an existing Driftless skill, script, gate, profile rule,
    prompt, or plugin-like integration already owns that lane.
@@ -110,6 +112,31 @@ without importing a private runtime or bespoke framework.
 This is a product/UX principle, not a private-runtime-only implementation detail: the
 portable idea is "single user goal -> atomic lanes -> role-aware sessions -> one
 manager-visible state surface".
+
+## Atomic Proof Planning
+
+Use `docs/en/atomic-proof-planning.md` whenever a
+mission-control request asks for child sessions, tickets, broad implementation,
+blocked work recovery, or proof-based Done.
+
+The coordinator first writes the user outcome, then creates proof atoms. Each
+proof atom must be independent, valuable, testable, small, observable,
+rollbackable, and single-purpose before a worker receives it.
+
+When a proof atom blocks, run **Blocked Atom Fission** instead of hiding it in a
+"later" bucket:
+
+1. keep the parent proof open;
+2. classify the blocker class;
+3. state the proof gap;
+4. create child proof atoms for the missing reproduction, diagnosis, decision,
+   dependency, verification, fix, or guardrail;
+5. adopt the child proof evidence back into the parent before Done.
+
+Agent-solvable blockers stay with the agent loop. Human escalation is limited
+to product priority, credentials, payment, public release, destructive action,
+private data movement, host-global promotion, force push/history rewrite, or a
+truth/content judgment only the maintainer can make.
 
 ## Model And Judgment Routing
 

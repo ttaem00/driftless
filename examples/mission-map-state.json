@@ -34,6 +34,15 @@
     "adoption": {
       "status": "UNVERIFIED",
       "detail": "No parent or manager adoption is claimed by this fixture"
+    },
+    "runtimeDriver": {
+      "status": "UNVERIFIED",
+      "lifecycle": null,
+      "stdinDelivery": null,
+      "inFlightWake": null,
+      "realProgressEvents": [],
+      "internalProgressEvents": [],
+      "detail": "Public fixture does not claim a live Codex, Claude, Hermes, or other runtime driver."
     }
   },
   "pr": {

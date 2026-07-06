@@ -33,6 +33,8 @@ $requirements = @(
       'parent_closeout_inventory',
       'Long or quiet commands',
       'long_command_evidence',
+      '180 seconds',
+      'atomic validation lanes',
       'does not start a competing validation loop',
       'missing log tail is `UNVERIFIED`'
     )
@@ -42,6 +44,8 @@ $requirements = @(
     needles = @(
       'parent_closeout_inventory',
       'long_command_evidence',
+      '180 seconds',
+      'atomic validation lanes',
       'Do not convert child completion into parent Done',
       'caller timeout'
     )

@@ -20,6 +20,61 @@ function New-Result {
   }
 }
 
+function Test-ControlPlaneState {
+  param([object]$ControlPlane)
+
+  $failures = New-Object System.Collections.Generic.List[string]
+  if (-not $ControlPlane) {
+    $failures.Add('controlPlane missing') | Out-Null
+    return $failures
+  }
+
+  $allowedNormalizedStates = @('ACTIVE', 'BLOCKED', 'DONE', 'UNVERIFIED', 'WATCHING')
+  $state = [string]$ControlPlane.normalizedState
+  if ($allowedNormalizedStates -notcontains $state) {
+    $failures.Add("normalizedState unsupported: $state") | Out-Null
+  }
+
+  $workspaceStatus = [string]$ControlPlane.workspaceRoot.status
+  $heartbeatStatus = [string]$ControlPlane.heartbeat.status
+  $adoptionStatus = [string]$ControlPlane.adoption.status
+  $evidenceStatuses = @($workspaceStatus, $heartbeatStatus, $adoptionStatus)
+  $allowedEvidenceStatuses = @('PASS', 'FAIL', 'BLOCKED', 'UNVERIFIED', 'PARTIAL')
+  foreach ($status in $evidenceStatuses) {
+    if ($allowedEvidenceStatuses -notcontains $status) {
+      $failures.Add("control-plane evidence status unsupported: $status") | Out-Null
+    }
+  }
+
+  $expectedRootKind = [string]$ControlPlane.workspaceRoot.expectedRootKind
+  $observedRootKind = [string]$ControlPlane.workspaceRoot.observedRootKind
+  if ($expectedRootKind -and $observedRootKind -and $expectedRootKind -ne $observedRootKind -and $state -eq 'ACTIVE') {
+    $failures.Add('ACTIVE requires matching workspace root evidence') | Out-Null
+  }
+
+  $hasNativeWorkId = -not [string]::IsNullOrWhiteSpace([string]$ControlPlane.nativeWorkId)
+  $hasPendingWorkId = -not [string]::IsNullOrWhiteSpace([string]$ControlPlane.pendingWorkId)
+  if ($state -eq 'ACTIVE') {
+    if (-not $hasNativeWorkId) {
+      $failures.Add('ACTIVE requires nativeWorkId') | Out-Null
+    }
+    if ($workspaceStatus -ne 'PASS') {
+      $failures.Add('ACTIVE requires workspaceRoot.status PASS') | Out-Null
+    }
+    if ($heartbeatStatus -ne 'PASS') {
+      $failures.Add('ACTIVE requires heartbeat.status PASS') | Out-Null
+    }
+    if ($adoptionStatus -ne 'PASS') {
+      $failures.Add('ACTIVE requires adoption.status PASS') | Out-Null
+    }
+    if ($hasPendingWorkId -and -not $hasNativeWorkId) {
+      $failures.Add('pendingWorkId alone cannot be ACTIVE') | Out-Null
+    }
+  }
+
+  return $failures
+}
+
 $results = New-Object System.Collections.Generic.List[object]
 $fixturePath = Join-Path $Root 'examples\mission-map-state.json'
 $docPath = Join-Path $Root 'docs\en\mission-map.md'
@@ -34,10 +89,10 @@ if (-not (Test-Path -LiteralPath $docPath -PathType Leaf)) {
   $results.Add((New-Result 'Mission Map doc exists' 'FAIL' 'docs/en/mission-map.md is missing'))
 } else {
   $doc = Get-Content -LiteralPath $docPath -Raw
-  if ($doc -match 'do(es)? not prove a real\s+runtime' -and $doc -match 'private state files') {
-    $results.Add((New-Result 'Mission Map doc caveat' 'PASS' 'doc separates fixture proof from runtime behavior'))
+  if ($doc -match 'do(es)? not prove a real\s+runtime' -and $doc -match 'private state files' -and $doc -match 'Control-plane status must fail closed') {
+    $results.Add((New-Result 'Mission Map doc caveat' 'PASS' 'doc separates fixture proof from runtime behavior and requires fail-closed control-plane status'))
   } else {
-    $results.Add((New-Result 'Mission Map doc caveat' 'FAIL' 'doc must state fixture/static proof does not prove runtime behavior and private adapters stay private'))
+    $results.Add((New-Result 'Mission Map doc caveat' 'FAIL' 'doc must state fixture/static proof does not prove runtime behavior, private adapters stay private, and control-plane status fails closed'))
   }
 }
 
@@ -47,6 +102,7 @@ if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
     $required = @(
       'activeGoal',
       'guardian',
+      'controlPlane',
       'pr',
       'checks',
       'blockers',
@@ -76,6 +132,53 @@ if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
       $results.Add((New-Result 'Mission Map state labels' 'PASS' ('states=' + ($states -join ','))))
     } else {
       $results.Add((New-Result 'Mission Map state labels' 'FAIL' ('unsupported states=' + ($badStates -join ','))))
+    }
+
+    $controlPlaneFailures = @(Test-ControlPlaneState -ControlPlane $fixture.controlPlane)
+    if ($controlPlaneFailures.Count -eq 0) {
+      $results.Add((New-Result 'Mission Map control-plane status' 'PASS' ('normalizedState=' + [string]$fixture.controlPlane.normalizedState)))
+    } else {
+      $results.Add((New-Result 'Mission Map control-plane status' 'FAIL' ($controlPlaneFailures -join '; ')))
+    }
+
+    $badPendingActive = [pscustomobject]@{
+      normalizedState = 'ACTIVE'
+      pendingWorkId = 'pending-worktree-123'
+      nativeWorkId = $null
+      workspaceRoot = [pscustomobject]@{ status = 'PASS'; expectedRootKind = 'repo-a'; observedRootKind = 'repo-a' }
+      heartbeat = [pscustomobject]@{ status = 'PASS' }
+      adoption = [pscustomobject]@{ status = 'PASS' }
+    }
+    $badWrongRootActive = [pscustomobject]@{
+      normalizedState = 'ACTIVE'
+      pendingWorkId = $null
+      nativeWorkId = 'worker-123'
+      workspaceRoot = [pscustomobject]@{ status = 'PASS'; expectedRootKind = 'repo-a'; observedRootKind = 'repo-b' }
+      heartbeat = [pscustomobject]@{ status = 'PASS' }
+      adoption = [pscustomobject]@{ status = 'PASS' }
+    }
+    $badUnmonitoredActive = [pscustomobject]@{
+      normalizedState = 'ACTIVE'
+      pendingWorkId = $null
+      nativeWorkId = 'worker-123'
+      workspaceRoot = [pscustomobject]@{ status = 'PASS'; expectedRootKind = 'repo-a'; observedRootKind = 'repo-a' }
+      heartbeat = [pscustomobject]@{ status = 'UNVERIFIED' }
+      adoption = [pscustomobject]@{ status = 'PASS' }
+    }
+    $badUnnormalized = [pscustomobject]@{
+      normalizedState = 'waiting on worker slot'
+      pendingWorkId = $null
+      nativeWorkId = 'worker-123'
+      workspaceRoot = [pscustomobject]@{ status = 'PASS'; expectedRootKind = 'repo-a'; observedRootKind = 'repo-a' }
+      heartbeat = [pscustomobject]@{ status = 'PASS' }
+      adoption = [pscustomobject]@{ status = 'PASS' }
+    }
+    $badCases = @($badPendingActive, $badWrongRootActive, $badUnmonitoredActive, $badUnnormalized)
+    $badCasePasses = @($badCases | Where-Object { @(Test-ControlPlaneState -ControlPlane $_).Count -eq 0 })
+    if ($badCasePasses.Count -eq 0) {
+      $results.Add((New-Result 'Mission Map control-plane fail-closed fixtures' 'PASS' 'pending-only, wrong-root, unmonitored, and non-normalized ACTIVE states are rejected'))
+    } else {
+      $results.Add((New-Result 'Mission Map control-plane fail-closed fixtures' 'FAIL' ('bad cases accepted=' + $badCasePasses.Count)))
     }
 
     $raw = Get-Content -LiteralPath $fixturePath -Raw

@@ -35,15 +35,26 @@ Mission Map can summarize live agent work, but it must not invent aliveness. A
 row is only `ACTIVE` when the runtime can show all of these public-safe facts:
 
 - a native work/session id from the tool that is actually doing the work;
+- runtime driver semantics for the attached tool: lifecycle shape, stdin
+  delivery mode, in-flight wake behavior, and which events count as real
+  progress rather than internal progress;
 - workspace-root evidence from the repo or project that owns the work;
 - heartbeat evidence that the worker is still monitored;
 - parent, manager, or issue adoption evidence showing where the final result
   will be received.
 
 If a row has only a pending work id, a mismatched workspace root, no heartbeat,
-no adoption evidence, or a tool-specific status string that is not normalized,
-show it as `BLOCKED` or `UNVERIFIED`, never as active. Keep tool-specific detail
-in `detail`; keep the machine state in `normalizedState`.
+no adoption evidence, no runtime-driver declaration, or a tool-specific status
+string that is not normalized, show it as `BLOCKED` or `UNVERIFIED`, never as
+active. Keep tool-specific detail in `detail`; keep the machine state in
+`normalizedState`.
+
+Runtime-driver fields are public-safe adapter facts, not private session data.
+For example, a public row may say a driver is `persistent` or `per_turn`, uses
+`direct`, `gated`, or `none` stdin delivery, and distinguishes real progress
+events from internal thinking/telemetry. It must not expose private thread ids,
+profile homes, credentials, logs, browser state, or account-specific runtime
+paths.
 
 ## Public fixture
 

@@ -56,6 +56,35 @@ events from internal thinking/telemetry. It must not expose private thread ids,
 profile homes, credentials, logs, browser state, or account-specific runtime
 paths.
 
+
+## Runtime cards and optional node graph
+
+Runtime cards are the smallest public-safe Mission Map projection. Each card
+summarizes one visible unit of work without exposing private runtime state:
+
+| Field | Meaning | Rule |
+| --- | --- | --- |
+| `id` | stable public fixture id | repo-relative or descriptive, never a private session id |
+| `label` | user-facing name | plain language, not a tool log line |
+| `kind` | `intent`, `runtime`, `evidence`, `blocker`, or `next-action` | explains why the card exists |
+| `normalizedState` | `PASS`, `FAIL`, `BLOCKED`, `UNVERIFIED`, `PARTIAL`, or a control-plane state | must not upgrade the underlying source state |
+| `authority` | `projection-only` | card UI is a projection, not execution authority |
+| `evidenceRefs` | public-safe links or fixture ids | no private paths, credentials, logs, browser state, or account ids |
+| `nextAction` | one executable next step | points back to the owning runtime, repo gate, issue, or PR |
+
+The optional node graph uses the same vocabulary as the cards. A node can mirror
+an intent, runtime, evidence, blocker, or next-action card; an edge only explains
+public relationships such as `summarizes`, `guards`, `blocks`, or `validates`.
+It is useful for showing dependencies, but it is not a scheduler, lock service,
+worker queue, or merge authority.
+
+Graph and card UI must remain a projection, not execution authority. A graph may
+show that a lane is blocked or that a validation step is next, but the source of
+truth stays with the owning runtime control plane, local gate output, issue, PR,
+or manager-approved action. If the graph has stale, missing, or private-only
+runtime evidence, render that node as `BLOCKED` or `UNVERIFIED` rather than
+inferring `ACTIVE` or `DONE`.
+
 ## Public fixture
 
 The public example lives at

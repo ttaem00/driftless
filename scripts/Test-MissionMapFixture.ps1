@@ -105,6 +105,12 @@ if (-not (Test-Path -LiteralPath $docPath -PathType Leaf)) {
   } else {
     $results.Add((New-Result 'Mission Map doc caveat' 'FAIL' 'doc must state fixture/static proof does not prove runtime behavior, private adapters stay private, and control-plane status fails closed'))
   }
+
+  if ($doc -match 'Runtime cards' -and $doc -match 'optional node graph' -and $doc -match 'projection, not execution authority') {
+    $results.Add((New-Result 'Mission Map card/graph vocabulary' 'PASS' 'doc defines runtime cards, optional node graph, and projection-only authority'))
+  } else {
+    $results.Add((New-Result 'Mission Map card/graph vocabulary' 'FAIL' 'doc must define public-safe runtime cards, optional node graph vocabulary, and state that graph/card UI is a projection, not execution authority'))
+  }
 }
 
 if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
@@ -114,6 +120,8 @@ if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
       'activeGoal',
       'guardian',
       'controlPlane',
+      'runtimeCards',
+      'nodeGraph',
       'pr',
       'checks',
       'blockers',
@@ -150,6 +158,73 @@ if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
       $results.Add((New-Result 'Mission Map control-plane status' 'PASS' ('normalizedState=' + [string]$fixture.controlPlane.normalizedState)))
     } else {
       $results.Add((New-Result 'Mission Map control-plane status' 'FAIL' ($controlPlaneFailures -join '; ')))
+    }
+
+    $cardFailures = New-Object System.Collections.Generic.List[string]
+    $runtimeCards = @($fixture.runtimeCards)
+    if ($runtimeCards.Count -eq 0) {
+      $cardFailures.Add('runtimeCards must contain at least one public-safe card') | Out-Null
+    }
+    $allowedCardKinds = @('intent', 'runtime', 'evidence', 'blocker', 'next-action')
+    $allowedCardStates = @('ACTIVE', 'BLOCKED', 'DONE', 'WATCHING', 'PASS', 'FAIL', 'UNVERIFIED', 'PARTIAL')
+    foreach ($card in $runtimeCards) {
+      foreach ($field in @('id', 'label', 'kind', 'normalizedState', 'authority', 'nextAction')) {
+        if ([string]::IsNullOrWhiteSpace([string]$card.$field)) {
+          $cardFailures.Add("runtimeCards item missing $field") | Out-Null
+        }
+      }
+      if ($allowedCardKinds -notcontains [string]$card.kind) {
+        $cardFailures.Add('runtimeCards kind must use public Mission Map vocabulary') | Out-Null
+      }
+      if ($allowedCardStates -notcontains [string]$card.normalizedState) {
+        $cardFailures.Add('runtimeCards normalizedState is unsupported') | Out-Null
+      }
+      if ([string]$card.authority -ne 'projection-only') {
+        $cardFailures.Add('runtimeCards authority must be projection-only') | Out-Null
+      }
+      if ([string]$card.normalizedState -eq 'ACTIVE' -and [string]$fixture.controlPlane.normalizedState -ne 'ACTIVE') {
+        $cardFailures.Add('runtimeCards cannot claim ACTIVE when controlPlane is not ACTIVE') | Out-Null
+      }
+    }
+    if ($cardFailures.Count -eq 0) {
+      $results.Add((New-Result 'Mission Map runtime cards' 'PASS' ('cards=' + $runtimeCards.Count)))
+    } else {
+      $results.Add((New-Result 'Mission Map runtime cards' 'FAIL' ($cardFailures -join '; ')))
+    }
+
+    $graphFailures = New-Object System.Collections.Generic.List[string]
+    if (-not $fixture.nodeGraph) {
+      $graphFailures.Add('nodeGraph missing') | Out-Null
+    } else {
+      if ([string]$fixture.nodeGraph.mode -ne 'optional-projection') {
+        $graphFailures.Add('nodeGraph.mode must be optional-projection') | Out-Null
+      }
+      if ([string]$fixture.nodeGraph.authority -ne 'projection-only') {
+        $graphFailures.Add('nodeGraph.authority must be projection-only') | Out-Null
+      }
+      $cardIds = @($runtimeCards | ForEach-Object { [string]$_.id })
+      $nodeIds = @($fixture.nodeGraph.nodes | ForEach-Object { [string]$_.id })
+      if (@($fixture.nodeGraph.nodes).Count -eq 0) {
+        $graphFailures.Add('nodeGraph.nodes must not be empty') | Out-Null
+      }
+      foreach ($node in @($fixture.nodeGraph.nodes)) {
+        if ($cardIds -notcontains [string]$node.cardId) {
+          $graphFailures.Add('nodeGraph nodes must reference runtimeCards by cardId') | Out-Null
+        }
+      }
+      if (@($fixture.nodeGraph.edges).Count -eq 0) {
+        $graphFailures.Add('nodeGraph.edges must not be empty') | Out-Null
+      }
+      foreach ($edge in @($fixture.nodeGraph.edges)) {
+        if ($nodeIds -notcontains [string]$edge.from -or $nodeIds -notcontains [string]$edge.to) {
+          $graphFailures.Add('nodeGraph edges must connect existing nodes') | Out-Null
+        }
+      }
+    }
+    if ($graphFailures.Count -eq 0) {
+      $results.Add((New-Result 'Mission Map optional node graph' 'PASS' ('nodes=' + @($fixture.nodeGraph.nodes).Count + '; edges=' + @($fixture.nodeGraph.edges).Count)))
+    } else {
+      $results.Add((New-Result 'Mission Map optional node graph' 'FAIL' ($graphFailures -join '; ')))
     }
 
     $badPendingActive = [pscustomobject]@{

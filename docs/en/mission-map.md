@@ -10,7 +10,7 @@ The pattern keeps three tiers visible:
 | Tier | User question | Public-safe fields |
 | --- | --- | --- |
 | Intent | What are we trying to finish? | `activeGoal`, `outcomeClass` |
-| Progress | What is running or blocked? | `guardian`, `lanes`, `blockers` |
+| Progress | What is running or blocked? | `guardian`, `lanes`, `controlPlane`, `blockers` |
 | Evidence | How do we know? | `pr`, `checks`, `evidence`, `nextAction` |
 
 ## Required UI summary
@@ -19,6 +19,7 @@ A Mission Map card should show:
 
 - active parent goal in plain language;
 - guardian or heartbeat status, if one is attached;
+- runtime control-plane state, if any worker/session/automation is attached;
 - PR or review gate state;
 - check or validation state;
 - blocker count and next retry condition;
@@ -27,6 +28,22 @@ A Mission Map card should show:
 The UI must not treat `review_ready`, `blocked`, or `unverified` as done.
 Fixture/static checks prove only the example shape. They do not prove a real
 runtime, agent, PR, or browser workflow.
+
+## Control-plane status must fail closed
+
+Mission Map can summarize live agent work, but it must not invent aliveness. A
+row is only `ACTIVE` when the runtime can show all of these public-safe facts:
+
+- a native work/session id from the tool that is actually doing the work;
+- workspace-root evidence from the repo or project that owns the work;
+- heartbeat evidence that the worker is still monitored;
+- parent, manager, or issue adoption evidence showing where the final result
+  will be received.
+
+If a row has only a pending work id, a mismatched workspace root, no heartbeat,
+no adoption evidence, or a tool-specific status string that is not normalized,
+show it as `BLOCKED` or `UNVERIFIED`, never as active. Keep tool-specific detail
+in `detail`; keep the machine state in `normalizedState`.
 
 ## Public fixture
 

@@ -16,6 +16,26 @@
       "nextAction": "Run the fixture validation gate"
     }
   ],
+  "controlPlane": {
+    "label": "Runtime control plane",
+    "normalizedState": "UNVERIFIED",
+    "detail": "This public fixture is a spec seed only; no live runtime worker is attached",
+    "pendingWorkId": null,
+    "nativeWorkId": null,
+    "workspaceRoot": {
+      "status": "UNVERIFIED",
+      "expectedRootKind": "runtime-owned-repo-root",
+      "observedRootKind": null
+    },
+    "heartbeat": {
+      "status": "UNVERIFIED",
+      "detail": "No live heartbeat is claimed by this fixture"
+    },
+    "adoption": {
+      "status": "UNVERIFIED",
+      "detail": "No parent or manager adoption is claimed by this fixture"
+    }
+  },
   "pr": {
     "label": "Pull request",
     "state": "UNVERIFIED",

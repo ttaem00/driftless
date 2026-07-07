@@ -124,6 +124,12 @@
       "file": "skills/handoff-guard/SKILL.md",
       "consumedBy": ["claude", "codex"],
       "why": "Tool-agnostic long-session handoff guard. Authored once in the shared tier so both profiles can resume overnight work without raw logs or stale claims."
+    },
+    {
+      "name": "skill-intake-preflight",
+      "file": "skills/intake-preflight/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic pre-plan intake gate. Authored once in the shared tier so large or unclear requests gather root intent, current evidence, past learning, external examples when relevant, risks, and one native question-surface decision before planning or implementation."
     }
   ],
 

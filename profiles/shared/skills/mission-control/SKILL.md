@@ -67,6 +67,7 @@ Do not ask the user to pick from this table. The agent applies it.
 
 | Situation | Internal workflow |
 |---|---|
+| Large, unclear, current-state-dependent, or externally referenced goal before planning | `intake-preflight` |
 | Goal or completion criteria are vague | `root-goal-check`, then `work-ledger` |
 | Non-simple product, feature, extension, architecture, or verification goal | Epic Preparation mode |
 | User asks for mission control, epic/child tickets, proof experiments, plan sessions, or goal companion | Epic Preparation mode |

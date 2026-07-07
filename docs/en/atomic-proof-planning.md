@@ -126,6 +126,27 @@ workers, or profile-specific lanes. The coordinator should:
 5. split agent-solvable blockers into child proofs;
 6. close through parent adoption, validation, and cleanup.
 
+## One-Skill Bootstrap
+
+When a maintainer invokes only one mission-control or Orphanless-style skill, the
+coordinator must not assume that a proof board, control plane, heartbeat, or
+worker ledger already exists. The first loop is a bootstrap loop:
+
+1. identify the maintainer entry point, repository root, and requested outcome;
+2. discover existing proof surfaces such as APDM rows, ledgers, issue/PR links,
+   status files, dashboards, guardian/monitor records, and active owners;
+3. create a minimal repo-local proof/control surface when none exists and local
+   writes are allowed;
+4. recover existing worker or lane results before issuing duplicate work;
+5. reconcile the next proof by doing it in the parent, assigning an active
+   owner, splitting a blocked atom, or recording a true human-only decision;
+6. leave a durable status artifact and run the narrowest available gate.
+
+The coordinator may not close with only a prompt, plan, handoff, or bare
+`next action` row while an agent-solvable proof remains. If the platform cannot
+issue workers, write status, or run the gate, that is a blocked proof with a
+tooling/environment class and a concrete recovery owner, not Done.
+
 ## Parent Closeout Controller Gate
 
 For long-running or multi-session APDM work, a parent coordinator should behave

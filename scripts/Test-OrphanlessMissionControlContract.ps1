@@ -32,7 +32,13 @@ if (-not (Test-Path -LiteralPath $skillPath -PathType Leaf)) {
     'Blocked Atom Fission',
     'blocker class',
     'proof gap',
-    'child proof atoms'
+    'child proof atoms',
+    '## One-Skill Bootstrap',
+    'bootstrap the control surface',
+    'discover existing proof surfaces',
+    'create a minimal repo-local proof/control surface',
+    'recover existing worker or lane results',
+    'Do not end with a bare `next action`'
   )) {
     if ($text -notmatch [regex]::Escape($pattern)) {
       $failures.Add("mission-control missing Orphanless contract anchor: $pattern") | Out-Null
@@ -59,6 +65,12 @@ if (-not (Test-Path -LiteralPath $atomicDocPath -PathType Leaf)) {
     'Blocker Classes',
     'Blocked Atom Fission',
     'Parent Closeout Controller Gate',
+    'One-Skill Bootstrap',
+    'discover existing proof surfaces',
+    'create a minimal repo-local proof/control surface',
+    'recover existing worker or lane results',
+    'bare',
+    'tooling/environment class',
     'Desired state',
     'Actual state',
     'Reconcile action',

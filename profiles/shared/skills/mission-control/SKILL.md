@@ -145,6 +145,31 @@ to product priority, credentials, payment, public release, destructive action,
 private data movement, host-global promotion, force push/history rewrite, or a
 truth/content judgment only the maintainer can make.
 
+## One-Skill Bootstrap
+
+If the maintainer invokes only `mission-control` or another Orphanless-style
+entry skill, bootstrap the control surface before reporting next work. Do not
+assume a prepared APDM board, status file, guardian, worker ledger, or dashboard
+already exists.
+
+The first coordinator loop must:
+
+1. identify the maintainer entry point, repository root, and requested outcome;
+2. discover existing proof surfaces, owner rows, issue/PR links, status files,
+   dashboards, guardian/monitor records, and active worker lanes;
+3. create a minimal repo-local proof/control surface when none exists and local
+   writes are allowed;
+4. recover existing worker or lane results before issuing duplicate work;
+5. reconcile each unsatisfied proof by executing it in the parent, assigning a
+   real owner, splitting the blocked atom, or recording a true human-only
+   decision;
+6. run the narrowest available gate and leave a durable status artifact.
+
+Do not end with a bare `next action`, prompt, plan, or handoff while an
+agent-solvable proof remains. If the platform cannot issue workers, write
+status, or run the gate, classify that as a tooling/environment blocker and
+assign the recovery proof.
+
 ## Model And Judgment Routing
 
 Use lightweight workers, lower-effort lanes, or separate sessions only for

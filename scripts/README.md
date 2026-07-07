@@ -17,6 +17,7 @@ PowerShell 7 and PowerShell 7.
 | `Test-CrossAgentWorkArbitrationContract.ps1` | Cross-agent arbitration keeps exact duplicate-work conflicts separate from advisory similar-work discovery and keeps agent work control-plane discipline public-safe/local-first. | The arbitration doc lets history act as a default blocker, lets semantic search authorize mutation, omits sanitized `purpose_summary` / `intent_tags`, drops dependency-aware `ready`, drops single owner claim, drops worktree/scratch lane, drops actionable warning remediation, or treats GitHub/project boards as execution owners. |
 | `Test-ContextEngineeringDiscipline.ps1` | The shared context budget, compressed reference integrity, repo map freshness, and action/evidence ledger contract remains present, skill-wired, and documented as a local closeout gate. | The shared contract, handoff/ledger skills, or local gate docs drop those context-management anchors. |
 | `Test-MissionControlCloseoutBoundary.ps1` | Mission-control and finish-to-done preserve parent closeout inventory and long command evidence before Done claims. | A shared closeout skill drops the parent-vs-child Done boundary, long command evidence, or aggregate PR-gate wiring. |
+| `Test-OrphanlessMissionControlContract.ps1` | Mission-control keeps the public-safe Orphanless contract, Atomic Proof Planning anchors, Blocked Atom Fission, and one-skill bootstrap behavior. | The shared mission-control skill or atomic proof planning doc drops coordinator bootstrap, parent adoption, blocked-atom fission, or public-safe boundary anchors. |
 | `Test-WorkerFailureRecoveryContract.ps1` | Multi-lane skills keep worker capacity, context-window, and partial-output failures as recovery states, not Done. | A shared worker skill drops `worker_recovery_inventory` or the retry states needed before closeout. |
 | `Test-CodeIntelligenceBenchmark.ps1` | The compiled context wiki remains useful enough to test code-intelligence ideas before installing external tools. | The wiki cannot build, average recall falls below the floor, token direction regresses, or source-traceability validation fails. |
 | `Test-PublicPortabilityEvidence.ps1` | Public evidence stays machine-independent and does not cite absent hosted CI as live proof. | Current evidence docs cite retired hosted CI as current proof, or a machine-specific path appears outside an explicit fixture needle. |
@@ -61,6 +62,9 @@ pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-ContextEngineeringDiscipline
 
 # Mission-control closeout boundary: keep parent Done separate from child Done and require long command evidence
 pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-MissionControlCloseoutBoundary.ps1 -Root .
+
+# Orphanless mission-control contract: keep one-skill bootstrap and APDM-style proof ownership public-safe
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-OrphanlessMissionControlContract.ps1 -Root .
 
 # Code intelligence: benchmark compiled wiki usefulness before external tool adoption
 pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-CodeIntelligenceBenchmark.ps1 -Root .

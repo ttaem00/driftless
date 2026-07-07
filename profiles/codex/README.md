@@ -46,6 +46,7 @@ profile:
 - `../shared/skills/review-before-done/`
 - `../shared/skills/work-ledger/`
 - `../shared/skills/handoff-guard/`
+- `../shared/skills/intake-preflight/`
 
 On top of those, this profile adds its **own tool-specific skills** that only make
 sense for Codex and are never mirrored into Claude:

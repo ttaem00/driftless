@@ -82,6 +82,12 @@ Session visibility and rollover gate:
   a companion guardian, even if the automation is active. If this cannot be
   verified, report `UNVERIFIED_HEARTBEAT_TARGET` and repair or provide
   paste-ready prompts instead of claiming the automation is active.
+- Treat opaque thread/session ids, index rows, pending work ids, and saved
+  automation records as lookup hints, not liveness proof. A goal or guardian is
+  active only after the tool exposes readable materialized state or another
+  public-safe adapter evidence packet with native id, workspace root,
+  monitoring, and parent adoption evidence. If only the id exists, report
+  `UNVERIFIED_OWNER_READBACK` instead of sending progress or Done updates.
 - A heartbeat prompt update alone is not a rollover. A valid rollover has a
   fresh implementation thread, fresh guardian thread, verified project `cwd`,
   retargeted heartbeat, and stale visible pairs stopped or archived.

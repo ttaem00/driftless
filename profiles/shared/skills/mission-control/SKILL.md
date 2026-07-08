@@ -299,6 +299,11 @@ The main session must prepare the epic before implementation starts:
   `split_gate=serial_direct` or `subsession_unavailable` and create the same
   charter, ticket, probe, and close-gate artifacts serially in the current
   session. Do not ask the user whether to open plan sessions.
+- Treat opaque thread/session ids, pending work ids, index rows, and saved
+  automation records as lookup hints, not liveness proof. Report
+  `UNVERIFIED_OWNER_READBACK` until the tool exposes readable materialized state
+  or another public-safe adapter evidence packet with native id, workspace root,
+  monitoring, and parent adoption evidence.
 - Final report states what is immediately executable: first lane to start,
   blocked lane if any, active guardian/ledger, and the parent close gate.
 

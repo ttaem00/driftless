@@ -31,7 +31,7 @@ $requirements = @(
   },
   @{
     path = 'profiles\shared\skills\mission-control\SKILL.md'
-    needles = @('Split And Closeout Gates', 'User Interaction Boundary', 'coordinator-cleanup', 'split_gate=single_lane', 'uncommitted changes', 'Do not ask the user to choose worker prompts')
+    needles = @('Split And Closeout Gates', 'User Interaction Boundary', 'coordinator-cleanup', 'split_gate=single_lane', 'uncommitted changes', 'Do not ask the user to choose worker prompts', 'lookup hints, not liveness proof', 'readable materialized state', 'UNVERIFIED_OWNER_READBACK')
   },
   @{
     path = 'profiles\shared\skills\parallel-ticket-planner\SKILL.md'

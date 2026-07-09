@@ -185,6 +185,19 @@ $prTemplateAnchors = @(
   'special-casing'
 )
 
+$breakthroughOpportunityAnchors = @(
+  'Public-Safe Transfer Learning Frame',
+  'Principle-based Learning',
+  'Far Transfer',
+  'Structural Mapping',
+  'Schema Induction',
+  'Generative Learning',
+  'Conceptual Blending',
+  'Anti-overfitting guard',
+  'private paths',
+  'ticket/parallel planning'
+)
+
 function Add-FileAnchorCheck {
   param(
     [string]$Check,
@@ -272,6 +285,8 @@ Add-FileAnchorCheck `
   -RelPath 'scripts/README.md' `
   -Anchors @('shipped SKILL.md', 'learning-loop', 'finish-to-done', 'local gate') `
   -NextAction 'Document what the strengthened improvement-principle gate checks.'
+
+Add-FileAnchorCheck -Check 'Breakthrough opportunity keeps public-safe transfer frame' -RelPath 'profiles/shared/skills/breakthrough-opportunity-review/SKILL.md' -Anchors $breakthroughOpportunityAnchors -NextAction 'Restore the public-safe transfer learning frame so private lessons become sanitized reusable structure, not private-detail copies.'
 
 $blockingFailures = @($results | Where-Object { $_.blocking -eq $true -and $_.status -eq 'FAIL' })
 $overall = if ($blockingFailures.Count -gt 0) { 'FAIL' } else { 'PASS' }

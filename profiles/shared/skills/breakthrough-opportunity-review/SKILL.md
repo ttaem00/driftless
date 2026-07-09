@@ -20,6 +20,44 @@ description: >
 
 Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces time, tokens, human intervention, usage, or performance burden.
 
+## Public-Safe Transfer Learning Frame
+
+Use this skill to transform a hidden opportunity from a single surface into a
+portable improvement principle without copying private runtime details. The
+review should preserve these public-safe learning concepts when they fit the
+scope: Principle-based Learning, Far Transfer, Analogical Transfer, Relational
+Thinking, Structural Analogical Learning, Cross-domain Principle Extraction,
+Structural Mapping, Generative Learning, Schema Induction, and Conceptual
+Blending.
+
+Apply the frame as a practical checklist:
+
+1. **Principle-based Learning:** name the invariant rule that would make similar
+   work cheaper, safer, or easier next time.
+2. **Structural Mapping:** map source case -> target case by roles,
+   constraints, feedback loops, risks, and success criteria, not by file names,
+   issue numbers, or tool labels alone.
+3. **Far Transfer:** ask whether the same relationship appears in another
+   profile, workflow, user flow, or maintainer routine before adding a new
+   one-off rule.
+4. **Schema Induction:** compress repeated examples into a reusable trigger/root cause/decision rule/placement/validation/rollback schema.
+5. **Generative Learning:** produce at least one reusable artifact candidate,
+   such as a skill patch, gate, script, template, checklist, report, or issue.
+6. **Conceptual Blending:** combine the user's real goal, the non-developer UX,
+   and proven workflow practice into the smallest safe first slice.
+7. **Anti-overfitting guard:** reject changes that only satisfy the latest
+   example unless the bounded exception demonstrably lowers user effort,
+   maintainer effort, time, cost, safety risk, recurrence risk, or maintenance
+   burden.
+8. **Executable verification:** prefer a deterministic gate, fixture, harness,
+   local run, or checklist over prose-only confidence when recurrence is likely.
+
+Keep the transfer public-safe: do not include private paths, private ticket
+numbers, credentials, account details, browser/session/auth state, host-global
+instructions, or internal project wording. If an idea came from a private runtime
+lesson, carry forward only the reusable structure and record any skipped private
+detail as an exclusion.
+
 Find the sharpest hidden improvement without turning the answer into generic
 ideation. The scope can be a whole product or a narrow feature surface. Preserve
 the pressure frame: a strong hidden answer exists, and the agent must hunt for
@@ -156,6 +194,16 @@ apply each layer to that widget, not to the whole product:
    - Evidence: what is observed vs inferred vs unverified?
    - Blast radius: what can break, and what rollback exists?
    - Public-safe reuse: should the idea belong in shared skills, profile-specific guidance, code, docs, tests, or backlog?
+
+8a. Choose the public-safe propagation shape.
+   - If the strongest candidate is a transferable lesson, state the structural
+     analogy and which public surface should receive it: existing shared skill,
+     shared contract, script gate, fixture, checklist, report, or issue.
+   - If the candidate needs ticket/parallel planning, reuse existing open issues
+     first and name owner surface, write surface, read-only surfaces, conflict
+     risks, validation command, rollback path, and parallel_safe status.
+   - If a private or tool-specific detail inspired the idea, explicitly exclude
+     the private detail and keep only the public-safe reusable relation.
 
 9. Select the strongest 1-3 opportunities.
    - Prefer the opportunity that removes repeated user burden or makes hidden state visible.

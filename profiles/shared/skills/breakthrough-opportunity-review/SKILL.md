@@ -4,66 +4,43 @@ description: >
   Breakthrough Opportunity Review: Use when the user asks for hidden,
   game-changing, high-leverage improvement opportunities they have not fully
   specified yet, either for a whole product or for a narrow requested surface
-  such as a page, component, feature, tool, workflow, screen, or user moment.
-  Also use when the user asks for a "clear opportunity" the system needs for
-  its root goal but has not recognized yet, or asks for a dated report such as
-  docs/breakthrough-opportunity-YYYY-MM-DD.md. Assume a powerful hidden
-  improvement definitely exists inside that scope, review planning, UX/UI,
-  architecture/code, technology/library adoption, new features, security,
-  process, runtime dependencies, public-safe propagation, and workflow, then
-  produce evidence-labeled candidates.
+  such as a page, component, feature, tool, workflow, screen, dashboard, prompt,
+  skill, or user moment. Also use when the user asks for a "clear opportunity",
+  "big shift", "breakthrough", or dated report such as
+  docs/breakthrough-opportunity-YYYY-MM-DD.md. Lock the scope, inspect current
+  project/ticket/session evidence plus public sources when relevant, run a
+  multi-layer opportunity sweep, separate evidence from hypothesis, and route
+  implementation through tickets/parallel lanes when requested.
 ---
 
 # Breakthrough Opportunity Review
 
+## Purpose
+
+Find the sharpest hidden improvement without turning the answer into generic ideation. The scope can be a whole product or a narrow feature surface. Preserve the pressure frame: a strong hidden answer exists, and the agent must hunt for it. Start from current source evidence, infer what the user or maintainer may be seeing from real use that the repo has not made obvious yet, and close with a small proof path inside the requested boundary.
+
+This is the public-safe Driftless counterpart of private "big shift" opportunity workflows. It must not include private repository paths, campaign notes, credentials, account details, or internal positioning. Shared, tool-agnostic opportunity discovery belongs here; tool-specific mechanics stay in `profiles/claude/` or `profiles/codex/`.
+
 ## Improvement Principle
 
-Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles; avoid spec/case overfitting and special-casing unless evidence proves a bounded exception reduces time, tokens, human intervention, usage, or performance burden.
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles. Avoid spec/case overfitting, special-casing, and exception growth unless evidence shows a bounded exception lowers user effort, maintainer effort, time, tokens, cost, recurrence risk, maintenance risk, or safety burden.
 
 ## Public-Safe Transfer Learning Frame
 
-Use this skill to transform a hidden opportunity from a single surface into a
-portable improvement principle without copying private runtime details. The
-review should preserve these public-safe learning concepts when they fit the
-scope: Principle-based Learning, Far Transfer, Analogical Transfer, Relational
-Thinking, Structural Analogical Learning, Cross-domain Principle Extraction,
-Structural Mapping, Generative Learning, Schema Induction, and Conceptual
-Blending.
+Use this skill to transform a hidden opportunity from a single surface into a portable improvement principle without copying private runtime details. The review should preserve these public-safe learning concepts when they fit the scope: Principle-based Learning, Far Transfer, Analogical Transfer, Relational Thinking, Structural Analogical Learning, Cross-domain Principle Extraction, Structural Mapping, Generative Learning, Schema Induction, and Conceptual Blending.
 
 Apply the frame as a practical checklist:
 
-1. **Principle-based Learning:** name the invariant rule that would make similar
-   work cheaper, safer, or easier next time.
-2. **Structural Mapping:** map source case -> target case by roles,
-   constraints, feedback loops, risks, and success criteria, not by file names,
-   issue numbers, or tool labels alone.
-3. **Far Transfer:** ask whether the same relationship appears in another
-   profile, workflow, user flow, or maintainer routine before adding a new
-   one-off rule.
+1. **Principle-based Learning:** name the invariant rule that would make similar work cheaper, safer, or easier next time.
+2. **Structural Mapping:** map source case -> target case by roles, constraints, feedback loops, risks, and success criteria, not by file names, issue numbers, or tool labels alone.
+3. **Far Transfer:** ask whether the same relationship appears in another profile, workflow, user flow, or maintainer routine before adding a new one-off rule.
 4. **Schema Induction:** compress repeated examples into a reusable trigger/root cause/decision rule/placement/validation/rollback schema.
-5. **Generative Learning:** produce at least one reusable artifact candidate,
-   such as a skill patch, gate, script, template, checklist, report, or issue.
-6. **Conceptual Blending:** combine the user's real goal, the non-developer UX,
-   and proven workflow practice into the smallest safe first slice.
-7. **Anti-overfitting guard:** reject changes that only satisfy the latest
-   example unless the bounded exception demonstrably lowers user effort,
-   maintainer effort, time, cost, safety risk, recurrence risk, or maintenance
-   burden.
-8. **Executable verification:** prefer a deterministic gate, fixture, harness,
-   local run, or checklist over prose-only confidence when recurrence is likely.
+5. **Generative Learning:** produce at least one reusable artifact candidate, such as a skill patch, gate, script, template, checklist, report, or issue.
+6. **Conceptual Blending:** combine the user's real goal, the non-developer UX, and proven workflow practice into the smallest safe first slice.
+7. **Anti-overfitting guard:** reject changes that only satisfy the latest example unless the bounded exception demonstrably lowers user effort, maintainer effort, time, cost, safety risk, recurrence risk, or maintenance burden.
+8. **Executable verification:** prefer a deterministic gate, fixture, harness, local run, or checklist over prose-only confidence when recurrence is likely.
 
-Keep the transfer public-safe: do not include private paths, private ticket
-numbers, credentials, account details, browser/session/auth state, host-global
-instructions, or internal project wording. If an idea came from a private runtime
-lesson, carry forward only the reusable structure and record any skipped private
-detail as an exclusion.
-
-Find the sharpest hidden improvement without turning the answer into generic
-ideation. The scope can be a whole product or a narrow feature surface. Preserve
-the pressure frame: a strong hidden answer exists, and the agent must hunt for
-it. Start from source evidence, infer what the user may be seeing from real use
-that the agent has not noticed yet, and close with a small proof path inside the
-requested boundary.
+Keep the transfer public-safe: do not include private paths, private ticket numbers, credentials, account details, browser/session/auth state, host-global instructions, or internal project wording. If an idea came from a private runtime lesson, carry forward only the reusable structure and record any skipped private detail as an exclusion.
 
 ## Core Prompt Frame
 
@@ -71,74 +48,87 @@ Preserve the original forcing function:
 
 > The user has not told us yet, but a powerful game-changing improvement is definitely hidden inside the requested scope. Do not merely list possible improvements; hunt as if there is a real answer to uncover.
 
-This is a **search posture**, not permission to invent facts. Hunt as if the
-answer exists; report with evidence labels. The final answer can say "the
-strongest candidate is X" while still marking proof gaps as `Unverified`.
+This is a **search posture**, not permission to invent facts. Hunt as if the answer exists; report with evidence labels. The final answer can say "the strongest candidate is X" while still marking proof gaps as `UNVERIFIED`.
 
-## Report Mission Frame
+## Source Research Anchors
 
-When the user asks for a system-level opportunity report, preserve this mission:
+When public or current best practice matters, verify with public/primary sources before recommending. Useful analogues:
 
-> A clear opportunity exists that this system needs for its root goal but has not yet recognized. Find it and write a report.
+- Opportunity Solution Tree: connect outcomes, opportunities, solutions, and experiments rather than jumping from idea to implementation.
+- Service blueprint / journey mapping: expose backstage processes, support systems, and failure points invisible in the UI.
+- Business Model Canvas / strategy canvas: separate value, channel, resources, costs, and differentiator assumptions.
+- Product discovery practice: turn candidate opportunities into smallest experiments with kill/defer criteria.
 
-Default report path: `docs/breakthrough-opportunity-YYYY-MM-DD.md`, using the
-current local date unless the user gives another path. The report must be
-resumable from the file alone: root goal, evidence, opportunities, priorities,
-ticket structure, parallel/serial split, risks, and follow-ups must all be
-present.
+Do not cite these methods as proof about the local project. Use them as analogical lenses, then verify current repo/project/session evidence separately.
 
-Before investigating, define:
+## Scope Lock
 
-- root intent: what the non-developer user or maintainer ultimately wants and
-  why it matters.
-- root cause: why this request exists and what must not recur.
-- reusable criteria: which judgment principles apply to similar future cases.
+1. If the user names a page, feature, component, tool, workflow, screen, file, dashboard card, skill, prompt, or user moment, that exact surface is the primary boundary.
+2. If the user says "this system" or asks for `docs/breakthrough-opportunity-YYYY-MM-DD.md`, treat the active project as the scope unless repo evidence shows a narrower product root.
+3. Do not inflate a narrow request into the full product, pipeline, organization strategy, or architecture unless the user asks. Adjacent ideas must be labeled `adjacent/out-of-scope`.
+4. State one line before analysis: `scope lock: <exact surface>`.
 
-Treat user examples as evidence, not the answer key. Prefer principle-based
-guidance, design principles, and UX heuristics over case-specific exceptions.
-Avoid spec/case overfitting, special-casing, and growing exception lists unless
-the exception is bounded, evidenced, and reduces user effort, maintainer effort,
-time, tokens, recurrence risk, maintenance risk, or safety burden.
+## Evidence Map Before Ideation
+
+Before choosing opportunities, inspect enough current truth to avoid stale strategy:
+
+- Local source: `AGENTS.md`, profile hot-rules, `profiles/shared/contract/SHARED_DESIGN_CONTRACT.md`, relevant skills/prompts/hooks/scripts, README/docs, and the live code/docs of the locked surface.
+- Current work state: git status/branch, GitHub issue/PR bodies/comments when available, local session claims, mission-control artifacts, ticket lists, and recent handoff evidence when accessible.
+- Project/product state: remaining tickets, current development map, manager/maintainer-visible dashboards, launchers, validation gates, and stale/deprecated docs that can mislead execution.
+- Public research: primary docs or reputable references for current external technologies, UX patterns, product discovery, libraries, prices, policy, or standards.
+- Safety: never read or print `.env`, cookies, browser profiles, local storage, passwords, tokens, private keys, auth/session stores, or host-global profile homes.
+
+Mark each input as `PASS`, `FAIL`, `BLOCKED`, `UNVERIFIED`, or `PARTIAL` when reporting, matching `profiles/shared/contract/SHARED_DESIGN_CONTRACT.md`.
 
 ## Layer Sweep
 
-Always sweep the layers explicitly, even for a narrow scope. For a page widget,
-apply each layer to that widget, not to the whole product:
+Run each axis explicitly, even for a narrow scope:
 
-- Architecture pattern: reusable boundaries, contracts, and ownership shape.
-- Code/script shape: scripts, commands, hooks, prompts, rules, skills, and
-  repeatable automation surfaces.
-- Individual features: specific user-visible capability gaps.
-- Planning/function: what job, user decision, or product loop should change?
-- UX/UI: what interaction, information hierarchy, visual evidence, state, or flow would make the opportunity obvious?
-- GUI/dashboard/status UX: what non-developer status, progress, or control
-  surface should exist instead of raw scripts or hidden state?
-- Architecture/code: what data contract, component boundary, rendering path, test, or refactor unlocks it?
-- Credential/security boundary: what login, secret, API, public/private,
-  billing, release, or destructive-action boundary needs a safer shape?
-- Multi-worker/process model: what orchestration, worker contract, heartbeat, or
-  cleanup gate would reduce user or maintainer intervention?
-- Fixture/benchmark method: what test data, real-use proof, benchmark, or
-  fixture strategy would make the opportunity measurable?
-- Docs/skill template: what reusable prompt, template, skill, or documentation
-  would make the improvement repeatable?
-- Runtime dependency: what local dependency, installed tool, version, or
-  platform boundary enables or blocks the opportunity?
-- Technology/library: what current tool or library could make it cheaper or sharper, after verification when recency matters?
-- New feature: what feature would feel like the missing breakthrough inside the scope?
-- Development workflow: what validation or evidence loop would make the improvement repeatable?
-- Public-safe propagation: what should be shared, made profile-specific, or
-  explicitly skipped as private/unsafe?
+- Root product/user outcome: what user job or decision improves?
+- Planning/function: what roadmap, priority, or capability boundary changes?
+- UX/UI/design: what interaction, hierarchy, status, empty/error state, or trust signal becomes obvious?
+- GUI/dashboard/status UX: what non-developer status/control surface should replace raw scripts or hidden state?
+- Architecture/data contract: what reusable boundary, schema, state machine, or artifact spine unlocks it?
+- Code/script/prompt/skill shape: what small skill, script gate, prompt, schema, or template prevents recurrence?
+- Credential/security/private-public boundary: what login, billing, public release, secret, destructive, or host-global risk needs safer staging?
+- Multi-worker/process model: what owner, heartbeat, ticket, parallel lane, adoption step, or cleanup gate reduces human intervention?
+- Fixture/benchmark/real-use proof: what test, replay, harness, browser evidence, or live run would prove it?
+- Runtime dependency: what local tool, version, profile, launcher, active home, or materialization path enables or blocks it?
+- Technology/library: what current library or external pattern could make it cheaper or sharper after verification?
+- Public-safe propagation: should the lesson go to shared tier, a tool-specific profile, docs, tests, or be skipped as private/unsafe?
+
+## Ticket / Parallel Execution Add-on
+
+Use this section when the opportunity requires implementation, tickets, parallel work, or full closeout.
+
+1. **Ticket first when nontrivial.** Create/reuse the smallest GitHub issue with root cause, scope, acceptance criteria, validation, user-only gates, and no secrets.
+2. **Register ownership.** Use the repo's session-claim, mission-control, or Kanban/control-plane equivalent where available. Creation is not completion.
+3. **Split into parallel-safe lanes.** For each lane record: owner mode, write surface, read-only dependencies, forbidden/private surfaces, validation command, rollback path, and `parallel_safe` state.
+4. **Blocker fission.** A blocker should become a smaller owned lane or issue when it is agent-solvable; do not leave it as prose. Escalate only credentials, billing/quota, public release, destructive/irreversible action, host-global promotion, user-data transfer, force-push/history rewrite, or product/value judgments.
+5. **Parent adoption.** Worker/child output is not Done until the parent reads it, verifies evidence, updates the control surface, and reruns the original gate.
 
 ## Placement Decision
 
-1. Intended scope: breakthrough-improvement requests for a whole product or a specific page, feature, component, tool, workflow, screen, or user moment.
-2. Chosen location: shared on-demand skill `breakthrough-opportunity-review`.
-3. Why this scope is correct: scope-locking plus multi-layer opportunity review is too long for hot instructions and too strategic for ordinary code review.
-4. Hot vs on-demand: on-demand. Do not add this full process to always-loaded profile guidance.
-5. Rejected alternatives: prompt-only optimization focuses on wording; external adoption review only fits when a specific outside candidate is under consideration.
-6. Existing skill reuse check: UI-only depth can route to `ui-ux-design-guidance`; external candidates can route to `adopt-external-tool`; large coordinated work can route through `mission-control`; ticket decomposition can route to `parallel-ticket-planner`; repeated prevention can route to `learning-loop`; final readiness can route to `review-before-done`.
-7. Consolidation decision: keep this as the shared wrapper-style opportunity discovery skill. It owns the hidden-answer frame, report contract, evidence labels, and opportunity synthesis.
+Before adding or changing a rule, choose the smallest durable surface:
+
+- Tool-agnostic, public-safe principle -> `profiles/shared/`.
+- Claude-specific mechanics -> `profiles/claude/`.
+- Codex-specific mechanics -> `profiles/codex/`.
+- Repeated/verifiable stateful action -> script/gate/schema/test instead of prose-only guidance.
+- Stable public procedure -> skill; current task progress -> issue/session evidence, not hot context.
+- Private, account-specific, path-specific, campaign, credential, billing, or internal material -> do not copy; write a sanitized skip reason or public-safe abstraction.
+
+## Transfer Learning Lens
+
+When the opportunity becomes a learning-loop update, preserve these concept names and perform the transformation:
+
+- **Principle-based Learning:** name the invariant rule that would prevent the failure class.
+- **Far Transfer:** identify where the same structure appears outside the current surface, including Claude, Codex, shared tier, launchers, dashboards, validation gates, and public docs.
+- **Analogical Transfer / Structural Analogical Learning:** map source case -> target case by roles, constraints, feedback loops, risks, and success criteria, not by string matching.
+- **Relational Thinking / Structural Mapping:** compare relationships such as user burden, hidden state, proof gap, owner/readback loop, and rollback path rather than files alone.
+- **Cross-domain Principle Extraction:** convert a private or local incident into a public-safe or tool-agnostic principle when possible.
+- **Generative Learning / Schema Induction:** write `trigger -> root_cause_class -> decision_rule -> placement -> validation -> rollback`.
+- **Conceptual Blending:** combine user root goal, non-developer UX, public best practice, and repo constraints into the smallest safe implementation.
 
 ## Workflow
 
@@ -157,58 +147,37 @@ apply each layer to that widget, not to the whole product:
 3. Activate the hidden-answer frame.
    - Say internally: "A strong hidden improvement exists in this scope; find the best candidate."
    - For system-level reports, use the exact mission: "A clear opportunity exists that this system needs for its root goal but has not yet recognized."
-   - Avoid weak framing such as "the user may have missed something" as the main posture.
    - Keep evidence honesty: the premise drives search intensity, while proof still requires observed or source evidence.
 
-4. Restate root intent inside that scope.
-   - What the user likely wants next.
-   - What must become visible, easier, safer, or more trustworthy.
-   - What should not remain hidden in raw scripts, fragile setup, closed experiments, or vague automation claims.
-
-5. Build a compact evidence map before ideation.
+4. Build a compact evidence map before ideation.
    - Inspect the locked surface first: relevant docs, UI/screens, code paths, payload contracts, tests, issues/PRs, and recent user corrections when available.
    - For whole-product or system reports, inspect `AGENTS.md`, product docs, README, design docs, issues/PRs/tickets/comments, decision records, skills/prompts/hooks, primary workflows, and recent failures when available.
-   - Inspect old code/docs/temp files only to classify whether they block the root goal. Do not delete or rewrite them without a separate authorized implementation scope; record evidence and impact only.
-   - For UX/UI/frontend work, use the local design guidance skill or design contract before proposing visual or flow changes.
    - For current technologies, libraries, standards, prices, laws, or public claims, verify with browsing or primary sources before recommending.
-   - Label each input as `Observed`, `Inferred`, `Unverified`, or `Blocked`.
+   - Label each input as `PASS`, `FAIL`, `BLOCKED`, `UNVERIFIED`, or `PARTIAL`.
 
-6. Run axis-by-axis investigation, not a blended skim.
-   - Cover every Layer Sweep axis with at least one evidence label or an explicit `Unverified`/`Blocked` reason.
+5. Run axis-by-axis investigation, not a blended skim.
+   - Cover every Layer Sweep axis with at least one evidence label or an explicit `UNVERIFIED`/`BLOCKED` reason.
    - If native worker/session tools and user authorization exist for a large investigation, coordinate through `mission-control` and keep parent synthesis evidence-labeled.
    - If worker tools are unavailable or recursive/peer AI is disallowed, run the axes serially in the current session. Do not call another AI bridge to satisfy "dispatch".
    - Every opportunity candidate needs evidence labels such as code path, doc path, issue/PR number, command output, browser evidence, or source URL.
 
-7. Reverse-engineer the missing breakthrough inside the scope.
+6. Reverse-engineer the missing breakthrough inside the scope.
    - Ask: "What would the user or target audience see from real use of this exact surface that the repo, docs, or agent transcript may hide?"
    - For narrow UI/tool requests, prefer feature-level changes: interaction mode, visual evidence, filtering, grouping, defaults, copy/export action, state clarity, empty/error states, or a sharper user decision flow.
    - For broad requests, search for leverage in onboarding collapse, status surfaces, evidence handoff, safer automation, defaults, recovery flows, public/private propagation, lower token use, lower human intervention, and clearer trust signals.
-   - Generate 5-9 hypotheses at the same granularity as the scope. Cover the layer sweep before choosing. If the scope is a page widget, do not make the top candidate a whole pipeline unless explicitly marked `adjacent/out-of-scope`.
+   - Generate 5-9 hypotheses at the same granularity as the scope.
 
-8. Score candidates with hard filters.
-   - Scope fit: does this improve the requested surface directly?
-   - Hidden-answer fit: does it feel like the single strong thing the user expected the agent to discover, not just a reasonable improvement?
-   - Pain removed: time, setup, tokens, security risk, validation burden, or human intervention.
-   - Visibility: would the target user notice and trust the improvement?
-   - Feasibility: can it be piloted without credentials, billing, destructive actions, host-global mutation, or recursive/peer AI calls?
-   - Evidence: what is observed vs inferred vs unverified?
-   - Blast radius: what can break, and what rollback exists?
-   - Public-safe reuse: should the idea belong in shared skills, profile-specific guidance, code, docs, tests, or backlog?
+7. Score candidates with hard filters.
+   - Scope fit, hidden-answer fit, pain removed, visibility, feasibility, evidence strength, blast radius, rollback, and public-safe propagation.
 
-8a. Choose the public-safe propagation shape.
-   - If the strongest candidate is a transferable lesson, state the structural
-     analogy and which public surface should receive it: existing shared skill,
-     shared contract, script gate, fixture, checklist, report, or issue.
-   - If the candidate needs ticket/parallel planning, reuse existing open issues
-     first and name owner surface, write surface, read-only surfaces, conflict
-     risks, validation command, rollback path, and parallel_safe status.
-   - If a private or tool-specific detail inspired the idea, explicitly exclude
-     the private detail and keep only the public-safe reusable relation.
+8. Choose the public-safe propagation shape.
+   - If the strongest candidate is a transferable lesson, state the structural analogy and which public surface should receive it: existing shared skill, shared contract, script gate, fixture, checklist, report, or issue.
+   - If the candidate needs ticket/parallel planning, reuse existing open issues first and name owner surface, write surface, read-only surfaces, conflict risks, validation command, rollback path, and parallel_safe status.
+   - If a private or tool-specific detail inspired the idea, explicitly exclude the private detail and keep only the public-safe reusable relation.
 
 9. Select the strongest 1-3 opportunities.
    - Prefer the opportunity that removes repeated user burden or makes hidden state visible.
    - Avoid novelty bias. A small workflow surface can beat a large new feature if it changes real usage.
-   - For narrow requests, choose the strongest in-scope idea first; list broader adjacent ideas only after the in-scope answer.
    - If the best idea needs approval, design the smallest contained pilot instead of stopping.
 
 10. Return an action-ready result or report.
@@ -219,46 +188,33 @@ apply each layer to that widget, not to the whole product:
    - For report mode, write `docs/breakthrough-opportunity-YYYY-MM-DD.md` and include the mandatory report sections below.
    - After a report is confirmed and follow-up work is in scope, route open work through ticket review and parallel planning, reusing existing open issues before proposing new ones.
    - If the user asked for implementation, continue into the work instead of ending at brainstorming.
+   - If follow-up remains, every `BLOCKED`, `UNVERIFIED`, `PARTIAL`, `watch`, `follow-up`, or `later` item needs an open issue/lane or a concrete `not needed` reason.
 
 ## Report Contract
 
 For `docs/breakthrough-opportunity-YYYY-MM-DD.md`, include:
 
-1. `Root Goal Summary`: project vision/user directive, assumptions, and evidence locations.
-2. `Preparation Evidence`: `AGENTS.md`, related docs, issue/PR/ticket/comment evidence, and old-file interference notes.
-3. `Axis Review`: every Layer Sweep axis with `Observed`, `Inferred`, `Unverified`, or `Blocked`.
-4. `Clear Opportunities Not Yet Recognized`: each with description, root-goal contribution, evidence, expected leverage, risk, confidence, and first proof slice.
-5. `Priority`: rank opportunities and explain why the top item is the best hidden-answer candidate.
-6. `Epic/Ticket Structure`: reuse existing open issues first. New tickets need purpose, done criteria, validation method, owner surface, stop/resume instructions, and user-only gates.
-7. `Parallel vs Serial`: conflict surfaces, dependencies, and which lanes can safely run in parallel.
-8. `Risks And Follow-Up`: every `Blocked`, `Unverified`, `Partial`, `watch`, `follow-up`, or `later` item needs an existing/new issue number or a clear reason no issue is needed.
-9. `Resume Instructions`: exact file paths, commands, evidence, and next action so another session can continue without this chat.
-
-## Missing-Risk Checklist
-
-Confirm these in the report rather than leaving them implicit:
-
-- Hidden user burden: raw scripts, unclear git/GitHub state, invisible status, or developer-only setup.
-- Evidence gap: fixture/schema/unit/static proof being mistaken for behavioral proof.
-- Credential/security boundary: secret, `.env`, browser profile, account, billing, public release, destructive, or host-global risks.
-- Runtime/workflow dependency: local tool versions, generated profile surfaces, hooks, skills, commands, and validation gates.
-- Multi-worker/process gap: stale workers, missing heartbeat/status board, no cleanup gate, or user paste burden.
-- Public/private propagation: what is public-safe, profile-specific, shared, or skipped with a private/unsafe reason.
-- Old artifact interference: retired docs, temporary files, stale compatibility shims, or archived routes that could mislead current goals.
+1. `Root Goal Summary`: user goal, assumptions, and evidence locations.
+2. `Preparation Evidence`: local source, issue/PR/ticket/session evidence, public research, and stale-file interference notes.
+3. `Axis Review`: every Layer Sweep axis with `PASS`, `FAIL`, `BLOCKED`, `UNVERIFIED`, or `PARTIAL`.
+4. `Clear Opportunities Not Yet Recognized`: description, root-goal contribution, evidence, expected leverage, risk, confidence, and first proof slice.
+5. `Priority`: why the top item is the strongest hidden-answer candidate.
+6. `Epic/Ticket Structure`: reuse open issues first; new issues need purpose, done criteria, validation, owner surface, stop/resume instructions, and user-only gates.
+7. `Parallel vs Serial`: conflict surfaces, dependencies, parallel-safe lanes, serialized lanes.
+8. `Control / Adoption Plan`: owner modes, session/control-plane/Kanban/heartbeat/readback when applicable.
+9. `Risks And Follow-Up`: every unresolved term has an issue/lane/reason.
+10. `Resume Instructions`: exact file paths, commands, evidence, and next action.
 
 ## Output Shape
 
-Use this structure unless the user asks for a shorter answer:
+Use the manager/maintainer labels from the shared contract:
 
-- `inspected`: sources checked and root intent.
-- `scope lock`: exact surface analyzed; mark any adjacent idea as out-of-scope or optional.
-- `hidden-answer frame`: the assumed missing breakthrough and why it fits the user's implied expectation.
-- `layer sweep`: planning, UX/UI, architecture/code, technology, new feature, and workflow lenses checked.
-- `evidence`: observed facts, inferred facts, unverified gaps, and blockers.
-- `top opportunity`: the single sharpest hidden improvement and why it could change the product.
-- `other strong opportunities`: 2-5 runners-up with tradeoffs.
-- `report path`: created report path when report mode is requested.
-- `ticket/parallel plan`: issue reuse/new-ticket structure and parallel vs serial lanes when requested.
+- `built/inspected`: sources checked, root intent, scope lock.
+- `hidden-answer frame`: the strongest hidden opportunity candidate.
+- `layer sweep`: planning/UX/UI/architecture/code/technology/security/workflow/public-safe propagation.
+- `tested/evidence`: command/source/browser/session evidence with PASS/FAIL/BLOCKED/UNVERIFIED/PARTIAL.
+- `ticket/parallel plan`: issue reuse/new issue, lanes, serial dependencies.
+- `top opportunity`: why it can change the product/system.
 - `first slice`: the smallest safe implementation or pilot.
 - `validation`: what would prove, disprove, or defer the opportunity.
 
@@ -267,6 +223,6 @@ Use this structure unless the user asks for a shorter answer:
 - Do not claim a breakthrough is proven without behavioral, local, or source evidence.
 - Do not water down the task into "possible improvements"; preserve the premise that a powerful hidden opportunity exists, then label proof honestly.
 - Do not turn a narrow page/tool/component request into a whole-product or whole-pipeline answer unless the user asks for that expansion.
-- Do not read credentials, `.env`, private keys, browser profiles, cookies, session stores, or host-global profile files.
-- Do not recommend public release, billing, destructive actions, credential use, host-global mutation, or recursive/peer AI without explicit approval.
+- Do not read credentials, `.env`, private keys, browser profiles, cookies, local storage, session stores, or host-global profile files.
+- Do not recommend public release, billing, destructive actions, credential use, host-global mutation, force-push/history rewrite, or recursive/peer AI without explicit approval.
 - Do not let excitement replace closeout: every candidate ends as implement, pilot, defer, reject, blocked, or unverified.

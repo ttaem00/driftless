@@ -23,7 +23,24 @@ This is the public-safe Driftless counterpart of private "big shift" opportunity
 
 ## Improvement Principle
 
-Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles. Avoid spec overfitting, case overfitting, special-casing, and exception growth unless evidence shows a bounded exception lowers user effort, maintainer effort, time, tokens, cost, recurrence risk, maintenance risk, or safety burden.
+Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as principle-based guidance or design principles. Avoid spec/case overfitting, special-casing, and exception growth unless evidence shows a bounded exception lowers user effort, maintainer effort, time, tokens, cost, recurrence risk, maintenance risk, or safety burden.
+
+## Public-Safe Transfer Learning Frame
+
+Use this skill to transform a hidden opportunity from a single surface into a portable improvement principle without copying private runtime details. The review should preserve these public-safe learning concepts when they fit the scope: Principle-based Learning, Far Transfer, Analogical Transfer, Relational Thinking, Structural Analogical Learning, Cross-domain Principle Extraction, Structural Mapping, Generative Learning, Schema Induction, and Conceptual Blending.
+
+Apply the frame as a practical checklist:
+
+1. **Principle-based Learning:** name the invariant rule that would make similar work cheaper, safer, or easier next time.
+2. **Structural Mapping:** map source case -> target case by roles, constraints, feedback loops, risks, and success criteria, not by file names, issue numbers, or tool labels alone.
+3. **Far Transfer:** ask whether the same relationship appears in another profile, workflow, user flow, or maintainer routine before adding a new one-off rule.
+4. **Schema Induction:** compress repeated examples into a reusable trigger/root cause/decision rule/placement/validation/rollback schema.
+5. **Generative Learning:** produce at least one reusable artifact candidate, such as a skill patch, gate, script, template, checklist, report, or issue.
+6. **Conceptual Blending:** combine the user's real goal, the non-developer UX, and proven workflow practice into the smallest safe first slice.
+7. **Anti-overfitting guard:** reject changes that only satisfy the latest example unless the bounded exception demonstrably lowers user effort, maintainer effort, time, cost, safety risk, recurrence risk, or maintenance burden.
+8. **Executable verification:** prefer a deterministic gate, fixture, harness, local run, or checklist over prose-only confidence when recurrence is likely.
+
+Keep the transfer public-safe: do not include private paths, private ticket numbers, credentials, account details, browser/session/auth state, host-global instructions, or internal project wording. If an idea came from a private runtime lesson, carry forward only the reusable structure and record any skipped private detail as an exclusion.
 
 ## Core Prompt Frame
 
@@ -115,13 +132,63 @@ When the opportunity becomes a learning-loop update, preserve these concept name
 
 ## Workflow
 
-1. Define root intent, root cause, reusable criteria, and scope lock.
-2. Gather evidence from local source, tickets/session state, current development state, and public sources when relevant.
-3. Generate 5-9 hypotheses at the locked scope's granularity.
-4. Score candidates by scope fit, hidden-answer fit, pain removed, visibility, feasibility, evidence strength, blast radius, rollback, and public-safe propagation.
-5. Select the strongest 1-3 candidates. Prefer the opportunity that collapses repeated user burden or makes hidden system state visible.
-6. Produce an action-ready answer or report. If implementation is in scope, continue into ticket/parallel planning/finish-to-done instead of stopping at brainstorming.
-7. If follow-up remains, every `BLOCKED`, `UNVERIFIED`, `PARTIAL`, `watch`, `follow-up`, or `later` item needs an open issue/lane or a concrete `not needed` reason.
+1. Lock the requested scope first.
+   - If the user names a page, feature, component, tool, workflow, screen, file, or user moment, treat that as the primary boundary.
+   - If the user says "this system" or asks for `docs/breakthrough-opportunity-YYYY-MM-DD.md`, treat the active project as the scope unless repo evidence shows a narrower product root.
+   - Do not inflate a narrow request into the full product, pipeline, company strategy, or architecture unless the user asks.
+   - Use adjacent systems only for constraints, dependencies, or clearly bounded optional extensions.
+   - State the scope in one sentence: `scope lock: <exact surface>`.
+
+2. Define the root-intent gate before gathering evidence.
+   - State the root goal, the root cause of the request, and the reusable criteria that should apply to similar future cases.
+   - If the project vision or user directive is not explicit, infer from `AGENTS.md`, product docs, decision docs, issues, and recent user instructions; mark the inference.
+   - Prefer visible workflow, one-click action, guided UI, clear status, and agent-owned validation over raw scripts or developer setup for non-developer users.
+
+3. Activate the hidden-answer frame.
+   - Say internally: "A strong hidden improvement exists in this scope; find the best candidate."
+   - For system-level reports, use the exact mission: "A clear opportunity exists that this system needs for its root goal but has not yet recognized."
+   - Keep evidence honesty: the premise drives search intensity, while proof still requires observed or source evidence.
+
+4. Build a compact evidence map before ideation.
+   - Inspect the locked surface first: relevant docs, UI/screens, code paths, payload contracts, tests, issues/PRs, and recent user corrections when available.
+   - For whole-product or system reports, inspect `AGENTS.md`, product docs, README, design docs, issues/PRs/tickets/comments, decision records, skills/prompts/hooks, primary workflows, and recent failures when available.
+   - For current technologies, libraries, standards, prices, laws, or public claims, verify with browsing or primary sources before recommending.
+   - Label each input as `PASS`, `FAIL`, `BLOCKED`, `UNVERIFIED`, or `PARTIAL`.
+
+5. Run axis-by-axis investigation, not a blended skim.
+   - Cover every Layer Sweep axis with at least one evidence label or an explicit `UNVERIFIED`/`BLOCKED` reason.
+   - If native worker/session tools and user authorization exist for a large investigation, coordinate through `mission-control` and keep parent synthesis evidence-labeled.
+   - If worker tools are unavailable or recursive/peer AI is disallowed, run the axes serially in the current session. Do not call another AI bridge to satisfy "dispatch".
+   - Every opportunity candidate needs evidence labels such as code path, doc path, issue/PR number, command output, browser evidence, or source URL.
+
+6. Reverse-engineer the missing breakthrough inside the scope.
+   - Ask: "What would the user or target audience see from real use of this exact surface that the repo, docs, or agent transcript may hide?"
+   - For narrow UI/tool requests, prefer feature-level changes: interaction mode, visual evidence, filtering, grouping, defaults, copy/export action, state clarity, empty/error states, or a sharper user decision flow.
+   - For broad requests, search for leverage in onboarding collapse, status surfaces, evidence handoff, safer automation, defaults, recovery flows, public/private propagation, lower token use, lower human intervention, and clearer trust signals.
+   - Generate 5-9 hypotheses at the same granularity as the scope.
+
+7. Score candidates with hard filters.
+   - Scope fit, hidden-answer fit, pain removed, visibility, feasibility, evidence strength, blast radius, rollback, and public-safe propagation.
+
+8. Choose the public-safe propagation shape.
+   - If the strongest candidate is a transferable lesson, state the structural analogy and which public surface should receive it: existing shared skill, shared contract, script gate, fixture, checklist, report, or issue.
+   - If the candidate needs ticket/parallel planning, reuse existing open issues first and name owner surface, write surface, read-only surfaces, conflict risks, validation command, rollback path, and parallel_safe status.
+   - If a private or tool-specific detail inspired the idea, explicitly exclude the private detail and keep only the public-safe reusable relation.
+
+9. Select the strongest 1-3 opportunities.
+   - Prefer the opportunity that removes repeated user burden or makes hidden state visible.
+   - Avoid novelty bias. A small workflow surface can beat a large new feature if it changes real usage.
+   - If the best idea needs approval, design the smallest contained pilot instead of stopping.
+
+10. Return an action-ready result or report.
+   - Start from the frame: "The hidden-answer candidate is X."
+   - Explain why X is the likely breakthrough idea plainly.
+   - Separate evidence from hypothesis.
+   - Provide the first implementation slice, validation evidence required, and kill/defer criteria.
+   - For report mode, write `docs/breakthrough-opportunity-YYYY-MM-DD.md` and include the mandatory report sections below.
+   - After a report is confirmed and follow-up work is in scope, route open work through ticket review and parallel planning, reusing existing open issues before proposing new ones.
+   - If the user asked for implementation, continue into the work instead of ending at brainstorming.
+   - If follow-up remains, every `BLOCKED`, `UNVERIFIED`, `PARTIAL`, `watch`, `follow-up`, or `later` item needs an open issue/lane or a concrete `not needed` reason.
 
 ## Report Contract
 

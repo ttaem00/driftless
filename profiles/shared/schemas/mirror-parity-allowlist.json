@@ -136,6 +136,18 @@
       "file": "skills/intake-preflight/SKILL.md",
       "consumedBy": ["claude", "codex"],
       "why": "Tool-agnostic pre-plan intake gate. Authored once in the shared tier so large or unclear requests gather root intent, current evidence, past learning, external examples when relevant, risks, and one native question-surface decision before planning or implementation."
+    },
+    {
+      "name": "skill-wuther-codemap",
+      "file": "skills/wuther-codemap/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic repository-map skill. One versioned manifest generates the same manager HTML and LLM JSON/Markdown views for both profiles, with provenance and code-contract gates."
+    },
+    {
+      "name": "schema-wuther-codemap-manifest",
+      "file": "schemas/wuther-codemap-manifest.schema.json",
+      "consumedBy": ["claude", "codex"],
+      "why": "The shared versioned model that keeps manager and LLM repository views aligned across both profiles."
     }
   ],
 

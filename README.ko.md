@@ -81,7 +81,7 @@
 - **이슈 94건**
 - **커밋 114건**
 - 그 개발 런타임 기준 두 프로필에 걸친 **Claude 스킬 39개 + Codex 스킬 34개**
-  (이 공개 키트는 starter 스킬 16개를 ship — shared 12 + Claude 1 + Codex 1 + 단독 2개
+  (이 공개 키트는 starter 스킬 25개를 ship — shared 21 + Claude 1 + Codex 1 + 단독 2개
   `overnight-autonomous-work`·`skillopt`. `git ls-files | grep -c SKILL.md`로 직접 세어 보세요)
 - 깨끗한 트리에서 통과하는 정적 격리 가드, 스크립트의 ASCII + BOM 없음을 강제하는
   Windows 텍스트 안전 게이트, 프로필 거울 일치 게이트

@@ -1,0 +1,152 @@
+{
+  "schema_version": "wuther-codemap.v1",
+  "project": {
+    "id": "school-media-processing",
+    "name": "School Media Processing",
+    "manager_summary": "A classroom recording becomes timestamped text, a searchable lesson, and a teacher-reviewable page.",
+    "source_ref": "synthetic-fixture-v1"
+  },
+  "domains": [
+    {"id": "acquisition", "label": "Recording intake", "icon": "IN", "purpose": "Accept supported classroom media and reject unusable input early."},
+    {"id": "understanding", "label": "Lesson understanding", "icon": "TXT", "purpose": "Turn media into timestamped, searchable lesson information."},
+    {"id": "delivery", "label": "Lesson delivery", "icon": "OUT", "purpose": "Create the teacher-facing lesson page."}
+  ],
+  "nodes": [
+    {
+      "id": "intake.accept", "domain_id": "acquisition",
+      "manager": {
+        "title": "Check the selected recording",
+        "purpose": "Stop unsupported files before expensive work starts.",
+        "operation": "Check the extension and mark supported media as accepted.",
+        "next_action": "Confirm the selected file is MP3, MP4, or WAV.",
+        "failure_impact": "No transcript or lesson page can be created."
+      },
+      "code_refs": [{"path": "src/intake.py", "symbol": "accept_recording", "line": 4}],
+      "data_in": ["selected_media_path"], "data_out": ["accepted_media"],
+      "risks": ["An incorrect allowlist can reject a valid lesson or accept an unusable file."],
+      "validation": "Run supported-extension and unsupported-extension fixture cases."
+    },
+    {
+      "id": "transcript.build", "domain_id": "understanding",
+      "manager": {
+        "title": "Turn the recording into timestamped text",
+        "purpose": "Make spoken lesson content readable and traceable by time.",
+        "operation": "Require accepted media and create ordered second-and-text rows.",
+        "next_action": "Check that every row has a time and readable text.",
+        "failure_impact": "The lesson cannot be searched or organized."
+      },
+      "code_refs": [{"path": "src/transcribe.py", "symbol": "build_transcript", "line": 4}],
+      "data_in": ["accepted_media"], "data_out": ["transcript_segments"],
+      "risks": ["Missing timestamps make source review difficult."],
+      "validation": "Run the accepted-media fixture and assert second and text fields."
+    },
+    {
+      "id": "catalog.index", "domain_id": "understanding",
+      "manager": {
+        "title": "Organize text as a searchable lesson",
+        "purpose": "Keep the lesson title and timestamped segments together.",
+        "operation": "Reject empty transcripts and create one lesson record.",
+        "next_action": "Confirm the title and at least one segment are present.",
+        "failure_impact": "The lesson cannot be found or published."
+      },
+      "code_refs": [{"path": "src/catalog.py", "symbol": "index_lesson", "line": 4}],
+      "data_in": ["transcript_segments"], "data_out": ["lesson_record"],
+      "risks": ["An empty lesson record looks complete but contains no useful content."],
+      "validation": "Run non-empty and empty transcript fixture cases."
+    },
+    {
+      "id": "publish.render", "domain_id": "delivery",
+      "manager": {
+        "title": "Create the teacher review page",
+        "purpose": "Give the teacher a simple page to inspect.",
+        "operation": "Escape the lesson title and render a static article.",
+        "next_action": "Open the generated page and compare its title with the lesson.",
+        "failure_impact": "The teacher has no reviewable output."
+      },
+      "code_refs": [{"path": "src/publish.py", "symbol": "render_lesson", "line": 6}],
+      "data_in": ["lesson_record"], "data_out": ["lesson_html"],
+      "risks": ["Unescaped titles can break or inject page markup."],
+      "validation": "Render a title containing markup and confirm it is escaped."
+    }
+  ],
+  "data_objects": [
+    {
+      "id": "selected_media_path", "manager_name": "Selected recording path",
+      "description": "The classroom recording selected by the caller.",
+      "form": "Function input", "type": "str",
+      "fields": [{"name": "path", "type": "text", "meaning": "Repository-external recording location", "optional": false}],
+      "safe_example": {"path": "fixtures/lesson.mp4"},
+      "origin": "Fixture caller", "created_by": "External caller",
+      "transformations": ["File extension inspection"], "storage": "Call argument only",
+      "artifacts": [], "consumers": ["intake.accept"],
+      "validation": "The value must end in mp3, mp4, or wav.",
+      "missing_impact": "Intake cannot begin.", "sensitivity": "Caller-controlled path"
+    },
+    {
+      "id": "accepted_media", "manager_name": "Accepted media record",
+      "description": "A short record proving the selected recording passed intake.",
+      "form": "Python dictionary", "type": "dict[str, str]",
+      "fields": [
+        {"name": "media_path", "type": "str", "meaning": "Selected recording path", "optional": false},
+        {"name": "status", "type": "str", "meaning": "Accepted state", "optional": false}
+      ],
+      "safe_example": {"media_path": "fixtures/lesson.mp4", "status": "accepted"},
+      "origin": "Selected recording path", "created_by": "intake.accept",
+      "transformations": ["Supported-extension validation"], "storage": "Process memory",
+      "artifacts": [], "consumers": ["transcript.build"],
+      "validation": "status must equal accepted.",
+      "missing_impact": "Transcription refuses to run.", "sensitivity": "Internal runtime data"
+    },
+    {
+      "id": "transcript_segments", "manager_name": "Timestamped transcript rows",
+      "description": "Ordered lesson text with a source time for every row.",
+      "form": "Python list", "type": "list[dict[str, object]]",
+      "fields": [
+        {"name": "second", "type": "number", "meaning": "Start time in seconds", "optional": false},
+        {"name": "text", "type": "str", "meaning": "Spoken lesson text", "optional": false}
+      ],
+      "safe_example": [{"second": 0, "text": "Synthetic lesson introduction."}],
+      "origin": "Accepted media record", "created_by": "transcript.build",
+      "transformations": ["Speech represented as timestamped text"], "storage": "Process memory",
+      "artifacts": [], "consumers": ["catalog.index"],
+      "validation": "Every row must contain second and text.",
+      "missing_impact": "No searchable lesson can be created.", "sensitivity": "Synthetic fixture text"
+    },
+    {
+      "id": "lesson_record", "manager_name": "Searchable lesson record",
+      "description": "The lesson title and timestamped segments kept together.",
+      "form": "Python dictionary", "type": "dict[str, object]",
+      "fields": [
+        {"name": "title", "type": "str", "meaning": "Lesson display title", "optional": false},
+        {"name": "segments", "type": "list", "meaning": "Timestamped transcript rows", "optional": false}
+      ],
+      "safe_example": {"title": "Synthetic lesson", "segments": [{"second": 0, "text": "Synthetic lesson introduction."}]},
+      "origin": "Timestamped transcript rows", "created_by": "catalog.index",
+      "transformations": ["Empty-input rejection", "Lesson title attachment"], "storage": "Process memory",
+      "artifacts": [], "consumers": ["publish.render"],
+      "validation": "The record must have a title and at least one segment.",
+      "missing_impact": "There is nothing to publish.", "sensitivity": "Synthetic fixture data"
+    },
+    {
+      "id": "lesson_html", "manager_name": "Teacher review HTML",
+      "description": "A static article fragment containing the escaped lesson title.",
+      "form": "HTML text", "type": "str",
+      "fields": [{"name": "article", "type": "HTML", "meaning": "Teacher-visible lesson fragment", "optional": false}],
+      "safe_example": "<article><h1>Synthetic lesson</h1></article>",
+      "origin": "Searchable lesson record", "created_by": "publish.render",
+      "transformations": ["Title HTML escaping", "Article rendering"], "storage": "Returned value",
+      "artifacts": [], "consumers": ["Teacher review surface"],
+      "validation": "The title must be escaped before rendering.",
+      "missing_impact": "The teacher has no review page.", "sensitivity": "Public-safe fixture output"
+    }
+  ],
+  "edges": [
+    {"id": "accepted-to-transcript", "from": "intake.accept", "to": "transcript.build", "data_id": "accepted_media", "label": "Accepted media", "transform": "The accepted record unlocks transcript work."},
+    {"id": "transcript-to-catalog", "from": "transcript.build", "to": "catalog.index", "data_id": "transcript_segments", "label": "Timestamped transcript", "transform": "Timestamped rows become the body of a lesson."},
+    {"id": "lesson-to-publish", "from": "catalog.index", "to": "publish.render", "data_id": "lesson_record", "label": "Searchable lesson", "transform": "The complete lesson record becomes a review page."}
+  ],
+  "views": [
+    {"id": "manager", "mode": "easy"},
+    {"id": "llm", "mode": "contract"}
+  ]
+}

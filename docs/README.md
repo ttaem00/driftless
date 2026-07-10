@@ -19,6 +19,7 @@ parentheses where a Korean mirror exists.
 - **[Portfolio operating layer](./en/portfolio-operating-layer.md)** — split broad agent goals into vision, outcome, opportunity, capability, execution, and governance before they become issue sprawl.
 - **[Atomic proof planning](./en/atomic-proof-planning.md)** — split broad agent work into proof atoms, classify blockers, and recover stuck work by child proofs.
 - **[Compiled context wiki](./en/compiled-context-wiki.md)** — generate a local markdown wiki for recurring repo context without paid APIs or bundled apps.
+- **[Wuther Codemap](./en/wuther-codemap.md)** (한국어: [Wuther Codemap](./ko/wuther-codemap.md)) — generate one manager HTML and two LLM repository-map views from a single versioned manifest.
 
 ## Safety
 

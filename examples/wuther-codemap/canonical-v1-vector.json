@@ -1,0 +1,11 @@
+{
+  "contract": "wuther-codemap.v1",
+  "manifest_sha256": "b781139126435672629012c3fc2f2a682fef68b622ad24991a3623c103ecfcba",
+  "schema_sha256": "5296543265d27713de3b2819e61f25cd31e6e0434df544777a8608aa95c9703a",
+  "generator_sha256": "570b7a4da440c652319d6f70eb0c8dd23e543c7697fa0268f8f73b9b963baa2e",
+  "outputs": {
+    "manager.html": "d3340ba78d314c0089dfe8f8c8d97cebccb3e41d38697cea01983324e05b1b2d",
+    "llm-context.json": "4b62d57c32e0fb9810f4f789c16d5d9d0e9e14c2d99d98172e44ab9173279d15",
+    "llm-context.md": "4c808abc24cb8486929ae7c2b152d06e9146173d649e5415664d731305474b68"
+  }
+}

@@ -67,6 +67,7 @@ $tools = @(
 )
 
 $rows = [System.Collections.Generic.List[object]]::new()
+$requiredExactTriggerSkills = @('wuther-codemap')
 
 foreach ($entry in $tools) {
   $install = Invoke-Installer -Tool $entry.tool
@@ -75,11 +76,36 @@ foreach ($entry in $tools) {
   $expected = @(Get-SkillNames -Roots @($sharedSkills, $profileSkills) | Sort-Object)
   $actual = @(Get-SkillNames -Roots @($homeSkills) | Sort-Object)
   $missing = @($expected | Where-Object { $actual -notcontains $_ })
+  $triggerFailures = [System.Collections.Generic.List[string]]::new()
+  foreach ($skillName in $requiredExactTriggerSkills) {
+    $installedSkill = Join-Path $homeSkills (Join-Path $skillName 'SKILL.md')
+    if (-not (Test-Path -LiteralPath $installedSkill -PathType Leaf)) {
+      $triggerFailures.Add("$skillName missing") | Out-Null
+      continue
+    }
+    $skillText = Get-Content -LiteralPath $installedSkill -Raw -Encoding UTF8
+    $frontmatter = @($skillText -split "`r?`n" | Select-Object -First 14)
+    $nameMatch = $frontmatter -contains ("name: {0}" -f $skillName)
+    $descriptionLines = [System.Collections.Generic.List[string]]::new()
+    $inDescription = $false
+    foreach ($line in $frontmatter) {
+      if ($line -eq 'description: >') { $inDescription = $true; continue }
+      if ($inDescription -and $line -eq '---') { break }
+      if ($inDescription) { $descriptionLines.Add($line) | Out-Null }
+    }
+    $triggerMatch = ($descriptionLines -join ' ').Contains($skillName)
+    if (-not ($nameMatch -and $triggerMatch)) {
+      $triggerFailures.Add("$skillName frontmatter") | Out-Null
+    }
+  }
 
-  $status = if ($install.exit -eq 0 -and $missing.Count -eq 0) { 'PASS' } else { 'FAIL' }
-  $evidence = "installer_exit=$($install.exit); expected_active_skills=$($expected.Count); actual_active_skills=$($actual.Count)"
+  $status = if ($install.exit -eq 0 -and $missing.Count -eq 0 -and $triggerFailures.Count -eq 0) { 'PASS' } else { 'FAIL' }
+  $evidence = "installer_exit=$($install.exit); expected_active_skills=$($expected.Count); actual_active_skills=$($actual.Count); exact_triggers=$($requiredExactTriggerSkills.Count)"
   if ($missing.Count -gt 0) {
     $evidence += "; missing=" + (($missing | Select-Object -First 8) -join ',')
+  }
+  if ($triggerFailures.Count -gt 0) {
+    $evidence += "; trigger_failures=" + (($triggerFailures | Select-Object -First 8) -join ',')
   }
 
   $rows.Add([pscustomobject]@{

@@ -1,0 +1,10 @@
+version: 1
+name: wuther-codemap
+description: >
+  Use wuther-codemap to generate one source-backed repository model as a
+  non-developer manager HTML and LLM JSON/Markdown views.
+default_prompt: |
+  Use wuther-codemap for this repository. Build or update one versioned,
+  public-safe manifest with code provenance, domains, purpose-first nodes,
+  data objects, data edges, risks, validation, easy mode, and lifecycle. Generate the manager HTML and
+  LLM JSON/Markdown views with the repo-local facade, then run its check mode.

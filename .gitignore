@@ -50,6 +50,10 @@ Thumbs.db
 # Node (if any tooling is added later)
 node_modules/
 
+# Python tooling bytecode
+__pycache__/
+*.py[cod]
+
 # Internal maintainer strategy — never public (application/promo are not product docs)
 docs/application/
 docs/community/

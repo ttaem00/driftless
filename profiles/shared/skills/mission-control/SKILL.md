@@ -173,6 +173,20 @@ assign the recovery proof.
 
 ## Model And Judgment Routing
 
+Use the provider-detachable role and budget defaults in
+`profiles/shared/schemas/model-tier-routing.json`. Keep this hot rule short:
+ordinary scouts and mechanical workers use `fast`, bounded implementation and
+review use `value`, and `frontier` is exception-only with recorded evidence.
+The on-demand routing matrix, rollback rule, and public examples are in
+`docs/en/model-tier-routing.md`.
+
+Every child-session issuance records `routeRole`, `selectedModel`,
+`contextBudget`, `reasoningBudget`, and `escalationReason`. An ordinary child
+must receive its role default explicitly; it must not silently inherit frontier
+authority. A frontier exception additionally records the named risk and quality
+evidence. If an alias is unavailable, fall back inside the same tier and record
+the reason rather than silently escalating.
+
 Use lightweight workers, lower-effort lanes, or separate sessions only for
 bounded evidence and execution: file scans, small patches, UI/test runs, source
 summaries, and contained probes. They must not be the sole final judge for

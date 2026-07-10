@@ -155,8 +155,8 @@ not a claim about this repo's star count):
 - **113** merged pull requests
 - **94** issues
 - **114** commits
-- **22** starter agent skills shipped in this public kit (1 Claude-specific,
-  1 Codex-specific, 18 shared, plus 2 standalone — `overnight-autonomous-work`
+- **25** starter agent skills shipped in this public kit (1 Claude-specific,
+  1 Codex-specific, 21 shared, plus 2 standalone — `overnight-autonomous-work`
   and `skillopt`); count them yourself with
   `git ls-files | grep -c SKILL.md`. The private development runtime it grew
   from carries more (39 Claude + 34 Codex) — those are dev-runtime counts, not
@@ -184,6 +184,7 @@ Watch this repo's history fill in: [commits](https://github.com/mizan0515/driftl
 - [What is Driftless](./docs/en/what-is-driftless.md) — the idea in plain language.
 - [Apply it to your own agent](./docs/en/apply-to-your-agent.md) — adopt the pieces you want.
 - [Mission Map](./docs/en/mission-map.md) — public-safe fixture/spec for showing active goal, guardian, PR/check state, blockers, and next action.
+- [Wuther Codemap](./docs/en/wuther-codemap.md) (KO: [Wuther Codemap](./docs/ko/wuther-codemap.md)) — one versioned repository manifest for manager HTML and LLM JSON/Markdown views.
 - [Single-source two-profile mirror](./docs/en/single-source-mirror.md) — how one edit updates both.
 - [Guardrails](./docs/en/guardrails.md) — containment, the forbidden surface, and the FAIL test.
 - [Public-safe export classifier](./docs/en/public-safe-export-classifier.md) — classify private-derived lessons before they become public docs or examples.

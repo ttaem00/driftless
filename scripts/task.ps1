@@ -145,6 +145,11 @@ function Invoke-Test {
   & $publicPortability -Root $script:RepoRoot
   if ($LASTEXITCODE -ne 0) { throw ("Public portability evidence gate failed: exit={0}" -f $LASTEXITCODE) }
 
+  $wutherCodemap = Join-Path $script:RepoRoot 'scripts\Test-WutherCodemap.ps1'
+  $global:LASTEXITCODE = 0
+  & $wutherCodemap -Root $script:RepoRoot
+  if ($LASTEXITCODE -ne 0) { throw ("Wuther Codemap gate failed: exit={0}" -f $LASTEXITCODE) }
+
   $textSafety = Join-Path $script:RepoRoot 'scripts\Test-WindowsTextSafety.ps1'
   if (Test-Path -LiteralPath $textSafety) {
     $global:LASTEXITCODE = 0

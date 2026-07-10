@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:wuther-codemap:v1",
+  "title": "Wuther Codemap v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "project", "domains", "nodes", "data_objects", "edges"],
+  "properties": {
+    "$schema": {"type": "string", "minLength": 1},
+    "schema_version": {"const": "wuther-codemap.v1"},
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "manager_summary", "source_ref"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "name": {"$ref": "#/$defs/text"},
+        "manager_summary": {"$ref": "#/$defs/text"},
+        "source_ref": {"$ref": "#/$defs/text"}
+      }
+    },
+    "domains": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/domain"}},
+    "nodes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}},
+    "data_objects": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/dataObject"}},
+    "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}},
+    "views": {"type": "array", "items": {"$ref": "#/$defs/view"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9._-]*$"},
+    "text": {"type": "string", "minLength": 1},
+    "stringArray": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "purpose"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "label": {"$ref": "#/$defs/text"},
+        "purpose": {"$ref": "#/$defs/text"},
+        "icon": {"$ref": "#/$defs/text"}
+      }
+    },
+    "codeRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "symbol"],
+      "properties": {
+        "path": {"$ref": "#/$defs/text"},
+        "symbol": {"$ref": "#/$defs/text"},
+        "line": {"type": "integer", "minimum": 1}
+      }
+    },
+    "managerNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "purpose", "operation", "next_action", "failure_impact"],
+      "properties": {
+        "title": {"$ref": "#/$defs/text"},
+        "purpose": {"$ref": "#/$defs/text"},
+        "operation": {"$ref": "#/$defs/text"},
+        "next_action": {"$ref": "#/$defs/text"},
+        "failure_impact": {"$ref": "#/$defs/text"}
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "domain_id", "manager", "code_refs", "data_in", "data_out", "risks", "validation"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "domain_id": {"$ref": "#/$defs/id"},
+        "manager": {"$ref": "#/$defs/managerNode"},
+        "code_refs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/codeRef"}},
+        "data_in": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "data_out": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "risks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "validation": {"$ref": "#/$defs/text"}
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "meaning"],
+      "properties": {
+        "name": {"$ref": "#/$defs/text"},
+        "type": {"$ref": "#/$defs/text"},
+        "meaning": {"$ref": "#/$defs/text"},
+        "optional": {"type": "boolean"}
+      }
+    },
+    "dataObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "manager_name", "description", "form", "type", "fields", "safe_example", "origin", "created_by", "transformations", "storage", "artifacts", "consumers", "validation", "missing_impact", "sensitivity"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "manager_name": {"$ref": "#/$defs/text"},
+        "description": {"$ref": "#/$defs/text"},
+        "form": {"$ref": "#/$defs/text"},
+        "type": {"$ref": "#/$defs/text"},
+        "fields": {"type": "array", "items": {"$ref": "#/$defs/field"}},
+        "safe_example": {},
+        "origin": {"$ref": "#/$defs/text"},
+        "created_by": {"$ref": "#/$defs/text"},
+        "transformations": {"$ref": "#/$defs/stringArray"},
+        "storage": {"$ref": "#/$defs/text"},
+        "artifacts": {"$ref": "#/$defs/stringArray"},
+        "consumers": {"$ref": "#/$defs/stringArray"},
+        "validation": {"$ref": "#/$defs/text"},
+        "missing_impact": {"$ref": "#/$defs/text"},
+        "sensitivity": {"$ref": "#/$defs/text"}
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "from", "to", "data_id", "label", "transform"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "from": {"$ref": "#/$defs/id"},
+        "to": {"$ref": "#/$defs/id"},
+        "data_id": {"$ref": "#/$defs/id"},
+        "label": {"$ref": "#/$defs/text"},
+        "transform": {"$ref": "#/$defs/text"}
+      }
+    },
+    "view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "mode"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "mode": {"$ref": "#/$defs/text"}
+      }
+    }
+  }
+}

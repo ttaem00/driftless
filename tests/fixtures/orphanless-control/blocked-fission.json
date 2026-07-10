@@ -1,0 +1,32 @@
+{
+  "contractVersion": "1.0",
+  "controllerKey": "fixture-controller",
+  "desired": {
+    "proofId": "PROOF-DEMO-BLOCKED",
+    "state": "BLOCKED",
+    "blocker": {
+      "class": "verification",
+      "proofGap": "The result has no independent acceptance evidence.",
+      "agentSolvable": true,
+      "fissionSlices": [
+        {
+          "key": "implement",
+          "acceptance": "The bounded correction is implemented.",
+          "ownerKey": "owner-implement",
+          "ownerMode": "native-session"
+        },
+        {
+          "key": "verify",
+          "acceptance": "The original acceptance gate passes independently.",
+          "ownerKey": "owner-verify",
+          "ownerMode": "native-session"
+        }
+      ]
+    }
+  },
+  "actual": {
+    "identities": [],
+    "leases": [],
+    "childProofs": []
+  }
+}

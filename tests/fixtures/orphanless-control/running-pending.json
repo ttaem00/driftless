@@ -1,0 +1,39 @@
+{
+  "contractVersion": "1.0",
+  "controllerKey": "fixture-controller",
+  "desired": {
+    "proofId": "PROOF-DEMO-PENDING",
+    "state": "RUNNING",
+    "ownerKey": "owner-pending",
+    "ownerMode": "native-session"
+  },
+  "actual": {
+    "identities": [
+      {
+        "contractVersion": "1.0",
+        "ownerKey": "owner-pending",
+        "runtimeKind": "generic-agent",
+        "observedAt": "2030-01-01T00:00:00Z",
+        "nativeIdentity": {
+          "status": "PENDING",
+          "pendingHandle": "pending://owner/demo"
+        },
+        "workspace": {
+          "status": "UNVERIFIED",
+          "cwdEvidence": "fixture://cwd/pending",
+          "worktreeEvidence": "fixture://worktree/pending"
+        },
+        "task": {
+          "proofId": "PROOF-DEMO-PENDING",
+          "taskCardId": "task-card-pending",
+          "readback": {
+            "status": "PASS",
+            "evidence": "fixture://task-card/pending"
+          }
+        }
+      }
+    ],
+    "leases": [],
+    "childProofs": []
+  }
+}

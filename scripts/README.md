@@ -18,6 +18,7 @@ PowerShell 7 and PowerShell 7.
 | `Test-ContextEngineeringDiscipline.ps1` | The shared context budget, compressed reference integrity, repo map freshness, and action/evidence ledger contract remains present, skill-wired, and documented as a local closeout gate. | The shared contract, handoff/ledger skills, or local gate docs drop those context-management anchors. |
 | `Test-MissionControlCloseoutBoundary.ps1` | Mission-control and finish-to-done preserve parent closeout inventory and long command evidence before Done claims. | A shared closeout skill drops the parent-vs-child Done boundary, long command evidence, or aggregate PR-gate wiring. |
 | `Test-OrphanlessMissionControlContract.ps1` | Mission-control keeps the public-safe Orphanless contract, Atomic Proof Planning anchors, Blocked Atom Fission, and one-skill bootstrap behavior. | The shared mission-control skill or atomic proof planning doc drops coordinator bootstrap, parent adoption, blocked-atom fission, or public-safe boundary anchors. |
+| `Test-OrphanlessControlModule.ps1` | The detachable controller rejects pending-only owners, enforces proof-scoped leases, emits deterministic receipts, automatically materializes fission child Proof IDs/actions, and requires exact parent adoption. | Pending ownership becomes active, leases fail open, receipts drift, blockers remain prose-only, or child evidence bypasses parent adoption. |
 | `Test-WorkerFailureRecoveryContract.ps1` | Multi-lane skills keep worker capacity, context-window, and partial-output failures as recovery states, not Done. | A shared worker skill drops `worker_recovery_inventory` or the retry states needed before closeout. |
 | `Test-CodeIntelligenceBenchmark.ps1` | The compiled context wiki remains useful enough to test code-intelligence ideas before installing external tools. | The wiki cannot build, average recall falls below the floor, token direction regresses, or source-traceability validation fails. |
 | `Test-PublicPortabilityEvidence.ps1` | Public evidence stays machine-independent and does not cite absent hosted CI as live proof. | Current evidence docs cite retired hosted CI as current proof, or a machine-specific path appears outside an explicit fixture needle. |
@@ -65,6 +66,9 @@ pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-MissionControlCloseoutBounda
 
 # Orphanless mission-control contract: keep one-skill bootstrap and APDM-style proof ownership public-safe
 pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-OrphanlessMissionControlContract.ps1 -Root .
+
+# Detachable Orphanless controller: prove identity, lease, receipt, fission, and adoption invariants
+pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-OrphanlessControlModule.ps1 -Root .
 
 # Code intelligence: benchmark compiled wiki usefulness before external tool adoption
 pwsh.exe -ExecutionPolicy Bypass -File scripts/Test-CodeIntelligenceBenchmark.ps1 -Root .

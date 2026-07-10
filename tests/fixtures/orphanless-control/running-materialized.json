@@ -1,0 +1,44 @@
+{
+  "contractVersion": "1.0",
+  "controllerKey": "fixture-controller",
+  "desired": {
+    "proofId": "PROOF-DEMO-RUNNING",
+    "state": "RUNNING",
+    "ownerKey": "owner-demo",
+    "ownerMode": "native-session"
+  },
+  "actual": {
+    "identities": [
+      {
+        "contractVersion": "1.0",
+        "ownerKey": "owner-demo",
+        "runtimeKind": "generic-agent",
+        "observedAt": "2030-01-01T00:00:00Z",
+        "nativeIdentity": {
+          "status": "MATERIALIZED",
+          "ownerId": "native-owner-demo",
+          "ownerUri": "runtime://owner/demo",
+          "readback": {
+            "status": "PASS",
+            "evidence": "fixture://native-readback/demo"
+          }
+        },
+        "workspace": {
+          "status": "PASS",
+          "cwdEvidence": "repo://sample/worktree/demo",
+          "worktreeEvidence": "fixture://worktree-readback/demo"
+        },
+        "task": {
+          "proofId": "PROOF-DEMO-RUNNING",
+          "taskCardId": "task-card-demo",
+          "readback": {
+            "status": "PASS",
+            "evidence": "fixture://task-readback/demo"
+          }
+        }
+      }
+    ],
+    "leases": [],
+    "childProofs": []
+  }
+}

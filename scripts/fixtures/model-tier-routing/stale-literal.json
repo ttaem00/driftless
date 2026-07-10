@@ -1,0 +1,6 @@
+{
+  "name": "stale provider-style literal rejected",
+  "kind": "stale_literal",
+  "expect": "reject",
+  "literal": "scout uses gpt-legacy-99"
+}

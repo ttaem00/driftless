@@ -155,3 +155,40 @@ Remove or revert the recorded change if it causes over-triggering or false posit
 
 ### Status
 implementation_required
+
+## 2026-07-10 - Prevent implicit frontier routing in child issuance
+
+### Tier
+tool: codex
+reach: repo-dev
+
+### Project
+- path: repository root (repo-relative)
+- slug: ttaem00_driftless
+- remote: https://github.com/ttaem00/driftless.git
+
+### Observed Pattern
+A role-only child issuance can silently inherit a costly frontier selection unless route provenance and selected-tier validation are executable.
+
+### Evidence
+- UNVERIFIED
+
+### Lesson
+A role-only child issuance can silently inherit a costly frontier selection unless route provenance and selected-tier validation are executable.
+
+### Recommended Change
+Keep tier policy in one provider-detachable shared registry and require issuance provenance plus fixtures that reject tier mismatch, missing fields, stale literals, and unsupported escalation.
+
+### Promotion
+- status: record_only
+- placement: docs/codex/SYSTEM_UPDATE_PROPOSALS.md
+- next action: Track recurrence; promote on the second occurrence or any security/done signal.
+
+### Scope
+repo-local
+
+### Rollback
+Remove or revert the recorded change if it causes over-triggering or false positives.
+
+### Status
+recorded

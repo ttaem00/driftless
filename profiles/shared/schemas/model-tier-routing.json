@@ -1,0 +1,47 @@
+{
+  "$comment": "Public, provider-detachable routing data. Model aliases are examples, not account configuration or a vendor dependency.",
+  "contractVersion": 1,
+  "tiers": {
+    "fast": {
+      "purpose": "Low-cost, low-latency work with a bounded and reversible output.",
+      "exampleModelAlias": "fast-example",
+      "modelAliases": ["fast-example"],
+      "defaultContextBudget": "compact",
+      "defaultReasoningBudget": "minimal"
+    },
+    "value": {
+      "purpose": "Bounded implementation and review where a stronger result is worth the additional cost.",
+      "exampleModelAlias": "value-example",
+      "modelAliases": ["value-example"],
+      "defaultContextBudget": "focused",
+      "defaultReasoningBudget": "medium_execution"
+    },
+    "frontier": {
+      "purpose": "Exception-only final authority for named quality, security, architecture, or release risk.",
+      "exampleModelAlias": "frontier-example",
+      "modelAliases": ["frontier-example"],
+      "defaultContextBudget": "extended",
+      "defaultReasoningBudget": "high_judgment"
+    }
+  },
+  "roles": {
+    "scout": { "tier": "fast", "defaultContextBudget": "compact", "defaultReasoningBudget": "minimal" },
+    "mechanical_worker": { "tier": "fast", "defaultContextBudget": "compact", "defaultReasoningBudget": "minimal" },
+    "implementation_worker": { "tier": "value", "defaultContextBudget": "focused", "defaultReasoningBudget": "medium_execution" },
+    "reviewer": { "tier": "value", "defaultContextBudget": "focused", "defaultReasoningBudget": "medium_execution" },
+    "final_authority": { "tier": "frontier", "defaultContextBudget": "extended", "defaultReasoningBudget": "high_judgment" }
+  },
+  "issuanceProvenance": [
+    "routeRole",
+    "selectedModel",
+    "contextBudget",
+    "reasoningBudget",
+    "escalationReason"
+  ],
+  "escalation": {
+    "frontierRequires": ["namedRisk", "qualityEvidence", "escalationReason"],
+    "allowedReasons": ["security_boundary", "architecture_tradeoff", "release_authority", "quality_failure", "context_synthesis"],
+    "downgradeRule": "When the named risk or quality evidence no longer applies, return the next bounded task to its role default tier.",
+    "fallbackRule": "If a selected alias is unavailable, use another available alias in the same tier and record the selected alias and availability reason; do not silently promote tiers."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "missing provenance rejected",
+  "expect": "reject",
+  "record": {
+    "routeRole": "implementation_worker",
+    "selectedModel": "value-example",
+    "contextBudget": "focused",
+    "escalationReason": "not_escalated"
+  }
+}

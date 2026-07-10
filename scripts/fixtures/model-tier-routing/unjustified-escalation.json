@@ -1,0 +1,11 @@
+{
+  "name": "unjustified frontier escalation rejected",
+  "expect": "reject",
+  "record": {
+    "routeRole": "final_authority",
+    "selectedModel": "frontier-example",
+    "contextBudget": "extended",
+    "reasoningBudget": "high_judgment",
+    "escalationReason": "not_escalated"
+  }
+}

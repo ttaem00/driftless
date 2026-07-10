@@ -18,6 +18,12 @@
       "why": "The single machine-readable forbidden surface consumed by both profiles' containment guards. One edit re-protects both profiles."
     },
     {
+      "name": "model-tier-routing",
+      "file": "schemas/model-tier-routing.json",
+      "consumedBy": ["claude", "codex"],
+      "why": "One public provider-detachable role, budget, provenance, escalation, fallback, and rollback contract consumed by both profiles."
+    },
+    {
       "name": "skill-finish-to-done",
       "file": "skills/finish-to-done/SKILL.md",
       "consumedBy": ["claude", "codex"],

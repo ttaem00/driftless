@@ -17,7 +17,7 @@ This profile is **not** authored as one monolith. It is materialized from two
 inputs:
 
 1. **The shared tier** (`../shared/`): the design contract, the
-   `forbidden-paths.json` schema, and the tool-agnostic skills. These are
+   `forbidden-paths.json` and `model-tier-routing.json` schemas, and the tool-agnostic skills. These are
    consumed by relative path, so an edit in the shared tier improves this profile
    and the Claude profile at the same time.
 2. **Codex-specific parts**: the `AGENTS.md` hot-rules filename, Codex skill
@@ -55,6 +55,15 @@ sense for Codex and are never mirrored into Claude:
 
 Editing a shared skill once updates this profile and the Claude profile together;
 the `goal-mode` skill stays Codex-only by design.
+
+## Cost-aware routing
+
+This profile consumes the shared
+[`../shared/schemas/model-tier-routing.json`](../shared/schemas/model-tier-routing.json)
+contract. It uses role aliases and budgets from that one file: ordinary scouts
+and mechanical work use `fast`, bounded implementation uses `value`, and
+`frontier` is an evidenced exception. Provider/model aliases remain replaceable;
+the profile does not hard-code a vendor catalog.
 
 ## It never touches host-global config
 

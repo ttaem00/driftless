@@ -1,0 +1,11 @@
+{
+  "name": "silent frontier inheritance rejected",
+  "expect": "reject",
+  "record": {
+    "routeRole": "implementation_worker",
+    "selectedModel": "frontier-example",
+    "contextBudget": "focused",
+    "reasoningBudget": "medium_execution",
+    "escalationReason": "not_escalated"
+  }
+}

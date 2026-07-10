@@ -1,0 +1,13 @@
+{
+  "name": "justified frontier exception accepted",
+  "expect": "accept",
+  "record": {
+    "routeRole": "final_authority",
+    "selectedModel": "frontier-example",
+    "contextBudget": "extended",
+    "reasoningBudget": "high_judgment",
+    "escalationReason": "security_boundary",
+    "namedRisk": "authorization boundary changes",
+    "qualityEvidence": "value review found an unresolved access-control ambiguity"
+  }
+}

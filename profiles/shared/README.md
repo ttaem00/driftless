@@ -46,7 +46,7 @@ no mirroring, and no external sync step.
 | Folder | Contents | Consumed by |
 |---|---|---|
 | `contract/` | `SHARED_DESIGN_CONTRACT.md` — evidence statuses, the four manager report labels, manager-only gates, run-status enum, and improvement principle. | both profiles |
-| `schemas/` | `forbidden-paths.json` — the machine-readable list of paths and secret patterns the containment guard must never touch or leak; `model-tier-routing.json` — public provider-detachable role, budget, provenance, escalation, fallback, and rollback contract. | both profiles |
+| `schemas/` | `forbidden-paths.json` protects secret surfaces; `model-tier-routing.json` defines provider-detachable routing; `wuther-codemap-manifest.schema.json` keeps manager and LLM repository views on one versioned model. | both profiles |
 | `skills/` | Tool-agnostic skills (one folder each) that behave the same regardless of which AI runs them. | both profiles |
 
 ### Shared skills present under `skills/`
@@ -70,6 +70,8 @@ profile and the Codex profile:
   release so the manager does not read raw diffs.
 - `work-ledger/` — turn vague work into visible success criteria and evidence.
 - `handoff-guard/` — keep long or overnight runs resumable without raw logs.
+- `wuther-codemap/` — generate manager and LLM repository maps from one
+  versioned, source-backed manifest.
 
 **Edit one of these once and both profiles get it.** Because each profile consumes
 `skills/` by relative path (`../shared/skills/<name>/`), a single edit to any skill

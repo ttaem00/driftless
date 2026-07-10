@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://driftless.dev/schemas/orphanless-control-envelope.schema.json",
+  "title": "Driftless detachable Orphanless control input",
+  "oneOf": [
+    { "$ref": "#/$defs/identityEnvelope" },
+    { "$ref": "#/$defs/ownerLease" },
+    { "$ref": "#/$defs/reconcileInput" }
+  ],
+  "$defs": {
+    "opaqueValue": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?![A-Za-z]:[\\\\/])(?![/\\\\])(?!file:)[^\\r\\n]+$"
+    },
+    "passEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidence"],
+      "properties": {
+        "status": { "const": "PASS" },
+        "evidence": { "$ref": "#/$defs/opaqueValue" }
+      }
+    },
+    "identityEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractVersion", "ownerKey", "runtimeKind", "observedAt", "nativeIdentity", "workspace", "task"],
+      "properties": {
+        "contractVersion": { "const": "1.0" },
+        "ownerKey": { "$ref": "#/$defs/opaqueValue" },
+        "runtimeKind": { "$ref": "#/$defs/opaqueValue" },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "nativeIdentity": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "pendingHandle"],
+              "properties": {
+                "status": { "const": "PENDING" },
+                "pendingHandle": { "$ref": "#/$defs/opaqueValue" }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "ownerId", "ownerUri", "readback"],
+              "properties": {
+                "status": { "const": "MATERIALIZED" },
+                "ownerId": { "$ref": "#/$defs/opaqueValue" },
+                "ownerUri": { "$ref": "#/$defs/opaqueValue" },
+                "readback": { "$ref": "#/$defs/passEvidence" }
+              }
+            }
+          ]
+        },
+        "workspace": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "cwdEvidence", "worktreeEvidence"],
+          "properties": {
+            "status": { "enum": ["PASS", "UNVERIFIED"] },
+            "cwdEvidence": { "$ref": "#/$defs/opaqueValue" },
+            "worktreeEvidence": { "$ref": "#/$defs/opaqueValue" }
+          }
+        },
+        "task": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["proofId", "taskCardId", "readback"],
+          "properties": {
+            "proofId": { "$ref": "#/$defs/opaqueValue" },
+            "taskCardId": { "$ref": "#/$defs/opaqueValue" },
+            "readback": { "$ref": "#/$defs/passEvidence" }
+          }
+        }
+      }
+    },
+    "ownerLease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractVersion", "leaseId", "ownerKey", "proofId", "issuedAt", "expiresAt", "revision", "identityDigest"],
+      "properties": {
+        "contractVersion": { "const": "1.0" },
+        "leaseId": { "$ref": "#/$defs/opaqueValue" },
+        "ownerKey": { "$ref": "#/$defs/opaqueValue" },
+        "proofId": { "$ref": "#/$defs/opaqueValue" },
+        "issuedAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "revision": { "type": "integer", "minimum": 1 },
+        "identityDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "fissionSlice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "acceptance", "ownerKey", "ownerMode"],
+      "properties": {
+        "key": { "$ref": "#/$defs/opaqueValue" },
+        "acceptance": { "$ref": "#/$defs/opaqueValue" },
+        "ownerKey": { "$ref": "#/$defs/opaqueValue" },
+        "ownerMode": { "$ref": "#/$defs/opaqueValue" }
+      }
+    },
+    "reconcileInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractVersion", "controllerKey", "desired", "actual"],
+      "properties": {
+        "contractVersion": { "const": "1.0" },
+        "controllerKey": { "$ref": "#/$defs/opaqueValue" },
+        "desired": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["proofId", "state", "ownerKey", "ownerMode"],
+              "properties": {
+                "proofId": { "$ref": "#/$defs/opaqueValue" },
+                "state": { "const": "RUNNING" },
+                "ownerKey": { "$ref": "#/$defs/opaqueValue" },
+                "ownerMode": { "$ref": "#/$defs/opaqueValue" }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["proofId", "state", "blocker"],
+              "properties": {
+                "proofId": { "$ref": "#/$defs/opaqueValue" },
+                "state": { "const": "BLOCKED" },
+                "blocker": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["class", "proofGap", "agentSolvable", "fissionSlices"],
+                  "properties": {
+                    "class": { "$ref": "#/$defs/opaqueValue" },
+                    "proofGap": { "$ref": "#/$defs/opaqueValue" },
+                    "agentSolvable": { "type": "boolean" },
+                    "fissionSlices": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": { "$ref": "#/$defs/fissionSlice" }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "actual": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["identities", "leases", "childProofs"],
+          "properties": {
+            "identities": { "type": "array", "items": { "$ref": "#/$defs/identityEnvelope" } },
+            "leases": { "type": "array", "items": { "$ref": "#/$defs/ownerLease" } },
+            "childProofs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["proofId", "state", "evidenceStatus", "evidence", "observedAt"],
+                "properties": {
+                  "proofId": { "$ref": "#/$defs/opaqueValue" },
+                  "state": { "enum": ["PASS", "FAIL", "BLOCKED", "UNVERIFIED", "PARTIAL"] },
+                  "evidenceStatus": { "enum": ["PASS", "FAIL", "BLOCKED", "UNVERIFIED", "PARTIAL"] },
+                  "evidence": { "$ref": "#/$defs/opaqueValue" },
+                  "observedAt": { "type": "string", "format": "date-time" }
+                }
+              }
+            },
+            "adoption": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "parentProofId", "childProofIds", "adoptedBy", "adoptedAt", "evidence"],
+              "properties": {
+                "status": { "const": "PASS" },
+                "parentProofId": { "$ref": "#/$defs/opaqueValue" },
+                "childProofIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/opaqueValue" } },
+                "adoptedBy": { "$ref": "#/$defs/opaqueValue" },
+                "adoptedAt": { "type": "string", "format": "date-time" },
+                "evidence": { "$ref": "#/$defs/opaqueValue" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

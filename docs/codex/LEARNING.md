@@ -171,24 +171,32 @@ reach: repo-dev
 A role-only child issuance can silently inherit a costly frontier selection unless route provenance and selected-tier validation are executable.
 
 ### Evidence
-- UNVERIFIED
+- `scripts/Test-ModelTierRoutingContract.ps1 -Root .` PASS: rejects silent frontier inheritance, stale literals, missing provenance, and unjustified escalation.
+- `install.ps1 -Tool both -Yes` materialized the shared contract for both public profiles; `scripts/Test-InstallerMaterialization.ps1 -Root .` PASS.
+- PR #40 local aggregate gate: `scripts/Test-PrValidationGate.ps1 -Root .` PASS.
 
 ### Lesson
-A role-only child issuance can silently inherit a costly frontier selection unless route provenance and selected-tier validation are executable.
+**Principle-based Learning:** route work by stable role, named risk, and observed quality evidence; choose the cheapest sufficient tier and keep volatile price/availability on demand. A child must record its chosen route rather than inherit authority.
+
+**Schema Induction:** `bounded role -> root_cause_class: implicit authority/cost inheritance -> explicit tier and provenance -> contract fixture + install path -> revert shared role/alias mapping`.
+
+**Structural Analogical Learning:** this is the same control relation as SRE service tiers (cheap default capacity, explicit high-criticality exception) and a database query planner (cheap plan unless observed cost/selectivity justifies a costlier one).
+
+**Far Transfer:** apply the schema to CI workload classes, human-escalation triage, and cloud-instance selection: preserve the role/evidence boundary while changing the resource catalog.
 
 ### Recommended Change
-Keep tier policy in one provider-detachable shared registry and require issuance provenance plus fixtures that reject tier mismatch, missing fields, stale literals, and unsupported escalation.
+Keep the provider-detachable policy in the shared registry, with thin profile adapters and an executable contract gate; do not move a live price or availability catalog into hot rules.
 
 ### Promotion
-- status: record_only
-- placement: docs/codex/SYSTEM_UPDATE_PROPOSALS.md
-- next action: Track recurrence; promote on the second occurrence or any security/done signal.
+- status: implemented
+- placement: `profiles/shared/schemas/model-tier-routing.json`, the shared mission-control adapter, fixtures, and the aggregate PR gate.
+- validation: targeted routing contract, normal two-profile install/materialization, and PR validation gate.
 
 ### Scope
 repo-local
 
 ### Rollback
-Remove or revert the recorded change if it causes over-triggering or false positives.
+Revert or edit the shared role/alias mapping and rerun the targeted routing and install/materialization tests; consumers keep their role names.
 
 ### Status
-recorded
+implemented

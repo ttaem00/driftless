@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://driftless.dev/schemas/orphanless-reconcile-receipt.schema.json",
+  "title": "Driftless detachable Orphanless reconcile receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receiptVersion",
+    "proofId",
+    "observedAt",
+    "desiredState",
+    "normalizedState",
+    "decision",
+    "adoptionAllowed",
+    "inputDigest",
+    "childProofs",
+    "actions",
+    "reasons",
+    "receiptDigest"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": { "normalizedState": { "const": "ADOPTED" } },
+        "required": ["normalizedState"]
+      },
+      "then": { "properties": { "adoptionAllowed": { "const": true } } },
+      "else": { "properties": { "adoptionAllowed": { "const": false } } }
+    }
+  ],
+  "properties": {
+    "receiptVersion": { "const": "1.0" },
+    "proofId": { "type": "string", "minLength": 1 },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "desiredState": { "enum": ["RUNNING", "BLOCKED"] },
+    "normalizedState": {
+      "enum": [
+        "UNVERIFIED",
+        "WAITING_NATIVE_THREAD_MATERIALIZATION",
+        "BLOCKED_OWNER_EVIDENCE",
+        "LEASE_REQUIRED",
+        "LEASE_EXPIRED",
+        "ACTIVE",
+        "HUMAN_ONLY_BLOCKED",
+        "BLOCKED_FISSION_REQUIRED",
+        "BLOCKED_FISSION_IN_PROGRESS",
+        "READY_FOR_PARENT_ADOPTION",
+        "ADOPTED"
+      ]
+    },
+    "decision": { "type": "string", "minLength": 1 },
+    "adoptionAllowed": {
+      "type": "boolean",
+      "description": "True only when normalizedState is ADOPTED; ACTIVE ownership alone never permits parent adoption."
+    },
+    "inputDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "childProofs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["proofId", "sliceKey", "acceptance", "ownerKey", "ownerMode"],
+        "properties": {
+          "proofId": { "type": "string", "minLength": 1 },
+          "sliceKey": { "type": "string", "minLength": 1 },
+          "acceptance": { "type": "string", "minLength": 1 },
+          "ownerKey": { "type": "string", "minLength": 1 },
+          "ownerMode": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "proofId", "ownerKey", "ownerMode", "gate"],
+        "properties": {
+          "type": {
+            "enum": [
+              "ISSUE_NATIVE_OWNER",
+              "READBACK_NATIVE_OWNER",
+              "REPAIR_OWNER_EVIDENCE",
+              "ISSUE_OWNER_LEASE",
+              "RENEW_OWNER_LEASE",
+              "REPAIR_FISSION_INPUT",
+              "CONTINUE_CHILD_PROOF",
+              "RECORD_PARENT_ADOPTION"
+            ]
+          },
+          "proofId": { "type": "string", "minLength": 1 },
+          "ownerKey": { "type": "string", "minLength": 1 },
+          "ownerMode": { "type": "string" },
+          "gate": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "reasons": { "type": "array", "items": { "type": "string" } },
+    "receiptDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

@@ -10,7 +10,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
-$protected = [regex]::new('(?i)^(key|secrets?|auth|credentials?|cookies?|sessions?|browser-profiles?|\.ssh|\.codex|\.claude|\.hermes)$')
+$protected = [regex]::new('(?i)^(key|secrets?|auth|credentials?|cookies?|sessions?|private|agent-home)$')
 $unmanaged = [regex]::new('(?i)^(cc-pr-ci|pytest(?:[-_].*)?|tmp|temp|scratch|.*-finish|.*[-_. ](?:tmp|temp|artifacts?|handoff|scratch)(?:[-_. ].*|$))$')
 
 function Invoke-Audit([string]$Root) {

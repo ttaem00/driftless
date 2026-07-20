@@ -24,6 +24,12 @@
       "why": "One public provider-detachable role, budget, provenance, escalation, fallback, and rollback contract consumed by both profiles."
     },
     {
+      "name": "manager-closeout-routing-policy",
+      "file": "schemas/manager-closeout-routing-policy.json",
+      "consumedBy": ["claude", "codex"],
+      "why": "One public automatic closeout routing policy keeps the umbrella implicit, leaf skills explicit, and over-trigger exclusions identical across profiles."
+    },
+    {
       "name": "skill-finish-to-done",
       "file": "skills/finish-to-done/SKILL.md",
       "consumedBy": ["claude", "codex"],

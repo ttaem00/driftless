@@ -1,0 +1,46 @@
+{
+  "cases": [
+    {
+      "name": "deadline state change uses bounded sprint",
+      "input": {"nontrivial": true, "state_change": true, "deadline_or_repeat": true},
+      "expected_routes": ["bounded-sprint-close"],
+      "expected_may_reopen_sprint": false
+    },
+    {
+      "name": "done evidence and recurrence use all closeout receipts",
+      "input": {"nontrivial": true, "state_change": true, "deadline_or_repeat": true, "completion_claim": true, "evidence_or_adoption": true, "recurrence_or_manager_correction": true},
+      "expected_routes": ["bounded-sprint-close", "manager-blindspot-audit", "durable-evidence-audit", "closeout-skill-evolution"],
+      "expected_may_reopen_sprint": false
+    },
+    {
+      "name": "direct blocker may reopen sprint",
+      "input": {"nontrivial": true, "completion_claim": true, "direct_goal_impact": true, "blocking_finding": true},
+      "expected_routes": ["manager-blindspot-audit"],
+      "expected_may_reopen_sprint": true
+    },
+    {
+      "name": "audit warning does not reopen sprint",
+      "input": {"nontrivial": true, "completion_claim": true, "direct_goal_impact": true, "blocking_finding": false},
+      "expected_routes": ["manager-blindspot-audit"],
+      "expected_may_reopen_sprint": false
+    },
+    {
+      "name": "simple question is suppressed",
+      "input": {"simple_question": true, "recurrence_or_manager_correction": true},
+      "expected_routes": [],
+      "expected_may_reopen_sprint": false
+    },
+    {
+      "name": "read only status is suppressed",
+      "input": {"read_only_status": true, "completion_claim": true, "nontrivial": true},
+      "expected_routes": [],
+      "expected_may_reopen_sprint": false
+    },
+    {
+      "name": "excluded discovery is suppressed",
+      "input": {"scope_excluded": true, "nontrivial": true, "state_change": true, "deadline_or_repeat": true},
+      "expected_routes": [],
+      "expected_may_reopen_sprint": false
+    }
+  ]
+}

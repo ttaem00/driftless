@@ -104,15 +104,64 @@ def validate_evolution(data: dict) -> None:
 VALIDATORS = {"sprint": validate_sprint, "audit": validate_audit, "evidence": validate_evidence, "evolution": validate_evolution}
 
 
+def load_routing_policy(path: Path) -> dict:
+    try:
+        policy = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValidationError(f"invalid routing policy: {exc}") from exc
+    require(policy.get("entrypoint") == "finish-to-done", "routing entrypoint must be finish-to-done")
+    require(policy.get("implicit_entrypoint") is True, "finish-to-done must be implicit")
+    require(policy.get("implicit_leaf_skills") is False, "leaf skills must remain explicit")
+    route_ids = [item.get("id") for item in policy.get("routes", [])]
+    require(route_ids == [
+        "bounded-sprint-close",
+        "manager-blindspot-audit",
+        "durable-evidence-audit",
+        "closeout-skill-evolution",
+    ], "routing policy must declare the four closeout routes in order")
+    require(all(item.get("all") for item in policy["routes"]), "each route needs conditions")
+    require(policy.get("sprint_reopen", {}).get("all"), "sprint reopen conditions are required")
+    return policy
+
+
+def route_closeout(inputs: dict, policy: dict) -> dict:
+    if any(inputs.get(key) is True for key in policy.get("suppress_when_any", [])):
+        return {"routes": [], "required_receipts": [], "may_reopen_sprint": False}
+    routes = [
+        route["id"]
+        for route in policy["routes"]
+        if all(inputs.get(key) is True for key in route["all"])
+    ]
+    may_reopen = all(inputs.get(key) is True for key in policy["sprint_reopen"]["all"])
+    return {"routes": routes, "required_receipts": routes, "may_reopen_sprint": may_reopen}
+
+
+def validate_route_cases(data: dict, policy: dict) -> None:
+    cases = data.get("cases", [])
+    require(len(cases) >= 7, "routing fixture needs positive and negative cases")
+    names = [case.get("name") for case in cases]
+    require(all(names) and len(names) == len(set(names)), "routing case names must be unique")
+    for case in cases:
+        actual = route_closeout(case.get("input", {}), policy)
+        require(actual["routes"] == case.get("expected_routes"), f"route mismatch: {case['name']}")
+        require(actual["required_receipts"] == case.get("expected_routes"), f"receipt mismatch: {case['name']}")
+        require(actual["may_reopen_sprint"] is case.get("expected_may_reopen_sprint"), f"reopen mismatch: {case['name']}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--kind", choices=sorted(VALIDATORS), required=True)
+    parser.add_argument("--kind", choices=sorted([*VALIDATORS, "route"]), required=True)
     parser.add_argument("--input", type=Path, required=True)
+    parser.add_argument("--policy", type=Path)
     args = parser.parse_args()
     try:
         data = json.loads(args.input.read_text(encoding="utf-8"))
         require(isinstance(data, dict), "root must be an object")
-        VALIDATORS[args.kind](data)
+        if args.kind == "route":
+            require(args.policy is not None, "--policy is required for route validation")
+            validate_route_cases(data, load_routing_policy(args.policy))
+        else:
+            VALIDATORS[args.kind](data)
     except (OSError, json.JSONDecodeError, ValidationError) as exc:
         print(f"FAIL: {exc}")
         return 1

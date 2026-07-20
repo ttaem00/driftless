@@ -1,0 +1,6 @@
+interface:
+  display_name: "Manager Blindspot Audit"
+  short_description: "Audit hidden operational risks after completion."
+  default_prompt: "Use $manager-blindspot-audit to inspect overlooked manager risks after completion."
+policy:
+  allow_implicit_invocation: false

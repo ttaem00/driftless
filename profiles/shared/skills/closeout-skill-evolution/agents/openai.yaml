@@ -1,0 +1,6 @@
+interface:
+  display_name: "Closeout Skill Evolution"
+  short_description: "Decide and validate skill improvements at closeout."
+  default_prompt: "Use $closeout-skill-evolution to decide whether this lesson should update or create a skill."
+policy:
+  allow_implicit_invocation: false

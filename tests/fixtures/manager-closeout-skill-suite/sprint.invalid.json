@@ -1,0 +1,1 @@
+{"goal":"claim done too early","target_minutes":30,"contingency_minutes":45,"hard_stop_minutes":60,"scope_in":["implementation"],"scope_out":[],"proof_rows":[{"id":"P1","status":"FAIL"}],"checkpoints":[{"at_minutes":15,"evidence_delta":"none"}],"state":"DONE","manager_audit_status":"PASS"}

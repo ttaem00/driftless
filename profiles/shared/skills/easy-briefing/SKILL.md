@@ -152,3 +152,10 @@ Use root-cause analysis and root-cause fixes, not symptom patches. Generalize as
 상황 요약 정보 부족 시 추측 금지. 한 줄 질문 후 멈춤:
 
 > "지금 어떤 작업을 하시던 중인지 한 줄로 알려주세요 — '어제 짧은 영상 검토하다 멈춤' 같은 식으로요."
+
+## Sprint closeout summary
+
+For bounded work, lead with four short lines: outcome, proof, manager-visible
+check, and unresolved blocker. Put technical identifiers only in the evidence
+section. Do not turn warnings or backlog ideas into current blockers unless they
+directly invalidate the requested outcome.

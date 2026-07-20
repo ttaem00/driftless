@@ -1,0 +1,6 @@
+interface:
+  display_name: "Durable Evidence Audit"
+  short_description: "Verify that completion evidence survives and is safe."
+  default_prompt: "Use $durable-evidence-audit to verify this completion evidence is durable and safe."
+policy:
+  allow_implicit_invocation: false

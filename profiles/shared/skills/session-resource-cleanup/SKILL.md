@@ -30,6 +30,11 @@ The session that opens a resource owns its closeout. A global scheduler cannot
 reliably know whether a browser window belongs to this session, another session,
 or the user. Prefer owner cleanup over global cleanup.
 
+The same ownership rule applies to filesystem artifacts. Temporary test roots,
+worktrees, handoff files, and scratch directories must be created under a
+project-owned ignored root with an owner and cleanup trigger. A fixture PASS is
+not proof that the maintainer's real workspace root is clean.
+
 Never read cookies, local storage, browser profile files, passwords, session
 stores, `.env`, `.ssh`, private keys, or `secrets/**`.
 
@@ -55,6 +60,18 @@ stores, `.env`, `.ssh`, private keys, or `secrets/**`.
 ```powershell
 pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\profiles\shared\skills\session-resource-cleanup\scripts\Invoke-SessionResourceCleanup.ps1 -StaleMinutes 10
 ```
+
+When temporary folders, worktrees, or workspace-root clutter are in scope, run
+the metadata-only ownership audit against an explicit workspace root. It
+classifies protected names before enumeration and never reads their children:
+
+```powershell
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\profiles\shared\skills\session-resource-cleanup\scripts\Test-WorkspaceArtifactOwnership.ps1 -WorkspaceRoot <workspace-root> -Json
+```
+
+Use `-FailOnUnmanaged` in a maintainer closeout gate after existing residue is
+classified. Cleanup remains exact-path and owner-controlled; this audit does
+not delete or move anything.
 
 5. Apply cleanup only when targets are clearly temporary automation resources,
    stale by age, or orphaned because their parent process is gone:
@@ -86,3 +103,6 @@ If only the desktop AI app still has slow typing or scrolling after cleanup:
 - `scripts/Invoke-SessionResourceCleanup.ps1`: Windows-safe dry-run/apply helper
   for stale temporary browser automation process trees. It matches launch
   metadata only and never reads browser profile contents.
+- `scripts/Test-WorkspaceArtifactOwnership.ps1`: public-safe, metadata-only
+  workspace-root audit with protected-path short-circuiting and an optional
+  closeout failure mode.

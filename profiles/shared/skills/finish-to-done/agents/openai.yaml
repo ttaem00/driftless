@@ -1,0 +1,7 @@
+interface:
+  display_name: "Finish to Done"
+  short_description: "Automatically route non-trivial work through verified closeout."
+  default_prompt: "Use $finish-to-done to complete non-trivial work through the required closeout receipts."
+
+policy:
+  allow_implicit_invocation: true

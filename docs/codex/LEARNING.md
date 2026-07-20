@@ -57,6 +57,43 @@ Remove or revert the recorded change if it causes over-triggering or false posit
 ### Status
 implemented
 
+## 2026-07-21 - Route automatic closeout through one umbrella
+
+### Tier
+tool: shared
+reach: public OSS
+
+### Observed Pattern
+Installing several closeout skills did not make them automatic, while enabling
+every leaf independently would over-trigger simple questions and read-only work.
+
+### Evidence
+- The shipped leaf registrations were explicit-only and the existing record
+  validator did not test routing decisions.
+- Issue #50 adds one policy-driven umbrella route with positive and negative
+  fixtures and verifies the normal two-profile installer output.
+
+### Lesson
+**Principle-based Learning:** automate the stable decision boundary, not every
+procedure behind it. One implicit umbrella can select explicit leaf workflows
+and preserve negative cases.
+
+**Structural Analogical Learning:** this matches an API gateway routing to
+explicit services and a state machine requiring receipts before transitions;
+the shared relation is `classify -> select -> prove -> transition`.
+
+**Far Transfer:** use the same shape for release gates, Kanban Done transitions,
+and parent-worker adoption without copying tool-specific runtimes.
+
+### Promotion
+- status: implemented
+- placement: shared policy, existing validator, thin profile adapters, and
+  installer materialization gate
+- rollback: remove the policy adapter and restore explicit-only umbrella use
+
+### Status
+implemented
+
 ## 2026-06-11 - Public-safe workflows must reserve high-judgment decisions for lead review
 
 ### Observed Pattern

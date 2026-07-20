@@ -1,0 +1,12 @@
+{
+  "audited_categories":["user_path","provenance","fallback","recovery","data_integrity","permissions","cost_owner","rate_limit","logs","configuration","rollback","code_sync"],
+  "results":[
+    {"category":"user_path","status":"PASS","evidence":"e2e-1"},{"category":"provenance","status":"PASS","evidence":"log-1"},
+    {"category":"fallback","status":"FINDING","evidence":"log-2"},{"category":"recovery","status":"PASS","evidence":"test-2"},
+    {"category":"data_integrity","status":"PASS","evidence":"test-3"},{"category":"permissions","status":"PASS","evidence":"policy-1"},
+    {"category":"cost_owner","status":"UNVERIFIED","evidence":"billing excluded"},{"category":"rate_limit","status":"PASS","evidence":"test-4"},
+    {"category":"logs","status":"PASS","evidence":"log-3"},{"category":"configuration","status":"PASS","evidence":"fixture-1"},
+    {"category":"rollback","status":"PASS","evidence":"command-1"},{"category":"code_sync","status":"PASS","evidence":"revision-1"}
+  ],
+  "findings":[{"id":"F1","classification":"warning","direct_goal_impact":"fallback reason is not visible enough","excluded":false}]
+}

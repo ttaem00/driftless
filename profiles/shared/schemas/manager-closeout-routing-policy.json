@@ -29,6 +29,12 @@
   "sprint_reopen": {
     "all": ["direct_goal_impact", "blocking_finding"]
   },
+  "receipt_gate": {
+    "protected_transitions": ["DONE", "PARENT_ADOPTED"],
+    "identity_field": "route",
+    "status_field": "status",
+    "accepted_status": "PASS"
+  },
   "invariants": {
     "last_ten_percent_new_implementation": false,
     "warning_reopens_sprint": false,

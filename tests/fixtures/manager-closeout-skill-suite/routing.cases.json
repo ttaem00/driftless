@@ -4,43 +4,71 @@
       "name": "deadline state change uses bounded sprint",
       "input": {"nontrivial": true, "state_change": true, "deadline_or_repeat": true},
       "expected_routes": ["bounded-sprint-close"],
-      "expected_may_reopen_sprint": false
+      "expected_may_reopen_sprint": false,
+      "expected_transition_allowed": true
     },
     {
       "name": "done evidence and recurrence use all closeout receipts",
-      "input": {"nontrivial": true, "state_change": true, "deadline_or_repeat": true, "completion_claim": true, "evidence_or_adoption": true, "recurrence_or_manager_correction": true},
+      "input": {"nontrivial": true, "state_change": true, "deadline_or_repeat": true, "completion_claim": true, "evidence_or_adoption": true, "recurrence_or_manager_correction": true, "transition": "DONE", "receipts": [{"route": "bounded-sprint-close", "status": "PASS"}, {"route": "manager-blindspot-audit", "status": "PASS"}, {"route": "durable-evidence-audit", "status": "PASS"}, {"route": "closeout-skill-evolution", "status": "PASS"}]},
       "expected_routes": ["bounded-sprint-close", "manager-blindspot-audit", "durable-evidence-audit", "closeout-skill-evolution"],
-      "expected_may_reopen_sprint": false
+      "expected_may_reopen_sprint": false,
+      "expected_transition_allowed": true
     },
     {
       "name": "direct blocker may reopen sprint",
       "input": {"nontrivial": true, "completion_claim": true, "direct_goal_impact": true, "blocking_finding": true},
       "expected_routes": ["manager-blindspot-audit"],
-      "expected_may_reopen_sprint": true
+      "expected_may_reopen_sprint": true,
+      "expected_transition_allowed": true
     },
     {
       "name": "audit warning does not reopen sprint",
       "input": {"nontrivial": true, "completion_claim": true, "direct_goal_impact": true, "blocking_finding": false},
       "expected_routes": ["manager-blindspot-audit"],
-      "expected_may_reopen_sprint": false
+      "expected_may_reopen_sprint": false,
+      "expected_transition_allowed": true
     },
     {
       "name": "simple question is suppressed",
       "input": {"simple_question": true, "recurrence_or_manager_correction": true},
       "expected_routes": [],
-      "expected_may_reopen_sprint": false
+      "expected_may_reopen_sprint": false,
+      "expected_transition_allowed": true
     },
     {
       "name": "read only status is suppressed",
       "input": {"read_only_status": true, "completion_claim": true, "nontrivial": true},
       "expected_routes": [],
-      "expected_may_reopen_sprint": false
+      "expected_may_reopen_sprint": false,
+      "expected_transition_allowed": true
     },
     {
       "name": "excluded discovery is suppressed",
       "input": {"scope_excluded": true, "nontrivial": true, "state_change": true, "deadline_or_repeat": true},
       "expected_routes": [],
-      "expected_may_reopen_sprint": false
+      "expected_may_reopen_sprint": false,
+      "expected_transition_allowed": true
+    },
+    {
+      "name": "parent adoption rejects missing durable receipt",
+      "input": {"nontrivial": true, "evidence_or_adoption": true, "transition": "PARENT_ADOPTED", "receipts": []},
+      "expected_routes": ["durable-evidence-audit"],
+      "expected_may_reopen_sprint": false,
+      "expected_transition_allowed": false
+    },
+    {
+      "name": "done rejects failed audit receipt",
+      "input": {"nontrivial": true, "completion_claim": true, "transition": "DONE", "receipts": [{"route": "manager-blindspot-audit", "status": "FAIL"}]},
+      "expected_routes": ["manager-blindspot-audit"],
+      "expected_may_reopen_sprint": false,
+      "expected_transition_allowed": false
+    },
+    {
+      "name": "done rejects wrong receipt identity",
+      "input": {"nontrivial": true, "completion_claim": true, "transition": "DONE", "receipts": [{"route": "durable-evidence-audit", "status": "PASS"}]},
+      "expected_routes": ["manager-blindspot-audit"],
+      "expected_may_reopen_sprint": false,
+      "expected_transition_allowed": false
     }
   ]
 }

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Bounded Sprint Close"
+  short_description: "Lock scope, execute to proof, and stop on time."
+  default_prompt: "Use $bounded-sprint-close to finish this work within a fixed sprint and report proof."
+policy:
+  allow_implicit_invocation: false

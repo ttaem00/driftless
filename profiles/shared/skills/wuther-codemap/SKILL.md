@@ -58,3 +58,11 @@ state, credentials, browser data, or unlisted source facts.
 Report the manifest path, the three generated files, the `-Check` result, and
 any facts that remain `UNVERIFIED`. Use `Test-WutherCodemap.ps1` for the bundled
 positive, negative, boundary, cleanup, and installation checks.
+
+## Bootstrap, edit, and freshness gate
+
+Use four explicit modes: `bootstrap` creates or opens the map, `impact` names
+affected nodes before an edit, `verify` regenerates and checks after the edit,
+and `view` opens the manager or LLM output. A source revision mismatch makes
+the map stale and blocks its use as edit context. The generated manager view
+and LLM context must come from the same manifest and source revision.

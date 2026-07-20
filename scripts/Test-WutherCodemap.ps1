@@ -149,12 +149,14 @@ try {
   }
   $vectorOk = $true
   foreach ($property in $vectorFiles.Keys) {
-    $bytes = [System.IO.File]::ReadAllBytes($vectorFiles[$property])
+    $text = [System.IO.File]::ReadAllText($vectorFiles[$property]) -replace "`r`n", "`n"
+    $bytes = [System.Text.UTF8Encoding]::new($false).GetBytes($text)
     $actual = [System.Convert]::ToHexString([System.Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant()
     if ($actual -ne [string]$vector.$property) { $vectorOk = $false }
   }
   foreach ($property in $vector.outputs.PSObject.Properties) {
-    $bytes = [System.IO.File]::ReadAllBytes((Join-Path $outputFull $property.Name))
+    $text = [System.IO.File]::ReadAllText((Join-Path $outputFull $property.Name)) -replace "`r`n", "`n"
+    $bytes = [System.Text.UTF8Encoding]::new($false).GetBytes($text)
     $actual = [System.Convert]::ToHexString([System.Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant()
     if ($actual -ne [string]$property.Value) { $vectorOk = $false }
   }

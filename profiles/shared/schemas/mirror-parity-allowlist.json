@@ -30,6 +30,30 @@
       "why": "Tool-agnostic finish-to-done skill. Authored once in the shared tier; both profiles consume it by relative path, so one edit updates both."
     },
     {
+      "name": "skill-bounded-sprint-close",
+      "file": "skills/bounded-sprint-close/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic scope lock, evidence-delta, deadline, and hard-stop closeout workflow."
+    },
+    {
+      "name": "skill-manager-blindspot-audit",
+      "file": "skills/manager-blindspot-audit/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic post-completion manager audit across evidence-backed operational categories."
+    },
+    {
+      "name": "skill-durable-evidence-audit",
+      "file": "skills/durable-evidence-audit/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic reproducible evidence and nested-content safety audit."
+    },
+    {
+      "name": "skill-closeout-skill-evolution",
+      "file": "skills/closeout-skill-evolution/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "Tool-agnostic existing-asset-first decision for skill update, creation, scripting, recording, or no change."
+    },
+    {
       "name": "skill-root-goal-check",
       "file": "skills/root-goal-check/SKILL.md",
       "consumedBy": ["claude", "codex"],

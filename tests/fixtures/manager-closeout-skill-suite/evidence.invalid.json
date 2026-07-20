@@ -1,0 +1,1 @@
+{"source_revision":"abc123","reproduce_command":"python scripts/validate_manager_closeout.py","files":[{"path":"results/check.txt","sha256":"a68d7a6b055e21f9d9eafdcfec4fd29032b8de128f97a02f38c1af0e3b47deae","content_base64":"RDpccHJpdmF0ZVxzZWNyZXQudHh0Cg=="}],"bundle_digest":"65da1874ee84be71737c1eba0dd9953fa770eac3bb2dc8d20629bf5a553630d5"}

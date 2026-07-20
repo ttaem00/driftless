@@ -121,24 +121,45 @@ def load_routing_policy(path: Path) -> dict:
     ], "routing policy must declare the four closeout routes in order")
     require(all(item.get("all") for item in policy["routes"]), "each route needs conditions")
     require(policy.get("sprint_reopen", {}).get("all"), "sprint reopen conditions are required")
+    receipt_gate = policy.get("receipt_gate", {})
+    require(receipt_gate.get("protected_transitions") == ["DONE", "PARENT_ADOPTED"], "receipt gate must protect Done and parent adoption")
+    require(receipt_gate.get("identity_field") and receipt_gate.get("status_field"), "receipt identity and status fields are required")
+    require(receipt_gate.get("accepted_status") == "PASS", "receipt gate must require PASS")
     return policy
 
 
 def route_closeout(inputs: dict, policy: dict) -> dict:
     if any(inputs.get(key) is True for key in policy.get("suppress_when_any", [])):
-        return {"routes": [], "required_receipts": [], "may_reopen_sprint": False}
+        return {"routes": [], "required_receipts": [], "may_reopen_sprint": False, "transition_allowed": True, "receipt_failures": []}
     routes = [
         route["id"]
         for route in policy["routes"]
         if all(inputs.get(key) is True for key in route["all"])
     ]
     may_reopen = all(inputs.get(key) is True for key in policy["sprint_reopen"]["all"])
-    return {"routes": routes, "required_receipts": routes, "may_reopen_sprint": may_reopen}
+    gate = policy["receipt_gate"]
+    receipt_failures = []
+    if inputs.get("transition") in gate["protected_transitions"]:
+        receipts = inputs.get("receipts", [])
+        require(isinstance(receipts, list), "receipts must be a list")
+        for route in routes:
+            matching = [item for item in receipts if item.get(gate["identity_field"]) == route]
+            if not matching:
+                receipt_failures.append({"route": route, "reason": "missing"})
+            elif not any(item.get(gate["status_field"]) == gate["accepted_status"] for item in matching):
+                receipt_failures.append({"route": route, "reason": "not_pass"})
+    return {
+        "routes": routes,
+        "required_receipts": routes,
+        "may_reopen_sprint": may_reopen,
+        "transition_allowed": not receipt_failures,
+        "receipt_failures": receipt_failures,
+    }
 
 
 def validate_route_cases(data: dict, policy: dict) -> None:
     cases = data.get("cases", [])
-    require(len(cases) >= 7, "routing fixture needs positive and negative cases")
+    require(len(cases) >= 10, "routing fixture needs route and receipt-gate cases")
     names = [case.get("name") for case in cases]
     require(all(names) and len(names) == len(set(names)), "routing case names must be unique")
     for case in cases:
@@ -146,6 +167,7 @@ def validate_route_cases(data: dict, policy: dict) -> None:
         require(actual["routes"] == case.get("expected_routes"), f"route mismatch: {case['name']}")
         require(actual["required_receipts"] == case.get("expected_routes"), f"receipt mismatch: {case['name']}")
         require(actual["may_reopen_sprint"] is case.get("expected_may_reopen_sprint"), f"reopen mismatch: {case['name']}")
+        require(actual["transition_allowed"] is case.get("expected_transition_allowed"), f"transition mismatch: {case['name']}")
 
 
 def main() -> int:

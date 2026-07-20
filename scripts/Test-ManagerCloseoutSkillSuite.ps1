@@ -28,4 +28,4 @@ foreach ($case in $invalid) {
 }
 & python $validator --kind route --input (Join-Path $fixtures "routing.cases.json") --policy $policy
 if ($LASTEXITCODE -ne 0) { throw "Routing fixture rejected" }
-Write-Output "RESULT: PASS (valid=4; invalid_rejected=4; routing_cases=7)"
+Write-Output "RESULT: PASS (valid=4; invalid_rejected=4; routing_cases=10)"

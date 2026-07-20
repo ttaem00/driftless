@@ -1,0 +1,5 @@
+{
+  "audited_categories":["a","b","c","d","e","f","g","h","i","j","k"],
+  "results":[],
+  "findings":[{"id":"F1","classification":"blocker","direct_goal_impact":"excluded surface","excluded":true}]
+}

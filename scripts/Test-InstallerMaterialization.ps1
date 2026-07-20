@@ -62,12 +62,13 @@ function Invoke-Installer {
 
 $sharedSkills = Join-Path $repoRoot 'profiles\shared\skills'
 $tools = @(
-  @{ tool = 'claude'; profile = 'profiles\claude\skills'; home = '.runtime\claude-home\skills' },
-  @{ tool = 'codex'; profile = 'profiles\codex\skills'; home = '.runtime\codex-home\skills' }
+  @{ tool = 'claude'; profile = 'profiles\claude\skills'; home = '.runtime\claude-home\skills'; adapter = 'CLAUDE.md' },
+  @{ tool = 'codex'; profile = 'profiles\codex\skills'; home = '.runtime\codex-home\skills'; adapter = 'AGENTS.md' }
 )
 
 $rows = [System.Collections.Generic.List[object]]::new()
-$requiredExactTriggerSkills = @('wuther-codemap')
+$requiredExactTriggerSkills = @('wuther-codemap', 'finish-to-done')
+$leafCloseoutSkills = @('bounded-sprint-close', 'manager-blindspot-audit', 'durable-evidence-audit', 'closeout-skill-evolution')
 
 foreach ($entry in $tools) {
   $install = Invoke-Installer -Tool $entry.tool
@@ -96,6 +97,40 @@ foreach ($entry in $tools) {
     $triggerMatch = ($descriptionLines -join ' ').Contains($skillName)
     if (-not ($nameMatch -and $triggerMatch)) {
       $triggerFailures.Add("$skillName frontmatter") | Out-Null
+    }
+  }
+
+  $homeRoot = Split-Path -Parent $homeSkills
+  $adapterPath = Join-Path $homeRoot $entry.adapter
+  $policyPath = Join-Path $homeRoot 'shared\schemas\manager-closeout-routing-policy.json'
+  $umbrellaRegistration = Join-Path $homeSkills 'finish-to-done\agents\openai.yaml'
+  if (-not (Test-Path -LiteralPath $adapterPath -PathType Leaf)) {
+    $triggerFailures.Add("$($entry.adapter) missing") | Out-Null
+  } else {
+    $adapterText = Get-Content -LiteralPath $adapterPath -Raw -Encoding UTF8
+    if (-not ($adapterText.Contains('finish-to-done') -and $adapterText.Contains('manager-closeout-routing-policy.json'))) {
+      $triggerFailures.Add("$($entry.adapter) routing pointer") | Out-Null
+    }
+  }
+  if (-not (Test-Path -LiteralPath $policyPath -PathType Leaf)) {
+    $triggerFailures.Add('routing policy missing') | Out-Null
+  } else {
+    $policyData = Get-Content -LiteralPath $policyPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($policyData.entrypoint -ne 'finish-to-done' -or -not $policyData.implicit_entrypoint -or $policyData.implicit_leaf_skills) {
+      $triggerFailures.Add('routing policy semantics') | Out-Null
+    }
+  }
+  if (-not (Test-Path -LiteralPath $umbrellaRegistration -PathType Leaf)) {
+    $triggerFailures.Add('finish-to-done registration missing') | Out-Null
+  } elseif (-not (Get-Content -LiteralPath $umbrellaRegistration -Raw -Encoding UTF8).Contains('allow_implicit_invocation: true')) {
+    $triggerFailures.Add('finish-to-done is not implicit') | Out-Null
+  }
+  foreach ($leafName in $leafCloseoutSkills) {
+    $leafRegistration = Join-Path $homeSkills "$leafName\agents\openai.yaml"
+    if (-not (Test-Path -LiteralPath $leafRegistration -PathType Leaf)) {
+      $triggerFailures.Add("$leafName registration missing") | Out-Null
+    } elseif (-not (Get-Content -LiteralPath $leafRegistration -Raw -Encoding UTF8).Contains('allow_implicit_invocation: false')) {
+      $triggerFailures.Add("$leafName must stay explicit") | Out-Null
     }
   }
 

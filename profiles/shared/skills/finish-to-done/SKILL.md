@@ -190,9 +190,16 @@ recursive AI 호출은 하지 않는다(에이전트가 이 저장소의 자기 
 
 ## Bounded completion layers
 
-When a deadline or repeated closeout loop is part of the request, invoke
-`bounded-sprint-close`. Keep three verdicts separate: declared acceptance,
-root-goal behavior, and operational hardening. Before Done, invoke
-`manager-blindspot-audit`; only a direct-goal blocker reopens the sprint.
-If the manager requested reusable learning, finish with
-`closeout-skill-evolution` instead of adding ad-hoc hot rules.
+This is the single implicit closeout entrypoint. The four leaf closeout skills
+remain explicit and are selected by
+`shared/schemas/manager-closeout-routing-policy.json`; do not make every leaf
+implicit. Simple questions, read-only status, and excluded scope are suppressed.
+
+When a deadline or repeated closeout loop is part of non-trivial state-changing
+work, invoke `bounded-sprint-close`. Keep three verdicts separate: declared
+acceptance, root-goal behavior, and operational hardening. Before a non-trivial
+Done claim, invoke `manager-blindspot-audit`; only a direct-goal blocker reopens
+the sprint. Evidence bundles, handoffs, and parent adoption require
+`durable-evidence-audit`. Repeated failures or manager corrections require
+`closeout-skill-evolution` instead of ad-hoc hot rules. Each selected route must
+produce a receipt before the matching Done or parent-adoption transition.

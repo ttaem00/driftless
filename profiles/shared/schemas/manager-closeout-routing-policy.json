@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "entrypoint": "finish-to-done",
+  "implicit_entrypoint": true,
+  "implicit_leaf_skills": false,
+  "suppress_when_any": [
+    "simple_question",
+    "read_only_status",
+    "scope_excluded"
+  ],
+  "routes": [
+    {
+      "id": "bounded-sprint-close",
+      "all": ["nontrivial", "state_change", "deadline_or_repeat"]
+    },
+    {
+      "id": "manager-blindspot-audit",
+      "all": ["nontrivial", "completion_claim"]
+    },
+    {
+      "id": "durable-evidence-audit",
+      "all": ["nontrivial", "evidence_or_adoption"]
+    },
+    {
+      "id": "closeout-skill-evolution",
+      "all": ["recurrence_or_manager_correction"]
+    }
+  ],
+  "sprint_reopen": {
+    "all": ["direct_goal_impact", "blocking_finding"]
+  },
+  "receipt_gate": {
+    "protected_transitions": ["DONE", "PARENT_ADOPTED"],
+    "identity_field": "route",
+    "status_field": "status",
+    "accepted_status": "PASS"
+  },
+  "invariants": {
+    "last_ten_percent_new_implementation": false,
+    "warning_reopens_sprint": false,
+    "child_done_equals_parent_done": false
+  }
+}

@@ -112,6 +112,7 @@ $gates = @(
   @{ name = 'Compressed handoff protocol'; script = 'scripts\Test-CompressedHandoffSummaryProtocol.ps1'; args = @('-Root', $script:RepoRoot); next = 'Restore resumable handoff summary fields.' },
   @{ name = 'Mission map fixture'; script = 'scripts\Test-MissionMapFixture.ps1'; args = @(); next = 'Fix public-safe Mission Map fixture fields.' },
   @{ name = 'External adoption safety self-test'; script = 'scripts\Test-ExternalAdoptionSafetyGate.ps1'; args = @('-SelfTest'); next = 'Restore static adoption safety and lane closeout checks.' },
+  @{ name = 'Workspace artifact ownership self-test'; script = 'profiles\shared\skills\session-resource-cleanup\scripts\Test-WorkspaceArtifactOwnership.ps1'; args = @('-SelfTest'); next = 'Restore the shared metadata-only workspace audit so protected roots short-circuit before enumeration and unmanaged temp roots are owner-classified.' },
   @{ name = 'Public export classifier self-test'; script = 'scripts\Test-PublicExportClassifier.ps1'; args = @('-SelfTest'); next = 'Restore the pre-public classifier so private lessons are routed through public-safe, shared-internal, sanitize-first, private-only, or manager-only-decision before export.' }
 )
 

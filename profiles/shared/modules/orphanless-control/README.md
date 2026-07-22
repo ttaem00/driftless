@@ -54,3 +54,14 @@ Run the focused contract gate:
 ```powershell
 pwsh.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/Test-OrphanlessControlModule.ps1
 ```
+
+Before packaging or after updating, verify that every public module, schema,
+and guide still matches the reviewed release manifest:
+
+```powershell
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/Sync-OrphanlessControlReleaseManifest.ps1
+```
+
+Maintainers update hashes only after reviewing the package change by adding
+`-Write`. The verifier rejects missing files, files added inside the managed
+module without a manifest entry, and changed content with a stale hash.

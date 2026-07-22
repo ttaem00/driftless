@@ -104,3 +104,17 @@ Static fixture tests prove the public state machine and deterministic contract.
 They do not prove that a particular private adapter can issue or read a live
 native session; that remains `UNVERIFIED` until the adapter runs its own bounded
 end-to-end test.
+
+## Release integrity
+
+The package ships a repository-relative SHA-256 manifest. Installers and
+updaters can verify it without knowing which agent product consumes the module:
+
+```powershell
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/Sync-OrphanlessControlReleaseManifest.ps1
+```
+
+The check fails closed when a managed file is missing, changed, or added
+without review. After reviewing an intentional package change, maintainers can
+regenerate the deterministic file list and hashes with `-Write` and rerun the
+check. The manifest never contains credentials, machine paths, or session data.

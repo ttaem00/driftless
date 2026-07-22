@@ -35,6 +35,16 @@ function Resolve-UnderRoot {
   if (-not ($full -eq $rootFull -or $full.StartsWith($rootFull + [System.IO.Path]::DirectorySeparatorChar, [System.StringComparison]::OrdinalIgnoreCase))) {
     throw "Manifest path escapes repository root: $RelativePath"
   }
+  $cursor = $rootFull
+  foreach ($part in @($safe.Split('/', [System.StringSplitOptions]::RemoveEmptyEntries))) {
+    $cursor = Join-Path $cursor $part
+    if (Test-Path -LiteralPath $cursor) {
+      $item = Get-Item -LiteralPath $cursor -Force
+      if (($item.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) {
+        throw "Manifest path must not cross a link or junction: $RelativePath"
+      }
+    }
+  }
   return $full
 }
 

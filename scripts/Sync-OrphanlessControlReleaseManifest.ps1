@@ -24,6 +24,10 @@ function Convert-ToSafeRelativePath {
 function Get-Sha256Hex {
   param([Parameter(Mandatory = $true)][string]$Path)
   $bytes = [System.IO.File]::ReadAllBytes($Path)
+  if ([Array]::IndexOf($bytes, [byte]0) -lt 0) {
+    $text = [System.Text.UTF8Encoding]::new($false, $true).GetString($bytes)
+    $bytes = [System.Text.UTF8Encoding]::new($false).GetBytes($text.Replace("`r`n", "`n"))
+  }
   return [System.Convert]::ToHexString([System.Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant()
 }
 
@@ -132,12 +136,16 @@ if ($SelfTest) {
     New-Item -ItemType Directory -Path ([System.IO.Path]::GetDirectoryName($tempManifest)) -Force | Out-Null
     Copy-Item -LiteralPath $manifestFull -Destination $tempManifest
     $positive = Test-ReleaseManifest -RepoRoot $tempRoot -Path $tempManifest
+    $lineEndingPath = Resolve-UnderRoot -RepoRoot $tempRoot -RelativePath 'profiles/shared/modules/orphanless-control/README.md'
+    $lineEndingText = [System.IO.File]::ReadAllText($lineEndingPath, [System.Text.Encoding]::UTF8).Replace("`r`n", "`n").Replace("`n", "`r`n")
+    [System.IO.File]::WriteAllText($lineEndingPath, $lineEndingText, [System.Text.UTF8Encoding]::new($false))
+    $lineEndingPortable = Test-ReleaseManifest -RepoRoot $tempRoot -Path $tempManifest
     Add-Content -LiteralPath (Resolve-UnderRoot -RepoRoot $tempRoot -RelativePath 'profiles/shared/modules/orphanless-control/README.md') -Value 'stale fixture' -Encoding utf8NoBOM
     $stale = Test-ReleaseManifest -RepoRoot $tempRoot -Path $tempManifest
     Copy-Item -LiteralPath (Resolve-UnderRoot -RepoRoot $repoRoot -RelativePath 'profiles/shared/modules/orphanless-control/README.md') -Destination (Resolve-UnderRoot -RepoRoot $tempRoot -RelativePath 'profiles/shared/modules/orphanless-control/README.md') -Force
     New-Item -ItemType File -Path (Resolve-UnderRoot -RepoRoot $tempRoot -RelativePath 'profiles/shared/modules/orphanless-control/unlisted.ps1') | Out-Null
     $unlisted = Test-ReleaseManifest -RepoRoot $tempRoot -Path $tempManifest
-    $selfTestPassed = $positive.passed -and -not $stale.passed -and (@($stale.errors | Where-Object { $_ -like 'stale_hash:*' }).Count -eq 1) -and -not $unlisted.passed -and (@($unlisted.errors | Where-Object { $_ -like 'unlisted_file:*' }).Count -eq 1)
+    $selfTestPassed = $positive.passed -and $lineEndingPortable.passed -and -not $stale.passed -and (@($stale.errors | Where-Object { $_ -like 'stale_hash:*' }).Count -eq 1) -and -not $unlisted.passed -and (@($unlisted.errors | Where-Object { $_ -like 'unlisted_file:*' }).Count -eq 1)
     $result | Add-Member -NotePropertyName selfTestPassed -NotePropertyValue $selfTestPassed
   } finally {
     if (Test-Path -LiteralPath $tempRoot) { Remove-Item -LiteralPath $tempRoot -Recurse -Force }

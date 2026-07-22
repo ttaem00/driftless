@@ -19,27 +19,27 @@
   "files": [
     {
       "path": "docs/en/orphanless-control-module.md",
-      "sha256": "e5230c35bb0fed5b1ee8132c9d061377500a16eff45eb430fe0d0cfb658e2f5f"
+      "sha256": "77016c6f3c21203e4baaed2117c87a9682d03f89fc0431db6336b297996126d8"
     },
     {
       "path": "profiles/shared/modules/orphanless-control/OrphanlessControl.psm1",
-      "sha256": "b7bef58cb8ecd829e9d3497df569bc43575de1549246fce1e60ce8f087dc7d79"
+      "sha256": "dd49b2b04d94cc277e4684dc3a039b7d00d743be4d0e9fa89fec97e93dd948ff"
     },
     {
       "path": "profiles/shared/modules/orphanless-control/README.md",
-      "sha256": "6a9f7ca74cc6dfd4f52d9e4605c5dc7d27eff441c981209dd92100d72acf0ad6"
+      "sha256": "226c69b5718d9d573749dace2f80d3c267c7a1bf479ff9e8b147ce5b306434e0"
     },
     {
       "path": "profiles/shared/schemas/orphanless-control-envelope.schema.json",
-      "sha256": "9ef41ae7340ac99570e11c5b46b86240d67362e58c4cc663943a6a0c58543ca4"
+      "sha256": "442a03f031237a96284eb63791e62d2d9ff4c821c9f1d35e06fb70c220293061"
     },
     {
       "path": "profiles/shared/schemas/orphanless-reconcile-receipt.schema.json",
-      "sha256": "e19e0712e15575cb77e90352b6b5e524dd1ad6afad62368cc2d49dc82cab8882"
+      "sha256": "45a9867239621b2aff50087ed84d0b530e3078431752f41b9a35eaa88b8540e2"
     },
     {
       "path": "scripts/Sync-OrphanlessControlReleaseManifest.ps1",
-      "sha256": "1a4d91dd200658cbcdc97dc64ae32124766356efad420caffa72c5a2d2bb83d8"
+      "sha256": "c025e2df34a43e95abd496f2dae7037ca1a0cd8fb2fcf2dd37ddb7b553ab93a8"
     }
   ]
 }

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "orphanless-control.release-manifest.v1",
+  "package": "orphanless-control",
+  "hashAlgorithm": "SHA-256",
+  "discovery": {
+    "recursiveRoots": [
+      "profiles/shared/modules/orphanless-control"
+    ],
+    "excludePaths": [
+      "profiles/shared/modules/orphanless-control/release-manifest.json"
+    ],
+    "explicitFiles": [
+      "docs/en/orphanless-control-module.md",
+      "profiles/shared/schemas/orphanless-control-envelope.schema.json",
+      "profiles/shared/schemas/orphanless-reconcile-receipt.schema.json",
+      "scripts/Sync-OrphanlessControlReleaseManifest.ps1"
+    ]
+  },
+  "files": [
+    {
+      "path": "docs/en/orphanless-control-module.md",
+      "sha256": "e5230c35bb0fed5b1ee8132c9d061377500a16eff45eb430fe0d0cfb658e2f5f"
+    },
+    {
+      "path": "profiles/shared/modules/orphanless-control/OrphanlessControl.psm1",
+      "sha256": "b7bef58cb8ecd829e9d3497df569bc43575de1549246fce1e60ce8f087dc7d79"
+    },
+    {
+      "path": "profiles/shared/modules/orphanless-control/README.md",
+      "sha256": "6a9f7ca74cc6dfd4f52d9e4605c5dc7d27eff441c981209dd92100d72acf0ad6"
+    },
+    {
+      "path": "profiles/shared/schemas/orphanless-control-envelope.schema.json",
+      "sha256": "9ef41ae7340ac99570e11c5b46b86240d67362e58c4cc663943a6a0c58543ca4"
+    },
+    {
+      "path": "profiles/shared/schemas/orphanless-reconcile-receipt.schema.json",
+      "sha256": "e19e0712e15575cb77e90352b6b5e524dd1ad6afad62368cc2d49dc82cab8882"
+    },
+    {
+      "path": "scripts/Sync-OrphanlessControlReleaseManifest.ps1",
+      "sha256": "be9bee28f4b19b24e1b92148689fbc7e527d3fd076b10b0407173b9ca802a5af"
+    }
+  ]
+}

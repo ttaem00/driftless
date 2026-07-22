@@ -39,7 +39,7 @@
     },
     {
       "path": "scripts/Sync-OrphanlessControlReleaseManifest.ps1",
-      "sha256": "be9bee28f4b19b24e1b92148689fbc7e527d3fd076b10b0407173b9ca802a5af"
+      "sha256": "1a4d91dd200658cbcdc97dc64ae32124766356efad420caffa72c5a2d2bb83d8"
     }
   ]
 }

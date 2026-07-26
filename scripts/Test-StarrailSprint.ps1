@@ -71,6 +71,26 @@ if ($wutherBuildExit -eq 0 -and (Test-Path -LiteralPath $wutherContextPath)) {
 }
 $expectedNodeIds = @('aemeth.contract', 'stelle.step', 'starrail.topology', 'trailblazer.executor', 'profile.recognition', 'hermes.worker.adapter')
 $expectedDataIds = @('aemeth.sprint-spec', 'stelle.execution-receipt', 'starrail.topology-manifest', 'trailblazer.run-receipt', 'profile.vocabulary-contract')
+$wutherSourceRef = if ($null -ne $wutherContext) { [string]$wutherContext.project.source_ref } else { '' }
+$sourceRefExistsExit = 1
+$sourceImplementationDiffExit = 1
+if ($wutherSourceRef -match '^[0-9a-f]{40}$') {
+  & git -C $Root cat-file -e ('{0}^{{commit}}' -f $wutherSourceRef) 2>$null
+  $sourceRefExistsExit = $LASTEXITCODE
+  if ($sourceRefExistsExit -eq 0) {
+    $implementationPaths = @(
+      'profiles/shared/contract/STARRAIL_SPRINT_CONTRACT.json',
+      'profiles/shared/skills/starrail-sprint',
+      'tools/starrail-sprint/starrail_sprint.py',
+      'scripts/Invoke-StarrailSprint.ps1',
+      'install.ps1',
+      'install.sh',
+      'examples/starrail-sprint'
+    )
+    & git -C $Root diff --quiet $wutherSourceRef -- @implementationPaths
+    $sourceImplementationDiffExit = $LASTEXITCODE
+  }
+}
 
 $passOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $pass -ContractPath $contract -ReceiptPath $receiptPath 2>&1)
 $passExit = $LASTEXITCODE
@@ -134,7 +154,8 @@ $checks = @(
   [pscustomobject]@{ name = 'executable protected identifiers'; pass = @(@('class Aemeth', 'class Stelle', 'class StarrailTopology', 'def Trailblazer') | ForEach-Object { $runtimeText.Contains($_) } | Where-Object { -not $_ }).Count -eq 0 },
   [pscustomobject]@{ name = 'two profiles plus adapter fields'; pass = ($contractData.profiles.Count -eq 2 -and $contractData.profiles -contains 'claude' -and $contractData.profiles -contains 'codex' -and $contractData.compatibility.profile_required -eq $false -and $contractData.compatibility.consumers -contains 'hermes-worker') },
   [pscustomobject]@{ name = 'installed profile aliases and implicit recognition'; pass = ($installExit -eq 0 -and @($installedRuns | Where-Object { $_.exit -ne 0 -or $_.status -ne 'PASS' -or -not $_.contract_match -or -not $_.skill_match -or -not $_.registration_match -or -not $_.implicit -or -not $_.obsolete_absent -or -not $_.receipt }).Count -eq 0) },
-  [pscustomobject]@{ name = 'Wuther freshness and exact ids'; pass = ($null -ne $wutherContext -and $wutherBuildExit -eq 0 -and $wutherCheckExit -eq 0 -and @($expectedNodeIds | Where-Object { $_ -notin $wutherContext.nodes.id }).Count -eq 0 -and @($expectedDataIds | Where-Object { $_ -notin $wutherContext.data_objects.id }).Count -eq 0) }
+  [pscustomobject]@{ name = 'Wuther freshness and exact ids'; pass = ($null -ne $wutherContext -and $wutherBuildExit -eq 0 -and $wutherCheckExit -eq 0 -and @($expectedNodeIds | Where-Object { $_ -notin $wutherContext.nodes.id }).Count -eq 0 -and @($expectedDataIds | Where-Object { $_ -notin $wutherContext.data_objects.id }).Count -eq 0) },
+  [pscustomobject]@{ name = 'Wuther immutable implementation source ref'; pass = ($sourceRefExistsExit -eq 0 -and $sourceImplementationDiffExit -eq 0) }
 )
 $failed = @($checks | Where-Object { -not $_.pass })
 $result = [pscustomobject]@{ gate = 'starrail-sprint'; status = if ($failed.Count) { 'FAIL' } else { 'PASS' }; checks = $checks }

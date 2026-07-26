@@ -67,7 +67,7 @@ $tools = @(
 )
 
 $rows = [System.Collections.Generic.List[object]]::new()
-$requiredExactTriggerSkills = @('wuther-codemap', 'finish-to-done')
+$requiredExactTriggerSkills = @('wuther-codemap', 'finish-to-done', 'starrail-sprint')
 $leafCloseoutSkills = @('bounded-sprint-close', 'manager-blindspot-audit', 'durable-evidence-audit', 'closeout-skill-evolution')
 
 foreach ($entry in $tools) {

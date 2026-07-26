@@ -1,0 +1,33 @@
+{
+  "schema_version": "starrail-sprint.v1",
+  "purpose": "Run a small, ordered evidence sprint with one vocabulary shared by Claude and Codex.",
+  "protected_meanings": {
+    "Aemeth": "The data-driven sprint schema plus validation and feedback loop that refuses unproven work.",
+    "Stelle": "One named executable step with input, output, verification, and exception contracts.",
+    "StarrailTopology": "The directed graph of Stelle steps, artifacts, scope boundary, dependency edges, and feedback edges.",
+    "Trailblazer": "The executor that validates and traverses a StarrailTopology, emits a durable receipt, and blocks failed gates."
+  },
+  "executable_identifiers": {
+    "Aemeth": "class",
+    "Stelle": "class",
+    "StarrailTopology": "class",
+    "Trailblazer": "function"
+  },
+  "input_schema": "starrail-topology.v1",
+  "receipt_schema": "trailblazer-receipt.v1",
+  "required_stelle_contract": ["input", "output", "verification", "exception"],
+  "required_topology_contract": ["steps", "artifacts", "boundary", "feedback_edges"],
+  "profiles": ["claude", "codex"],
+  "compatibility": {
+    "adapter_contract": "public-json-fields",
+    "profile_required": false,
+    "consumers": ["hermes", "hermes-worker"],
+    "fields": {
+      "worker_role": "compatibility.worker_role",
+      "route": "compatibility.route",
+      "topology_id": "topology_id",
+      "run_status": "status",
+      "step_evidence": "steps[].evidence"
+    }
+  }
+}

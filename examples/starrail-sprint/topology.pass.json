@@ -8,7 +8,7 @@
   "feedback_edges": [{"from": "verify", "to": "inspect", "when": "FAIL"}],
   "steps": [
     {"id": "inspect", "action": "Inspect the public fixture", "depends_on": [], "input": {"fixture": "repository-relative"}, "output": {"inventory": "sanitized"}, "verification": {"status": "PASS", "evidence": "fixture paths are repository-relative"}, "exception": {"on_failure": "stop"}},
-    {"id": "build", "action": "Build the bounded result", "depends_on": ["inspect"], "input": {"inventory": "sanitized"}, "output": {"result": "public-safe"}, "verification": {"status": "PASS", "evidence": "result uses sanitized sample data"}, "exception": {"on_failure": "return-to-inspect"}},
-    {"id": "verify", "action": "Verify the acceptance rows", "depends_on": ["build"], "input": {"result": "public-safe"}, "output": {"receipt": "durable-json"}, "verification": {"status": "PASS", "evidence": "all declared rows passed"}, "exception": {"on_failure": "feedback-to-inspect"}}
+    {"id": "build", "action": "Build the bounded result", "depends_on": ["inspect"], "input": {"inventory": "sanitized"}, "output": {"result": "public-safe"}, "verification": {"status": "PASS", "evidence": "result uses sanitized sample data"}, "exception": {"on_failure": "stop"}},
+    {"id": "verify", "action": "Verify the acceptance rows", "depends_on": ["build"], "input": {"result": "public-safe"}, "output": {"receipt": "durable-json"}, "verification": {"status": "PASS", "evidence": "all declared rows passed"}, "exception": {"on_failure": "feedback"}}
   ]
 }

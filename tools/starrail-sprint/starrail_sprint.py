@@ -13,6 +13,7 @@ from typing import Any
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9._-]*$")
 REPO_ROOT = Path(__file__).resolve().parents[2]
+EVIDENCE_ROOT = (REPO_ROOT / ".runtime" / "starrail-sprint").resolve()
 CANONICAL_ALIASES = {
     "Aemeth": ["Aemeth", "에이메스"],
     "Stelle": ["Stelle", "스텔레"],
@@ -28,6 +29,15 @@ def resolve_repo_path(raw_path: Path, *, must_exist: bool) -> Path:
         candidate.relative_to(REPO_ROOT)
     except ValueError as exc:
         raise ValueError(f"path must stay inside the Driftless repository: {raw_path}") from exc
+    return candidate
+
+
+def resolve_receipt_path(raw_path: Path) -> Path:
+    candidate = resolve_repo_path(raw_path, must_exist=False)
+    try:
+        candidate.relative_to(EVIDENCE_ROOT)
+    except ValueError as exc:
+        raise ValueError(f"receipt path must stay under .runtime/starrail-sprint: {raw_path}") from exc
     return candidate
 
 
@@ -226,7 +236,7 @@ def main() -> int:
     receipt_path: Path | None = None
     try:
         topology_path = resolve_repo_path(args.topology, must_exist=True)
-        receipt_path = resolve_repo_path(args.receipt, must_exist=False) if args.receipt else None
+        receipt_path = resolve_receipt_path(args.receipt) if args.receipt else None
         if args.contract:
             contract_path = resolve_repo_path(args.contract, must_exist=True)
             contract = json.loads(contract_path.read_text(encoding="utf-8"))

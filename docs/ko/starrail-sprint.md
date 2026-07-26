@@ -20,5 +20,9 @@ Claude와 Codex의 격리 홈에 같은 skill/contract가 복사됩니다. Herme
 `hermes-worker`는 공개 JSON 호환 필드를 사용할 수 있지만 Driftless 프로필은
 Claude와 Codex 두 개뿐입니다.
 
+영수증 쓰기는 생성 증거 폴더 `.runtime/starrail-sprint` 아래로 제한됩니다.
+토폴로지와 계약은 저장소 안에서만 읽습니다. `README.md` 같은 소스 파일은
+PowerShell 또는 Python 직접 실행 어느 쪽에서도 영수증 대상으로 사용할 수 없습니다.
+
 공용 언어 계약은 `aemeth-sprint.v1`, 하위 토폴로지 문서는
 `starrail-topology.v1`, 영구 실행 영수증은 `trailblazer-run-receipt.v1`입니다.

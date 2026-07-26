@@ -19,6 +19,11 @@ The command returns zero only when every required verification passes. The
 negative fixture at `examples/starrail-sprint/topology.fail.json` proves the
 runner stops before a dependent step when Aemeth rejects evidence.
 
+Receipt writes are restricted to the generated evidence subtree
+`.runtime/starrail-sprint`. Topology and contract inputs may be read only from
+inside the repository. A source file such as `README.md` cannot be used as a
+receipt target, even through the direct Python entry point.
+
 The language contract is `aemeth-sprint.v1`, its subordinate topology document
 is `starrail-topology.v1`, and durable runs use
 `trailblazer-run-receipt.v1`. These names match the portable cross-project wire

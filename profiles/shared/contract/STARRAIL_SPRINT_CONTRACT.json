@@ -21,6 +21,7 @@
   },
   "input_schema": "starrail-topology.v1",
   "receipt_schema": "trailblazer-run-receipt.v1",
+  "receipt_write_root": ".runtime/starrail-sprint",
   "required_stelle_contract": ["input", "output", "verification", "exception"],
   "aemeth_success_status": "PASS",
   "evidence_required": true,

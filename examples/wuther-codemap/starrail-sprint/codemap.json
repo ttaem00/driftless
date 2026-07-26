@@ -5,7 +5,7 @@
     "id": "driftless-starrail-sprint",
     "name": "Driftless Starrail Sprint",
     "manager_summary": "One public-safe verification sprint contract shared by installed Claude/Codex profiles and a bounded Hermes Aemeth adapter.",
-    "source_ref": "634056078e460fe0ebd301e2befc93957c5fed1a"
+    "source_ref": "9ebf60dccab77f447e8e587cced4a0ea4613040b"
   },
   "domains": [
     {"id": "sprint", "label": "Evidence sprint", "purpose": "Turn bounded steps and verification feedback into one durable review receipt.", "icon": "route"}

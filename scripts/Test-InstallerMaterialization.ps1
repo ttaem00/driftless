@@ -160,6 +160,16 @@ foreach ($entry in $tools) {
     }) | Out-Null
 }
 
+function Get-Sha256 {
+  param([Parameter(Mandatory = $true)][string]$Path)
+  $stream = [System.IO.File]::OpenRead($Path)
+  try {
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    try { return [System.Convert]::ToHexString($sha.ComputeHash($stream)) }
+    finally { $sha.Dispose() }
+  } finally { $stream.Dispose() }
+}
+
 $hermesInstall = Invoke-Installer -Tool 'hermes'
 $hermesHome = Join-Path $repoRoot '.runtime\hermes-home'
 $hermesSkill = Join-Path $hermesHome 'skills\starrail-sprint\SKILL.md'
@@ -185,13 +195,13 @@ if (Test-Path -LiteralPath $hermesObsoleteContract -PathType Leaf) {
 }
 
 if ($hermesFailures.Count -eq 0) {
-  if ((Get-FileHash -LiteralPath $sourceStarrailSkill -Algorithm SHA256).Hash -cne (Get-FileHash -LiteralPath $hermesSkill -Algorithm SHA256).Hash) {
+  if ((Get-Sha256 -Path $sourceStarrailSkill) -cne (Get-Sha256 -Path $hermesSkill)) {
     $hermesFailures.Add('skill hash mismatch') | Out-Null
   }
-  if ((Get-FileHash -LiteralPath $sourceStarrailRegistration -Algorithm SHA256).Hash -cne (Get-FileHash -LiteralPath $hermesRegistration -Algorithm SHA256).Hash) {
+  if ((Get-Sha256 -Path $sourceStarrailRegistration) -cne (Get-Sha256 -Path $hermesRegistration)) {
     $hermesFailures.Add('registration hash mismatch') | Out-Null
   }
-  if ((Get-FileHash -LiteralPath $sourceStarrailContract -Algorithm SHA256).Hash -cne (Get-FileHash -LiteralPath $hermesContract -Algorithm SHA256).Hash) {
+  if ((Get-Sha256 -Path $sourceStarrailContract) -cne (Get-Sha256 -Path $hermesContract)) {
     $hermesFailures.Add('contract hash mismatch') | Out-Null
   }
 
@@ -226,9 +236,9 @@ if ($hermesFailures.Count -eq 0) {
   }
 }
 
-$configHashBefore = if (Test-Path -LiteralPath $hermesConfig -PathType Leaf) { (Get-FileHash -LiteralPath $hermesConfig -Algorithm SHA256).Hash } else { '' }
+$configHashBefore = if (Test-Path -LiteralPath $hermesConfig -PathType Leaf) { Get-Sha256 -Path $hermesConfig } else { '' }
 $hermesRerun = Invoke-Installer -Tool 'hermes'
-$configHashAfter = if (Test-Path -LiteralPath $hermesConfig -PathType Leaf) { (Get-FileHash -LiteralPath $hermesConfig -Algorithm SHA256).Hash } else { '' }
+$configHashAfter = if (Test-Path -LiteralPath $hermesConfig -PathType Leaf) { Get-Sha256 -Path $hermesConfig } else { '' }
 if ($hermesRerun.exit -ne 0 -or [string]::IsNullOrWhiteSpace($configHashBefore) -or $configHashBefore -cne $configHashAfter) {
   $hermesFailures.Add('idempotent rerun failed') | Out-Null
 }

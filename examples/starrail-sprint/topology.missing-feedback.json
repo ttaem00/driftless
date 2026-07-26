@@ -1,0 +1,12 @@
+{
+  "schema_version": "starrail-topology.v1",
+  "topology_id": "missing-feedback",
+  "compatibility": {"worker_role": "worker", "route": "local"},
+  "aemeth": {"required_status": "PASS", "require_evidence": true},
+  "artifacts": [{"id": "run-receipt", "type": "json", "durable": true}],
+  "boundary": {"in_scope": ["public fixture"], "out_of_scope": ["release publication"]},
+  "feedback_edges": [],
+  "steps": [
+    {"id": "verify", "action": "Request feedback without an edge", "depends_on": [], "input": {"result": "synthetic"}, "output": {"receipt": "must-block"}, "verification": {"status": "FAIL", "evidence": "feedback route is missing"}, "exception": {"on_failure": "feedback"}}
+  ]
+}

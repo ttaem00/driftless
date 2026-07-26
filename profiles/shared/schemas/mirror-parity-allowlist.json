@@ -178,6 +178,18 @@
       "file": "schemas/wuther-codemap-manifest.schema.json",
       "consumedBy": ["claude", "codex"],
       "why": "The shared versioned model that keeps manager and LLM repository views aligned across both profiles."
+    },
+    {
+      "name": "skill-starrail-sprint",
+      "file": "skills/starrail-sprint/SKILL.md",
+      "consumedBy": ["claude", "codex"],
+      "why": "One public-safe executable sprint vocabulary and validation loop is materialized identically into both isolated profiles."
+    },
+    {
+      "name": "contract-starrail-sprint",
+      "file": "contract/STARRAIL_SPRINT_CONTRACT.json",
+      "consumedBy": ["claude", "codex"],
+      "why": "The canonical meanings and metadata-only Hermes adapter fields are defined once for both profiles."
     }
   ],
 

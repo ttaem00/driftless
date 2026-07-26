@@ -20,6 +20,7 @@ parentheses where a Korean mirror exists.
 - **[Atomic proof planning](./en/atomic-proof-planning.md)** — split broad agent work into proof atoms, classify blockers, and recover stuck work by child proofs.
 - **[Compiled context wiki](./en/compiled-context-wiki.md)** — generate a local markdown wiki for recurring repo context without paid APIs or bundled apps.
 - **[Wuther Codemap](./en/wuther-codemap.md)** (한국어: [Wuther Codemap](./ko/wuther-codemap.md)) — generate one manager HTML and two LLM repository-map views from a single versioned manifest.
+- **[Starrail Sprint](./en/starrail-sprint.md)** (한국어: [Starrail Sprint](./ko/starrail-sprint.md)) — run a small ordered evidence topology from one contract installed into both profiles.
 
 ## Safety
 

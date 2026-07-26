@@ -67,7 +67,7 @@ $tools = @(
 )
 
 $rows = [System.Collections.Generic.List[object]]::new()
-$requiredExactTriggerSkills = @('wuther-codemap', 'finish-to-done')
+$requiredExactTriggerSkills = @('wuther-codemap', 'finish-to-done', 'starrail-sprint')
 $leafCloseoutSkills = @('bounded-sprint-close', 'manager-blindspot-audit', 'durable-evidence-audit', 'closeout-skill-evolution')
 
 foreach ($entry in $tools) {
@@ -104,6 +104,9 @@ foreach ($entry in $tools) {
   $adapterPath = Join-Path $homeRoot $entry.adapter
   $policyPath = Join-Path $homeRoot 'shared\schemas\manager-closeout-routing-policy.json'
   $umbrellaRegistration = Join-Path $homeSkills 'finish-to-done\agents\openai.yaml'
+  $starrailRegistration = Join-Path $homeSkills 'starrail-sprint\agents\openai.yaml'
+  $starrailContract = Join-Path $homeRoot 'shared\contract\STARRAIL_SPRINT_CONTRACT.json'
+  $obsoleteStarrailContract = Join-Path $homeRoot 'shared\contract\STARTRAIL_SPRINT_CONTRACT.json'
   if (-not (Test-Path -LiteralPath $adapterPath -PathType Leaf)) {
     $triggerFailures.Add("$($entry.adapter) missing") | Out-Null
   } else {
@@ -124,6 +127,12 @@ foreach ($entry in $tools) {
     $triggerFailures.Add('finish-to-done registration missing') | Out-Null
   } elseif (-not (Get-Content -LiteralPath $umbrellaRegistration -Raw -Encoding UTF8).Contains('allow_implicit_invocation: true')) {
     $triggerFailures.Add('finish-to-done is not implicit') | Out-Null
+  }
+  if (-not (Test-Path -LiteralPath $starrailRegistration -PathType Leaf) -or -not (Get-Content -LiteralPath $starrailRegistration -Raw -Encoding UTF8).Contains('allow_implicit_invocation: true')) {
+    $triggerFailures.Add('starrail-sprint implicit registration') | Out-Null
+  }
+  if (-not (Test-Path -LiteralPath $starrailContract -PathType Leaf) -or (Test-Path -LiteralPath $obsoleteStarrailContract)) {
+    $triggerFailures.Add('canonical Starrail contract materialization') | Out-Null
   }
   foreach ($leafName in $leafCloseoutSkills) {
     $leafRegistration = Join-Path $homeSkills "$leafName\agents\openai.yaml"

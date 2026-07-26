@@ -191,6 +191,8 @@ materialize_home() {
   if [ -d "$_shared" ]; then
     run_or_plan "copy shared contract + safety schemas into the isolated home" \
       sh -c "mkdir -p \"$HOME_DIR/shared\" && for item in \"$_shared\"/*; do [ \"\$(basename \"\$item\")\" = skills ] && continue; cp -R \"\$item\" \"$HOME_DIR/shared/\"; done"
+    run_or_plan "remove obsolete misspelled Starrail contract" \
+      rm -f "$HOME_DIR/shared/contract/STARTRAIL_SPRINT_CONTRACT.json"
   fi
 
   if [ "$DRY_RUN" -eq 0 ] && [ -d "$HOME_DIR/skills" ]; then

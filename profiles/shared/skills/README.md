@@ -25,6 +25,7 @@ skills live under each profile (e.g. Claude's `ultracode-orchestration`, Codex's
 | **work-ledger** | Turns vague work into visible success criteria and evidence rows the manager can understand. |
 | **handoff-guard** | Keeps long or overnight runs resumable with compact state, exact evidence, and no raw logs. |
 | **wuther-codemap** | Generates a non-developer manager HTML and LLM JSON/Markdown from one versioned, source-backed repository manifest. |
+| **starrail-sprint** | Runs a bounded dependency topology, blocks failed verification, and emits a durable receipt from the same contract in both profiles. |
 
 A skill is just a folder with a `SKILL.md` (frontmatter `name` + `description`
 with triggers, then the procedure). To add one that both tools should have, put

@@ -1,0 +1,51 @@
+display:
+  interface: cli
+quick_commands:
+  starrail-sprint:
+    type: alias
+    target: /starrail-sprint
+    description: 'Run the bounded Aemeth sprint contract.'
+  aemeth-sprint:
+    type: alias
+    target: /starrail-sprint
+    description: 'Compatibility name for the same Starrail sprint runtime.'
+  Aemeth:
+    type: alias
+    target: /starrail-sprint
+    description: 'Aemeth canonical executable sprint contract.'
+  Stelle:
+    type: alias
+    target: /starrail-sprint
+    description: 'Stelle canonical executable step contract.'
+  StarrailTopology:
+    type: alias
+    target: /starrail-sprint
+    description: 'StarrailTopology canonical typed step graph.'
+  Trailblazer:
+    type: alias
+    target: /starrail-sprint
+    description: 'Trailblazer canonical bounded executor and receipt.'
+  에이메스:
+    type: alias
+    target: /starrail-sprint
+    description: 'Aemeth canonical executable sprint contract.'
+  스텔레:
+    type: alias
+    target: /starrail-sprint
+    description: 'Stelle canonical executable step contract.'
+  '스타레일 토폴로지':
+    type: alias
+    target: /starrail-sprint
+    description: 'StarrailTopology canonical typed step graph.'
+  스타레일:
+    type: alias
+    target: /starrail-sprint
+    description: 'StarrailTopology canonical typed step graph.'
+  개척자:
+    type: alias
+    target: /starrail-sprint
+    description: 'Trailblazer canonical bounded executor and receipt.'
+  개척자Trailblazer:
+    type: alias
+    target: /starrail-sprint
+    description: 'Trailblazer canonical bounded executor and receipt.'

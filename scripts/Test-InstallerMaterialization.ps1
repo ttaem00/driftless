@@ -2,13 +2,13 @@
 #requires -PSEdition Core
 <#
 .SYNOPSIS
-  Verifies that Driftless installers materialize shared skills into active agent homes.
+  Verifies full Claude/Codex homes and the bounded Hermes Aemeth adapter home.
 
 .DESCRIPTION
   The profiles keep shared skills once under profiles/shared/skills, but the
-  generated Claude/Codex homes must expose those skills under their active
-  skills/ directory. A recursive SKILL.md count is not enough: agents load from
-  their home skills directory.
+  generated Claude/Codex homes must expose shared skills under their active
+  skills/ directory. The Hermes adapter must expose the exact Starrail skill,
+  contract, bundle, and protected aliases without becoming a full third profile.
 #>
 [CmdletBinding()]
 param(
@@ -159,6 +159,95 @@ foreach ($entry in $tools) {
       next_action = 'Copy shared profile skills into the active home skills directory before reporting setup complete.'
     }) | Out-Null
 }
+
+$hermesInstall = Invoke-Installer -Tool 'hermes'
+$hermesHome = Join-Path $repoRoot '.runtime\hermes-home'
+$hermesSkill = Join-Path $hermesHome 'skills\starrail-sprint\SKILL.md'
+$hermesRegistration = Join-Path $hermesHome 'skills\starrail-sprint\agents\openai.yaml'
+$hermesContract = Join-Path $hermesHome 'shared\contract\STARRAIL_SPRINT_CONTRACT.json'
+$hermesObsoleteContract = Join-Path $hermesHome 'shared\contract\STARTRAIL_SPRINT_CONTRACT.json'
+$hermesGuide = Join-Path $hermesHome 'HERMES.md'
+$hermesConfig = Join-Path $hermesHome 'config.yaml'
+$hermesBundle = Join-Path $hermesHome 'skill-bundles\starrail-sprint.yaml'
+$sourceStarrailSkill = Join-Path $repoRoot 'profiles\shared\skills\starrail-sprint\SKILL.md'
+$sourceStarrailRegistration = Join-Path $repoRoot 'profiles\shared\skills\starrail-sprint\agents\openai.yaml'
+$sourceStarrailContract = Join-Path $repoRoot 'profiles\shared\contract\STARRAIL_SPRINT_CONTRACT.json'
+$hermesFailures = [System.Collections.Generic.List[string]]::new()
+
+$requiredHermesFiles = @($hermesSkill, $hermesRegistration, $hermesContract, $hermesGuide, $hermesConfig, $hermesBundle)
+foreach ($requiredFile in $requiredHermesFiles) {
+  if (-not (Test-Path -LiteralPath $requiredFile -PathType Leaf)) {
+    $hermesFailures.Add("missing=$requiredFile") | Out-Null
+  }
+}
+if (Test-Path -LiteralPath $hermesObsoleteContract -PathType Leaf) {
+  $hermesFailures.Add('obsolete contract present') | Out-Null
+}
+
+if ($hermesFailures.Count -eq 0) {
+  if ((Get-FileHash -LiteralPath $sourceStarrailSkill -Algorithm SHA256).Hash -cne (Get-FileHash -LiteralPath $hermesSkill -Algorithm SHA256).Hash) {
+    $hermesFailures.Add('skill hash mismatch') | Out-Null
+  }
+  if ((Get-FileHash -LiteralPath $sourceStarrailRegistration -Algorithm SHA256).Hash -cne (Get-FileHash -LiteralPath $hermesRegistration -Algorithm SHA256).Hash) {
+    $hermesFailures.Add('registration hash mismatch') | Out-Null
+  }
+  if ((Get-FileHash -LiteralPath $sourceStarrailContract -Algorithm SHA256).Hash -cne (Get-FileHash -LiteralPath $hermesContract -Algorithm SHA256).Hash) {
+    $hermesFailures.Add('contract hash mismatch') | Out-Null
+  }
+
+  $contractData = Get-Content -LiteralPath $hermesContract -Raw -Encoding UTF8 | ConvertFrom-Json -Depth 20
+  $aliases = @($contractData.session_aliases.psobject.Properties | ForEach-Object { @($_.Value) } | ForEach-Object { [string]$_ })
+  $skillText = Get-Content -LiteralPath $hermesSkill -Raw -Encoding UTF8
+  $guideText = Get-Content -LiteralPath $hermesGuide -Raw -Encoding UTF8
+  $configText = Get-Content -LiteralPath $hermesConfig -Raw -Encoding UTF8
+  foreach ($alias in $aliases) {
+    if (-not $skillText.Contains($alias)) {
+      $hermesFailures.Add("skill alias missing=$alias") | Out-Null
+    }
+    $escapedAlias = [regex]::Escape($alias)
+    $mappingPattern = "(?m)^  (?:'$escapedAlias'|$escapedAlias):\r?`n    type: alias\r?`n    target: /starrail-sprint\r?$"
+    if (([regex]::Matches($configText, $mappingPattern)).Count -ne 1) {
+      $hermesFailures.Add("quick alias invalid=$alias") | Out-Null
+    }
+  }
+  foreach ($identifier in @('AemethExecutionLanguage', 'StelleStepContract', 'StarrailTopologyGraph', 'TrailblazerExecutor', 'New-AemethSprint', 'New-StelleStep', 'New-StarrailTopology', 'Invoke-Trailblazer')) {
+    if (-not $guideText.Contains($identifier)) {
+      $hermesFailures.Add("guide identifier missing=$identifier") | Out-Null
+    }
+  }
+  foreach ($commandName in @('starrail-sprint', 'aemeth-sprint')) {
+    $commandPattern = "(?m)^  ${commandName}:\r?`n    type: alias\r?`n    target: /starrail-sprint\r?$"
+    if (([regex]::Matches($configText, $commandPattern)).Count -ne 1) {
+      $hermesFailures.Add("command alias invalid=$commandName") | Out-Null
+    }
+  }
+  if ($contractData.compatibility.hermes_adapter.kind -cne 'bounded-aemeth-home') {
+    $hermesFailures.Add('Hermes adapter contract missing') | Out-Null
+  }
+}
+
+$configHashBefore = if (Test-Path -LiteralPath $hermesConfig -PathType Leaf) { (Get-FileHash -LiteralPath $hermesConfig -Algorithm SHA256).Hash } else { '' }
+$hermesRerun = Invoke-Installer -Tool 'hermes'
+$configHashAfter = if (Test-Path -LiteralPath $hermesConfig -PathType Leaf) { (Get-FileHash -LiteralPath $hermesConfig -Algorithm SHA256).Hash } else { '' }
+if ($hermesRerun.exit -ne 0 -or [string]::IsNullOrWhiteSpace($configHashBefore) -or $configHashBefore -cne $configHashAfter) {
+  $hermesFailures.Add('idempotent rerun failed') | Out-Null
+}
+$hermesSkillCount = @(Get-SkillNames -Roots @((Join-Path $hermesHome 'skills'))).Count
+if ($hermesSkillCount -ne 1) {
+  $hermesFailures.Add("bounded skill count=$hermesSkillCount") | Out-Null
+}
+
+$hermesStatus = if ($hermesInstall.exit -eq 0 -and $hermesFailures.Count -eq 0) { 'PASS' } else { 'FAIL' }
+$hermesEvidence = "installer_exit=$($hermesInstall.exit); active_skills=$hermesSkillCount; aliases=10; idempotent=$($configHashBefore -ceq $configHashAfter)"
+if ($hermesFailures.Count -gt 0) {
+  $hermesEvidence += '; failures=' + (($hermesFailures | Select-Object -First 8) -join ',')
+}
+$rows.Add([pscustomobject]@{
+    tool = 'hermes-aemeth-adapter'
+    status = $hermesStatus
+    evidence = $hermesEvidence
+    next_action = 'Materialize the bounded Hermes Aemeth home and restart or reload skills before claiming recognition.'
+  }) | Out-Null
 
 $failures = @($rows | Where-Object { $_.status -ne 'PASS' })
 $summary = [pscustomobject]@{

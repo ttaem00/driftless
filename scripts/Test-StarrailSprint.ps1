@@ -6,6 +6,7 @@ param([string]$Root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path, [switc
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $runner = Join-Path $Root 'scripts\Invoke-StarrailSprint.ps1'
+$aemethRunner = Join-Path $Root 'scripts\Invoke-AemethSprint.ps1'
 $pass = Join-Path $Root 'examples\starrail-sprint\topology.pass.json'
 $fail = Join-Path $Root 'examples\starrail-sprint\topology.fail.json'
 $hostileStatus = Join-Path $Root 'examples\starrail-sprint\topology.hostile-status.json'
@@ -22,6 +23,8 @@ $failReceiptPath = Join-Path $Root '.runtime\starrail-sprint\test\blocked-receip
 $installer = Join-Path $Root 'install.ps1'
 $sourceSkill = Join-Path $Root 'profiles\shared\skills\starrail-sprint\SKILL.md'
 $sourceRegistration = Join-Path $Root 'profiles\shared\skills\starrail-sprint\agents\openai.yaml'
+$contractData = Get-Content -LiteralPath $contract -Raw -Encoding UTF8 | ConvertFrom-Json -Depth 20
+$aliases = @($contractData.session_aliases.psobject.Properties | ForEach-Object { @($_.Value) } | ForEach-Object { [string]$_ })
 $wuther = Join-Path $Root 'scripts\Invoke-WutherCodemap.ps1'
 $wutherManifest = Join-Path $Root 'examples\wuther-codemap\starrail-sprint\codemap.json'
 $wutherOutput = '.runtime/test-starrail-sprint/wuther'
@@ -36,9 +39,9 @@ function Get-Sha256 {
   } finally { $stream.Dispose() }
 }
 
-$installOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $installer -Tool both -Yes 2>&1)
+$installOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $installer -Tool all -Yes 2>&1)
 $installExit = $LASTEXITCODE
-$installedRuns = foreach ($tool in @('claude', 'codex')) {
+$installedRuns = foreach ($tool in @('claude', 'codex', 'hermes')) {
   $installedHome = Join-Path $Root ".runtime\$tool-home"
   $installedContract = Join-Path $installedHome 'shared\contract\STARRAIL_SPRINT_CONTRACT.json'
   $installedSkill = Join-Path $installedHome 'skills\starrail-sprint\SKILL.md'
@@ -46,6 +49,20 @@ $installedRuns = foreach ($tool in @('claude', 'codex')) {
   $obsoleteInstalledContract = Join-Path $installedHome 'shared\contract\STARTRAIL_SPRINT_CONTRACT.json'
   $installedReceipt = Join-Path $Root ".runtime\starrail-sprint\test\$tool-receipt.json"
   $output = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $pass -ContractPath $installedContract -ReceiptPath $installedReceipt 2>&1)
+  $installedSkillText = Get-Content -LiteralPath $installedSkill -Raw -Encoding UTF8
+  $recognitionMatch = @($aliases | Where-Object { -not $installedSkillText.Contains($_) }).Count -eq 0
+  if ($tool -eq 'hermes') {
+    $hermesConfigText = Get-Content -LiteralPath (Join-Path $installedHome 'config.yaml') -Raw -Encoding UTF8
+    $hermesGuideText = Get-Content -LiteralPath (Join-Path $installedHome 'HERMES.md') -Raw -Encoding UTF8
+    foreach ($alias in $aliases) {
+      $escapedAlias = [regex]::Escape($alias)
+      $mappingPattern = "(?m)^  (?:'$escapedAlias'|$escapedAlias):\r?`n    type: alias\r?`n    target: /starrail-sprint\r?$"
+      if (([regex]::Matches($hermesConfigText, $mappingPattern)).Count -ne 1) { $recognitionMatch = $false }
+    }
+    foreach ($identifier in @('AemethExecutionLanguage', 'StelleStepContract', 'StarrailTopologyGraph', 'TrailblazerExecutor', 'New-AemethSprint', 'New-StelleStep', 'New-StarrailTopology', 'Invoke-Trailblazer')) {
+      if (-not $hermesGuideText.Contains($identifier)) { $recognitionMatch = $false }
+    }
+  }
   [pscustomobject]@{
     tool = $tool
     exit = $LASTEXITCODE
@@ -54,6 +71,7 @@ $installedRuns = foreach ($tool in @('claude', 'codex')) {
     skill_match = ((Get-Sha256 -Path $sourceSkill) -eq (Get-Sha256 -Path $installedSkill))
     registration_match = ((Get-Sha256 -Path $sourceRegistration) -eq (Get-Sha256 -Path $installedRegistration))
     implicit = (Get-Content -LiteralPath $installedRegistration -Raw -Encoding UTF8).Contains('allow_implicit_invocation: true')
+    recognition_match = $recognitionMatch
     obsolete_absent = (-not (Test-Path -LiteralPath $obsoleteInstalledContract))
     receipt = (Test-Path -LiteralPath $installedReceipt)
   }
@@ -69,7 +87,7 @@ if ($wutherBuildExit -eq 0 -and (Test-Path -LiteralPath $wutherContextPath)) {
   $wutherCheckExit = $LASTEXITCODE
   $wutherContext = Get-Content -LiteralPath $wutherContextPath -Raw -Encoding UTF8 | ConvertFrom-Json
 }
-$expectedNodeIds = @('aemeth.contract', 'stelle.step', 'starrail.topology', 'trailblazer.executor', 'profile.recognition', 'hermes.worker.adapter')
+$expectedNodeIds = @('aemeth.contract', 'stelle.step', 'starrail.topology', 'trailblazer.executor', 'profile.recognition', 'hermes.profile.adapter', 'hermes.worker.adapter')
 $expectedDataIds = @('aemeth.sprint-spec', 'stelle.execution-receipt', 'starrail.topology-manifest', 'trailblazer.run-receipt', 'profile.vocabulary-contract')
 $wutherSourceRef = if ($null -ne $wutherContext) { [string]$wutherContext.project.source_ref } else { '' }
 $sourceRefExistsExit = 1
@@ -83,6 +101,8 @@ if ($wutherSourceRef -match '^[0-9a-f]{40}$') {
       'profiles/shared/skills/starrail-sprint',
       'tools/starrail-sprint/starrail_sprint.py',
       'scripts/Invoke-StarrailSprint.ps1',
+      'scripts/Invoke-AemethSprint.ps1',
+      'profiles/hermes-aemeth-adapter',
       'install.ps1',
       'install.sh',
       'examples/starrail-sprint'
@@ -95,6 +115,10 @@ if ($wutherSourceRef -match '^[0-9a-f]{40}$') {
 $passOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $pass -ContractPath $contract -ReceiptPath $receiptPath 2>&1)
 $passExit = $LASTEXITCODE
 $passReceipt = ($passOutput -join "`n") | ConvertFrom-Json
+$aemethReceiptPath = Join-Path $Root '.runtime\starrail-sprint\test\aemeth-compat-receipt.json'
+$aemethOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $aemethRunner -TopologyPath $pass -ContractPath $contract -ReceiptPath $aemethReceiptPath 2>&1)
+$aemethExit = $LASTEXITCODE
+$aemethReceipt = ($aemethOutput -join "`n") | ConvertFrom-Json
 $failOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $fail -ReceiptPath $failReceiptPath 2>&1)
 $failExit = $LASTEXITCODE
 $failReceipt = ($failOutput -join "`n") | ConvertFrom-Json
@@ -146,10 +170,10 @@ try {
   Remove-Item -LiteralPath $directOutsideTopology,$directOutsideContract -Force -ErrorAction SilentlyContinue
 }
 $runtimeText = Get-Content -LiteralPath $runtime -Raw -Encoding UTF8
-$contractData = Get-Content -LiteralPath $contract -Raw -Encoding UTF8 | ConvertFrom-Json
 
 $checks = @(
   [pscustomobject]@{ name = 'positive durable topology receipt'; pass = ($passExit -eq 0 -and $passReceipt.status -eq 'PASS' -and $passReceipt.steps.Count -eq 3 -and (Test-Path -LiteralPath $receiptPath)) },
+  [pscustomobject]@{ name = 'Aemeth command is the same runtime'; pass = ($aemethExit -eq 0 -and (Test-Path -LiteralPath $aemethReceiptPath) -and (($aemethReceipt | ConvertTo-Json -Depth 30 -Compress) -ceq ($passReceipt | ConvertTo-Json -Depth 30 -Compress))) },
   [pscustomobject]@{ name = 'failed Aemeth blocks with durable feedback receipt'; pass = ($failExit -eq 2 -and $failReceipt.status -eq 'BLOCKED' -and $failReceipt.blocked_at -eq 'verify' -and $failReceipt.steps.Count -eq 2 -and $failReceipt.feedback.to -eq 'inspect' -and (Test-Path -LiteralPath $failReceiptPath)) },
   [pscustomobject]@{ name = 'configured FAIL cannot become success'; pass = ($hostileExit -eq 1 -and $hostileReceipt.status -eq 'BLOCKED' -and $hostileReceipt.blocked_at -eq 'topology-validation' -and $hostileReceipt.problem.Contains('required_status must be PASS')) },
   [pscustomobject]@{ name = 'invalid exception policy blocks'; pass = ($invalidPolicyExit -eq 1 -and $invalidPolicyReceipt.status -eq 'BLOCKED' -and $invalidPolicyReceipt.problem.Contains('must be stop or feedback')) },
@@ -160,9 +184,9 @@ $checks = @(
   [pscustomobject]@{ name = 'direct Python containment negative cases'; pass = ($directReceiptExit -ne 0 -and $directTopologyExit -ne 0 -and $directContractExit -ne 0 -and -not (Test-Path -LiteralPath $directOutsideReceipt)) },
   [pscustomobject]@{ name = 'tracked source receipt targets stay unchanged'; pass = ($wrapperTrackedExit -ne 0 -and $directTrackedExit -ne 0 -and $trackedReceiptBefore -eq $trackedReceiptAfterWrapper -and $trackedReceiptBefore -eq $trackedReceiptAfterDirect -and ($wrapperTrackedOutput -join "`n").Contains('.runtime/starrail-sprint') -and ($directTrackedOutput -join "`n").Contains('.runtime/starrail-sprint')) },
   [pscustomobject]@{ name = 'canonical cross-project schema names'; pass = ($contractData.schema_version -eq 'aemeth-sprint.v1' -and $contractData.receipt_schema -eq 'trailblazer-run-receipt.v1' -and $passReceipt.schema_version -eq 'trailblazer-run-receipt.v1' -and -not (($contractData | ConvertTo-Json -Depth 20).Contains('starrail-sprint.v1')) -and -not (($passReceipt | ConvertTo-Json -Depth 20).Contains('trailblazer-receipt.v1'))) },
-  [pscustomobject]@{ name = 'executable protected identifiers'; pass = @(@('class Aemeth', 'class Stelle', 'class StarrailTopology', 'def Trailblazer') | ForEach-Object { $runtimeText.Contains($_) } | Where-Object { -not $_ }).Count -eq 0 },
-  [pscustomobject]@{ name = 'two profiles plus adapter fields'; pass = ($contractData.profiles.Count -eq 2 -and $contractData.profiles -contains 'claude' -and $contractData.profiles -contains 'codex' -and $contractData.compatibility.profile_required -eq $false -and $contractData.compatibility.consumers -contains 'hermes-worker') },
-  [pscustomobject]@{ name = 'installed profile aliases and implicit recognition'; pass = ($installExit -eq 0 -and @($installedRuns | Where-Object { $_.exit -ne 0 -or $_.status -ne 'PASS' -or -not $_.contract_match -or -not $_.skill_match -or -not $_.registration_match -or -not $_.implicit -or -not $_.obsolete_absent -or -not $_.receipt }).Count -eq 0) },
+  [pscustomobject]@{ name = 'executable protected identifiers'; pass = @(@('AemethExecutionLanguage', 'StelleStepContract', 'StarrailTopologyGraph', 'class TrailblazerExecutor', 'def NewAemethSprint', 'def NewStelleStep', 'def NewStarrailTopology', 'def InvokeTrailblazer') | ForEach-Object { $runtimeText.Contains($_) } | Where-Object { -not $_ }).Count -eq 0 -and @($passReceipt.runtime_identifiers.objects).Count -eq 4 -and @($passReceipt.runtime_identifiers.functions).Count -eq 4 },
+  [pscustomobject]@{ name = 'two full profiles plus bounded Hermes adapter'; pass = ($contractData.profiles.Count -eq 2 -and $contractData.profiles -contains 'claude' -and $contractData.profiles -contains 'codex' -and $contractData.compatibility.profile_required -eq $false -and $contractData.compatibility.hermes_adapter.kind -eq 'bounded-aemeth-home' -and $contractData.compatibility.consumers -contains 'hermes-worker') },
+  [pscustomobject]@{ name = 'installed session aliases and implicit recognition'; pass = ($installExit -eq 0 -and @($installedRuns | Where-Object { $_.exit -ne 0 -or $_.status -ne 'PASS' -or -not $_.contract_match -or -not $_.skill_match -or -not $_.registration_match -or -not $_.implicit -or -not $_.recognition_match -or -not $_.obsolete_absent -or -not $_.receipt }).Count -eq 0) },
   [pscustomobject]@{ name = 'Wuther freshness and exact ids'; pass = ($null -ne $wutherContext -and $wutherBuildExit -eq 0 -and $wutherCheckExit -eq 0 -and @($expectedNodeIds | Where-Object { $_ -notin $wutherContext.nodes.id }).Count -eq 0 -and @($expectedDataIds | Where-Object { $_ -notin $wutherContext.data_objects.id }).Count -eq 0) },
   [pscustomobject]@{ name = 'Wuther immutable implementation source ref'; pass = ($sourceRefExistsExit -eq 0 -and $sourceImplementationDiffExit -eq 0) }
 )

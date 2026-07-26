@@ -1,0 +1,5 @@
+name: "starrail-sprint"
+description: "Aemeth sprint execution with Stelle, StarrailTopology, and Trailblazer"
+skills:
+  - "starrail-sprint"
+instruction: "Use the canonical Aemeth contract, preserve the protected runtime identifiers, stop failed verification, and emit a trailblazer-run-receipt.v1 receipt."

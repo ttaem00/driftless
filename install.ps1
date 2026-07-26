@@ -2,9 +2,8 @@
 #requires -PSEdition Core
 <#
 .SYNOPSIS
-  Driftless installer (PowerShell 7). Sets up an isolated home for Claude,
-  Codex, or both -- a config folder that lives INSIDE this repository, so the
-  agent never touches your machine's global Claude or Codex settings.
+  Driftless installer (PowerShell 7). Sets up isolated Claude/Codex homes and
+  the bounded Hermes Aemeth adapter inside this repository.
 
 .DESCRIPTION
   You cloned or downloaded Driftless. Run this once. It materializes a repo-local
@@ -21,24 +20,25 @@
   on PowerShell 7.
 
 .PARAMETER Tool
-  Which profile(s) to set up: 'claude', 'codex', or 'both'. Omit for an
-  interactive prompt (default 'both' when noninteractive).
+  Which surface(s) to set up: 'claude', 'codex', 'hermes', 'both', or 'all'.
+  'both' preserves the Claude+Codex behavior. 'all' also installs the bounded
+  Hermes Aemeth adapter and is the default when noninteractive.
 
 .PARAMETER DryRun
   Print the plan and change nothing.
 
 .PARAMETER Yes
-  Accept the default tool choice ('both') without prompting.
+  Accept the default tool choice ('all') without prompting.
 
 .EXAMPLE
   pwsh.exe -ExecutionPolicy Bypass -File install.ps1
 
 .EXAMPLE
-  pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool both -DryRun
+  pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool all -DryRun
 #>
 [CmdletBinding()]
 param(
-  [ValidateSet('claude', 'codex', 'both')]
+  [ValidateSet('claude', 'codex', 'hermes', 'both', 'all')]
   [string]$Tool,
   [switch]$DryRun,
   [switch]$Yes
@@ -94,16 +94,18 @@ function Confirm-YesNo {
 # ---------------------------------------------------------------------------
 function Select-Tool {
   if ($Tool) { return $Tool }
-  if ($Yes -or -not $interactive) { return 'both' }
-  Say 'Which agent do you want to set up an isolated home for?'
+  if ($Yes -or -not $interactive) { return 'all' }
+  Say 'Which agent surface do you want to set up?'
   Step '1) Claude'
   Step '2) Codex'
-  Step '3) Both  (default)'
-  $c = Read-Host '  Choose 1, 2, or 3 [3]'
+  Step '3) Hermes Aemeth adapter'
+  Step '4) All  (default)'
+  $c = Read-Host '  Choose 1, 2, 3, or 4 [4]'
   switch ($c) {
     '1' { return 'claude' }
     '2' { return 'codex' }
-    default { return 'both' }
+    '3' { return 'hermes' }
+    default { return 'all' }
   }
 }
 
@@ -193,6 +195,68 @@ function Install-IsolatedHome {
 }
 
 # ---------------------------------------------------------------------------
+# Materialize only the public Aemeth compatibility surface for Hermes. This is
+# intentionally not a full third Driftless profile: it copies one shared skill,
+# one shared contract, and a minimal Hermes-native routing adapter.
+# ---------------------------------------------------------------------------
+function Install-HermesAemethHome {
+  $name = 'Hermes Aemeth adapter'
+  $homeDir = Join-Path $runtimeDir 'hermes-home'
+  $profile = Join-Path $profilesDir 'hermes-aemeth-adapter'
+  $sharedSkill = Join-Path $profilesDir 'shared\skills\starrail-sprint'
+  $sharedContract = Join-Path $profilesDir 'shared\contract\STARRAIL_SPRINT_CONTRACT.json'
+
+  foreach ($required in @($profile, $sharedSkill, $sharedContract)) {
+    if (-not (Test-Path -LiteralPath $required)) {
+      throw "Hermes Aemeth adapter source is missing: $required"
+    }
+  }
+
+  if (Test-Path -LiteralPath $homeDir -PathType Container) {
+    Step ($name + ' home already exists -- refreshing it: ' + $homeDir)
+  } else {
+    Step ($name + ' home will be created at: ' + $homeDir)
+  }
+
+  if ($DryRun) {
+    Step ('[dry-run] would create ' + $homeDir)
+    Step '[dry-run] would copy the Starrail skill, Aemeth contract, and Hermes aliases'
+  } else {
+    $skillDest = Join-Path $homeDir 'skills\starrail-sprint'
+    $contractDest = Join-Path $homeDir 'shared\contract'
+    $sourceConfig = Join-Path $profile 'config.yaml'
+    $targetConfig = Join-Path $homeDir 'config.yaml'
+    if (Test-Path -LiteralPath $targetConfig -PathType Leaf) {
+      $targetConfigText = Get-Content -LiteralPath $targetConfig -Raw -Encoding UTF8
+      if (-not $targetConfigText.Contains('# driftless-aemeth-adapter.v1')) {
+        throw 'Existing repo-local Hermes config is not owned by the Driftless Aemeth adapter. It was preserved; choose a separate home or review it before installing.'
+      }
+      Step 'Existing Hermes adapter config preserved.'
+    }
+    foreach ($directory in @($homeDir, $skillDest, $contractDest)) {
+      if (-not (Test-Path -LiteralPath $directory)) {
+        New-Item -ItemType Directory -Path $directory -Force | Out-Null
+      }
+    }
+    if (-not (Test-Path -LiteralPath $targetConfig -PathType Leaf)) {
+      Copy-Item -LiteralPath $sourceConfig -Destination $targetConfig -Force
+    }
+    Get-ChildItem -LiteralPath $profile -Force |
+      Where-Object { $_.Name -ne 'config.yaml' } |
+      ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $homeDir -Recurse -Force }
+    Copy-Item -Path (Join-Path $sharedSkill '*') -Destination $skillDest -Recurse -Force
+    Copy-Item -LiteralPath $sharedContract -Destination (Join-Path $contractDest 'STARRAIL_SPRINT_CONTRACT.json') -Force
+    $obsoleteContract = Join-Path $contractDest 'STARTRAIL_SPRINT_CONTRACT.json'
+    if (Test-Path -LiteralPath $obsoleteContract -PathType Leaf) {
+      Remove-Item -LiteralPath $obsoleteContract -Force
+    }
+    Step ($name + ' active skills materialized: 1')
+  }
+
+  Step ($name + ' isolation: start Hermes with HERMES_HOME set to this repo-local home; the host-global Hermes home is never read or changed.')
+}
+
+# ---------------------------------------------------------------------------
 # Ask-before-install: optional extras (MCP servers, plugins, dependencies).
 # DEFAULT IS NO for every one of these. We print the prompt and only act on an
 # explicit yes. This is the load-bearing promise of the installer.
@@ -247,6 +311,7 @@ Say ''
 
 Step ("Claude CLI: " + (Get-CliState 'claude'))
 Step ("Codex CLI : " + (Get-CliState 'codex'))
+Step ("Hermes CLI: " + (Get-CliState 'hermes'))
 Say ''
 
 switch ($chosen) {
@@ -256,10 +321,20 @@ switch ($chosen) {
   'codex' {
     Install-IsolatedHome -Name 'Codex' -Profile 'codex' -HomeDir (Join-Path $runtimeDir 'codex-home') -EnvVar 'CODEX_HOME'
   }
+  'hermes' {
+    Install-HermesAemethHome
+  }
   'both' {
     Install-IsolatedHome -Name 'Claude' -Profile 'claude' -HomeDir (Join-Path $runtimeDir 'claude-home') -EnvVar 'CLAUDE_CONFIG_DIR'
     Say ''
     Install-IsolatedHome -Name 'Codex' -Profile 'codex' -HomeDir (Join-Path $runtimeDir 'codex-home') -EnvVar 'CODEX_HOME'
+  }
+  'all' {
+    Install-IsolatedHome -Name 'Claude' -Profile 'claude' -HomeDir (Join-Path $runtimeDir 'claude-home') -EnvVar 'CLAUDE_CONFIG_DIR'
+    Say ''
+    Install-IsolatedHome -Name 'Codex' -Profile 'codex' -HomeDir (Join-Path $runtimeDir 'codex-home') -EnvVar 'CODEX_HOME'
+    Say ''
+    Install-HermesAemethHome
   }
 }
 
@@ -272,13 +347,17 @@ if ($DryRun) {
 } else {
   Say 'Setup complete.'
   Step 'Your isolated home(s) live under .runtime and are contained to this repo.'
-  Step 'The host-global Claude/Codex config was never read or changed.'
+  Step 'The host-global Claude/Codex/Hermes config was never read or changed.'
   Say 'To start now, run from this folder (the env var points the agent at the isolated home):'
-  if ($chosen -eq 'claude' -or $chosen -eq 'both') {
+  if ($chosen -eq 'claude' -or $chosen -eq 'both' -or $chosen -eq 'all') {
     Step 'Claude:  $env:CLAUDE_CONFIG_DIR="$PWD\.runtime\claude-home"; claude'
   }
-  if ($chosen -eq 'codex' -or $chosen -eq 'both') {
+  if ($chosen -eq 'codex' -or $chosen -eq 'both' -or $chosen -eq 'all') {
     Step 'Codex:   $env:CODEX_HOME="$PWD\.runtime\codex-home"; codex'
+  }
+  if ($chosen -eq 'hermes' -or $chosen -eq 'all') {
+    Step 'Hermes:  $env:HERMES_HOME="$PWD\.runtime\hermes-home"; hermes'
+    Step 'Hermes Desktop: $env:HERMES_HOME="$PWD\.runtime\hermes-home"; hermes desktop --cwd $PWD'
   }
   Step 'Details + the macOS/Linux form: docs/en/apply-to-your-agent.md (Step 3).'
 }

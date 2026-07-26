@@ -10,7 +10,7 @@ You do not need to write any code.
 
 ## The magic path: say one sentence to your agent
 
-If you already have Claude Code or Codex running in this folder, you do not have
+If you already have Claude Code, Codex, or Hermes running in this folder, you do not have
 to run anything yourself. Just tell the agent, in plain words:
 
 > **"Apply this repo to me."**
@@ -22,7 +22,7 @@ Other sentences that work just as well:
 - "이 저장소를 나한테 적용해줘." (Korean)
 - "드리프트리스 격리 프로필로 나를 설정해줘." (Korean)
 
-The agent reads this page, figures out whether it is Claude or Codex, and runs
+The agent reads this page, figures out whether it is Claude, Codex, or Hermes, and runs
 the installer below for you. It will **stop and ask you** before installing any
 MCP server, plugin, or dependency. If you do not answer, the answer is No, and
 nothing extra is installed.
@@ -41,11 +41,13 @@ the shared skills into the active `skills/` directory for the selected agent.
    global config:
    - Claude is pointed at the isolated home via `CLAUDE_CONFIG_DIR`, instead of
      the host-global `~/.claude`.
-   - Codex is pointed at the isolated home via `CODEX_HOME`, instead of the
-     host-global `~/.codex`.
+    - Codex is pointed at the isolated home via `CODEX_HOME`, instead of the
+      host-global `~/.codex`.
+   - The bounded Hermes Aemeth adapter is pointed at `.runtime/hermes-home` via
+     `HERMES_HOME`, instead of a host-global Hermes home.
 4. Tell you which CLIs are installed and what to do next.
 
-The host-global `~/.claude` and `~/.codex` are **never read and never changed**.
+The host-global Claude, Codex, and Hermes homes are **never read and never changed**.
 Everything stays inside this repository, under `./.runtime/`, which is
 git-ignored and never committed.
 
@@ -61,12 +63,16 @@ Prefer to do it yourself? Open a terminal in this folder and run one command.
 # See the plan first (changes nothing):
 sh ./install.sh --dry-run
 
-# Set up both profiles:
-sh ./install.sh --both
+# Set up both full profiles plus the Hermes Aemeth adapter:
+sh ./install.sh --all
 
 # Or just one:
 sh ./install.sh --claude
 sh ./install.sh --codex
+sh ./install.sh --hermes
+
+# Back-compatible Claude + Codex only:
+sh ./install.sh --both
 
 # Interactive (it asks which tool):
 sh ./install.sh
@@ -78,12 +84,16 @@ sh ./install.sh
 # See the plan first (changes nothing):
 pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -DryRun
 
-# Set up both profiles:
-pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool both
+# Set up both full profiles plus the Hermes Aemeth adapter:
+pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool all
 
 # Or just one:
 pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool claude
 pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool codex
+pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool hermes
+
+# Back-compatible Claude + Codex only:
+pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool both
 
 # Interactive (it asks which tool):
 pwsh.exe -ExecutionPolicy Bypass -File install.ps1
@@ -136,15 +146,16 @@ appearing on your machine. You decide, every time.
 **2) 직접 한 줄 실행하기.**
 이 폴더에서 터미널을 열고 아래 한 줄만 실행하세요.
 
-- macOS / Linux: `sh ./install.sh --both`
-- Windows: `pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool both`
+- macOS / Linux: `sh ./install.sh --all`
+- Windows: `pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool all`
 - 먼저 계획만 보고 싶다면 끝에 `--dry-run`(Windows는 `-DryRun`)을 붙이세요.
 
 두 방법 모두 **격리 홈**을 이 저장소 안 `./.runtime/` 폴더에만 만듭니다.
 - Claude는 호스트 전역 `~/.claude` 대신 `CLAUDE_CONFIG_DIR`로 격리 홈을 봅니다.
 - Codex는 호스트 전역 `~/.codex` 대신 `CODEX_HOME`으로 격리 홈을 봅니다.
+- Hermes Aemeth 어댑터는 호스트 전역 Hermes 홈 대신 `HERMES_HOME`을 봅니다.
 
-즉, 컴퓨터의 전역 설정(`~/.claude`, `~/.codex`)은 **절대 읽거나 바꾸지
+즉, 컴퓨터의 전역 Claude/Codex/Hermes 설정은 **절대 읽거나 바꾸지
 않습니다.** 모든 것은 이 저장소 안에만 남습니다. 같은 명령을 다시 실행해도
 안전합니다(idempotent) — 이미 만든 격리 홈을 재사용하고 빠진 부분만 채웁니다.
 
@@ -168,6 +179,10 @@ macOS / Linux:
 CLAUDE_CONFIG_DIR="$(pwd)/.runtime/claude-home" claude
 # Codex
 CODEX_HOME="$(pwd)/.runtime/codex-home" codex
+# Hermes Aemeth adapter
+HERMES_HOME="$(pwd)/.runtime/hermes-home" hermes
+# Hermes Desktop with the same adapter
+HERMES_HOME="$(pwd)/.runtime/hermes-home" hermes desktop --cwd "$(pwd)"
 ```
 
 Windows (PowerShell):
@@ -177,13 +192,18 @@ Windows (PowerShell):
 $env:CLAUDE_CONFIG_DIR="$PWD\.runtime\claude-home"; claude
 # Codex
 $env:CODEX_HOME="$PWD\.runtime\codex-home"; codex
+# Hermes Aemeth adapter
+$env:HERMES_HOME="$PWD\.runtime\hermes-home"; hermes
+# Hermes Desktop with the same adapter
+$env:HERMES_HOME="$PWD\.runtime\hermes-home"; hermes desktop --cwd $PWD
 ```
 
 That is the launch step — there is no separate launcher script to install; the env
 var IS the isolation. Then:
 
 - Your isolated home(s) are under `./.runtime/` (for example
-  `./.runtime/claude-home` and `./.runtime/codex-home`). That folder is
+  `./.runtime/claude-home`, `./.runtime/codex-home`, and
+  `./.runtime/hermes-home`). That folder is
   git-ignored, so it is never committed and never shared.
 - To confirm the repo never touches a forbidden path or leaks a secret, run the
   containment gate:
@@ -205,7 +225,8 @@ Both gates are read-only: no network, no secrets, no host-global access.
 
 The procedure the agent follows when you say "apply this repo to me" is the
 shared **apply-driftless** skill (`profiles/shared/skills/apply-driftless/SKILL.md`),
-consumed identically by both the Claude and Codex profiles: detect the tool, dry-run
+consumed identically by both full Claude and Codex profiles: detect the tool, dry-run
 the installer, ask before any MCP/dependency/plugin (default no), verify the isolated
-home materialized and the gates pass, then report in plain language. It never touches
-your host-global config.
+home materialized and the gates pass, then report in plain language. The same
+installer can create the bounded Hermes Aemeth adapter. It never touches your
+host-global config.

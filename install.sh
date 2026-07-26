@@ -3,18 +3,20 @@
 #
 # What this does, in plain language:
 #   You cloned or downloaded Driftless. Run this once. It sets up an isolated
-#   home for Claude, Codex, or both -- a config folder that lives INSIDE this
-#   repository, so the agent never touches your machine's global Claude or Codex
-#   settings. It does NOT install Claude, Codex, any MCP server, any plugin, or
+#   homes for Claude/Codex plus a bounded Hermes Aemeth adapter -- all INSIDE
+#   this repository, so the agent never touches machine-global agent settings.
+#   It does NOT install Claude, Codex, Hermes, any MCP server, any plugin, or
 #   any dependency without asking you first (and the answer defaults to "no").
 #
 # Usage:
 #   ./install.sh                 # interactive: asks which tool(s) to set up
 #   ./install.sh --claude        # set up the Claude profile only
 #   ./install.sh --codex         # set up the Codex profile only
-#   ./install.sh --both          # set up both profiles
+#   ./install.sh --hermes        # set up only the Hermes Aemeth adapter
+#   ./install.sh --both          # set up Claude and Codex (back compatible)
+#   ./install.sh --all           # set up Claude, Codex, and the Hermes adapter
 #   ./install.sh --dry-run       # print the plan; change nothing
-#   ./install.sh --yes           # accept the default tool choice (both) noninteractively
+#   ./install.sh --yes           # accept the default tool choice (all) noninteractively
 #   ./install.sh --help          # show this help
 #
 # This script is idempotent: running it again re-uses the existing isolated home
@@ -60,7 +62,9 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --claude) TOOL="claude" ;;
     --codex)  TOOL="codex" ;;
+    --hermes) TOOL="hermes" ;;
     --both)   TOOL="both" ;;
+    --all)    TOOL="all" ;;
     --dry-run) DRY_RUN=1 ;;
     --yes|-y) ASSUME_YES=1 ;;
     -h|--help) print_help; exit 0 ;;
@@ -121,19 +125,21 @@ choose_tool() {
     return 0
   fi
   if [ "$ASSUME_YES" -eq 1 ] || [ ! -t 0 ]; then
-    TOOL="both"
+    TOOL="all"
     return 0
   fi
   say "Which agent do you want to set up an isolated home for?"
   step "1) Claude"
   step "2) Codex"
-  step "3) Both  (default)"
-  printf '  Choose 1, 2, or 3 [3]: '
+  step "3) Hermes Aemeth adapter"
+  step "4) All  (default)"
+  printf '  Choose 1, 2, 3, or 4 [4]: '
   read -r _c || _c=""
   case "$_c" in
     1) TOOL="claude" ;;
     2) TOOL="codex" ;;
-    *) TOOL="both" ;;
+    3) TOOL="hermes" ;;
+    *) TOOL="all" ;;
   esac
 }
 
@@ -203,6 +209,54 @@ materialize_home() {
   step "$NAME isolation: starting the agent with $ENV_VAR set to this repo-local home (the command printed at the end) keeps the host-global config untouched."
 }
 
+# Materialize only the shared Aemeth compatibility surface for Hermes. This is
+# not a full third Driftless profile.
+materialize_hermes_aemeth_home() {
+  _hermes_home="$RUNTIME_DIR/hermes-home"
+  _hermes_profile="$PROFILES_DIR/hermes-aemeth-adapter"
+  _hermes_skill="$PROFILES_DIR/shared/skills/starrail-sprint"
+  _hermes_contract="$PROFILES_DIR/shared/contract/STARRAIL_SPRINT_CONTRACT.json"
+
+  for _required in "$_hermes_profile" "$_hermes_skill" "$_hermes_contract"; do
+    if [ ! -e "$_required" ]; then
+      step "Hermes Aemeth adapter source is missing: $_required"
+      return 1
+    fi
+  done
+
+  if [ -d "$_hermes_home" ]; then
+    step "Hermes Aemeth adapter home already exists -- refreshing it: $_hermes_home"
+  else
+    step "Hermes Aemeth adapter home will be created at: $_hermes_home"
+  fi
+
+  _hermes_config_exists=0
+  if [ "$DRY_RUN" -eq 0 ] && [ -f "$_hermes_home/config.yaml" ]; then
+    _hermes_config_exists=1
+    if ! grep -Fq '# driftless-aemeth-adapter.v1' "$_hermes_home/config.yaml"; then
+      step "Existing repo-local Hermes config is not owned by the Driftless Aemeth adapter. It was preserved; choose a separate home or review it before installing."
+      return 1
+    fi
+    step "Existing Hermes adapter config preserved."
+  fi
+  run_or_plan "create the Hermes Aemeth adapter home" mkdir -p "$_hermes_home/skills/starrail-sprint" "$_hermes_home/shared/contract"
+  if [ "$_hermes_config_exists" -eq 0 ]; then
+    run_or_plan "copy the Hermes-native alias config" cp "$_hermes_profile/config.yaml" "$_hermes_home/config.yaml"
+  fi
+  for _profile_item in "$_hermes_profile"/*; do
+    [ "$(basename "$_profile_item")" = config.yaml ] && continue
+    run_or_plan "copy the Hermes adapter file $(basename "$_profile_item")" cp -R "$_profile_item" "$_hermes_home/"
+  done
+  run_or_plan "copy the shared Starrail skill" cp -R "$_hermes_skill/." "$_hermes_home/skills/starrail-sprint/"
+  run_or_plan "copy the canonical Aemeth contract" cp "$_hermes_contract" "$_hermes_home/shared/contract/STARRAIL_SPRINT_CONTRACT.json"
+  run_or_plan "remove obsolete misspelled Starrail contract" rm -f "$_hermes_home/shared/contract/STARTRAIL_SPRINT_CONTRACT.json"
+
+  if [ "$DRY_RUN" -eq 0 ]; then
+    step "Hermes Aemeth adapter active skills materialized: 1"
+  fi
+  step "Hermes isolation: start with HERMES_HOME set to this repo-local home; the host-global Hermes home is never read or changed."
+}
+
 # ---------------------------------------------------------------------------
 # Ask-before-install: optional extras (MCP servers, plugins, dependencies).
 # DEFAULT IS NO for every one of these. We print the prompt and only act on an
@@ -259,6 +313,7 @@ say ""
 # Report CLI presence (we never install the CLI itself).
 step "Claude CLI: $(cli_state claude)"
 step "Codex CLI : $(cli_state codex)"
+step "Hermes CLI: $(cli_state hermes)"
 say ""
 
 case "$TOOL" in
@@ -268,10 +323,20 @@ case "$TOOL" in
   codex)
     materialize_home "Codex" "codex" "$RUNTIME_DIR/codex-home" "CODEX_HOME"
     ;;
+  hermes)
+    materialize_hermes_aemeth_home
+    ;;
   both)
     materialize_home "Claude" "claude" "$RUNTIME_DIR/claude-home" "CLAUDE_CONFIG_DIR"
     say ""
     materialize_home "Codex" "codex" "$RUNTIME_DIR/codex-home" "CODEX_HOME"
+    ;;
+  all)
+    materialize_home "Claude" "claude" "$RUNTIME_DIR/claude-home" "CLAUDE_CONFIG_DIR"
+    say ""
+    materialize_home "Codex" "codex" "$RUNTIME_DIR/codex-home" "CODEX_HOME"
+    say ""
+    materialize_hermes_aemeth_home
     ;;
 esac
 
@@ -284,13 +349,17 @@ if [ "$DRY_RUN" -eq 1 ]; then
 else
   say "Setup complete."
   step "Your isolated home(s) live under .runtime and are contained to this repo."
-  step "The host-global Claude/Codex config was never read or changed."
+  step "The host-global Claude/Codex/Hermes config was never read or changed."
   say "To start now, run from this folder (the env var points the agent at the isolated home):"
-  if [ "$TOOL" = "claude" ] || [ "$TOOL" = "both" ]; then
+  if [ "$TOOL" = "claude" ] || [ "$TOOL" = "both" ] || [ "$TOOL" = "all" ]; then
     step "Claude:  CLAUDE_CONFIG_DIR=\"$(pwd)/.runtime/claude-home\" claude"
   fi
-  if [ "$TOOL" = "codex" ] || [ "$TOOL" = "both" ]; then
+  if [ "$TOOL" = "codex" ] || [ "$TOOL" = "both" ] || [ "$TOOL" = "all" ]; then
     step "Codex:   CODEX_HOME=\"$(pwd)/.runtime/codex-home\" codex"
+  fi
+  if [ "$TOOL" = "hermes" ] || [ "$TOOL" = "all" ]; then
+    step "Hermes:  HERMES_HOME=\"$(pwd)/.runtime/hermes-home\" hermes"
+    step "Hermes Desktop: HERMES_HOME=\"$(pwd)/.runtime/hermes-home\" hermes desktop --cwd \"$(pwd)\""
   fi
   step "Details + the Windows (PowerShell) form: docs/en/apply-to-your-agent.md (Step 3)."
 fi

@@ -1,0 +1,14 @@
+{
+  "schema_version": "starrail-topology.v1",
+  "topology_id": "blocked-demo",
+  "compatibility": {"worker_role": "worker", "route": "local"},
+  "aemeth": {"required_status": "PASS", "require_evidence": true},
+  "artifacts": [{"id": "run-receipt", "type": "json", "durable": true}],
+  "boundary": {"in_scope": ["public fixture", "local receipt"], "out_of_scope": ["credentials", "host-global profiles", "release publication"]},
+  "feedback_edges": [{"from": "verify", "to": "inspect", "when": "FAIL"}],
+  "steps": [
+    {"id": "inspect", "action": "Inspect the public fixture", "depends_on": [], "input": {"fixture": "repository-relative"}, "output": {"inventory": "sanitized"}, "verification": {"status": "PASS", "evidence": "fixture inspected"}, "exception": {"on_failure": "stop"}},
+    {"id": "verify", "action": "Verify the acceptance rows", "depends_on": ["inspect"], "input": {"inventory": "sanitized"}, "output": {"receipt": "blocked"}, "verification": {"status": "FAIL", "evidence": "one required row failed"}, "exception": {"on_failure": "feedback-to-inspect"}},
+    {"id": "publish", "action": "Prepare the review receipt", "depends_on": ["verify"], "input": {"receipt": "pass-only"}, "output": {"review": "ready"}, "verification": {"status": "PASS", "evidence": "must not run"}, "exception": {"on_failure": "stop"}}
+  ]
+}

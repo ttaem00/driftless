@@ -150,6 +150,11 @@ function Invoke-Test {
   & $wutherCodemap -Root $script:RepoRoot
   if ($LASTEXITCODE -ne 0) { throw ("Wuther Codemap gate failed: exit={0}" -f $LASTEXITCODE) }
 
+  $starrailSprint = Join-Path $script:RepoRoot 'scripts\Test-StarrailSprint.ps1'
+  $global:LASTEXITCODE = 0
+  & $starrailSprint -Root $script:RepoRoot
+  if ($LASTEXITCODE -ne 0) { throw ("Starrail Sprint gate failed: exit={0}" -f $LASTEXITCODE) }
+
   $textSafety = Join-Path $script:RepoRoot 'scripts\Test-WindowsTextSafety.ps1'
   if (Test-Path -LiteralPath $textSafety) {
     $global:LASTEXITCODE = 0

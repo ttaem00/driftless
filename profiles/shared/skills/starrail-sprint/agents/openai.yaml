@@ -1,0 +1,6 @@
+interface:
+  display_name: Starrail Sprint
+  short_description: Run a verification-gated shared evidence topology.
+  default_prompt: Use starrail-sprint to build and verify an ordered public-safe sprint receipt.
+policy:
+  allow_implicit_invocation: false

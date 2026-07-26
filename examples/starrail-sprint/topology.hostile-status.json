@@ -1,0 +1,12 @@
+{
+  "schema_version": "starrail-topology.v1",
+  "topology_id": "hostile-status",
+  "compatibility": {"worker_role": "worker", "route": "local"},
+  "aemeth": {"required_status": "FAIL", "require_evidence": true},
+  "artifacts": [{"id": "run-receipt", "type": "json", "durable": true}],
+  "boundary": {"in_scope": ["public fixture"], "out_of_scope": ["release publication"]},
+  "feedback_edges": [],
+  "steps": [
+    {"id": "verify", "action": "Attempt to reinterpret failure", "depends_on": [], "input": {"result": "unproven"}, "output": {"receipt": "must-block"}, "verification": {"status": "FAIL", "evidence": "failure cannot be success"}, "exception": {"on_failure": "stop"}}
+  ]
+}

@@ -187,7 +187,7 @@
     },
     {
       "name": "contract-starrail-sprint",
-      "file": "contract/STARTRAIL_SPRINT_CONTRACT.json",
+      "file": "contract/STARRAIL_SPRINT_CONTRACT.json",
       "consumedBy": ["claude", "codex"],
       "why": "The canonical meanings and metadata-only Hermes adapter fields are defined once for both profiles."
     }

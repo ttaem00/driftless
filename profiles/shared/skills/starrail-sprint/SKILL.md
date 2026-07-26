@@ -1,10 +1,10 @@
 ---
 name: starrail-sprint
 description: >
-  starrail-sprint: Use when a maintainer asks for a bounded Aemeth, Stelle,
-  StarrailTopology, and Trailblazer evidence sprint, an ordered sprint,
-  verification-gated topology, deterministic receipt, or Hermes-compatible
-  worker handoff without adding another agent profile.
+  starrail-sprint: Use when a maintainer says Aemeth/에이메스, Stelle/스텔레,
+  StarrailTopology/스타레일 토폴로지/스타레일, or
+  Trailblazer/개척자/개척자Trailblazer; also use for an ordered verification
+  topology, deterministic receipt, or metadata-only Hermes worker handoff.
 ---
 
 ## Improvement Principle
@@ -16,7 +16,7 @@ maintainer effort, time, cost, recurrence risk, or maintenance burden.
 
 # Starrail Sprint
 
-Use the installed `shared/contract/STARTRAIL_SPRINT_CONTRACT.json` as the single
+Use the installed `shared/contract/STARRAIL_SPRINT_CONTRACT.json` as the single
 meaning and compatibility authority. Both Claude and Codex receive this exact
 skill and contract from the Driftless installer.
 
@@ -29,7 +29,7 @@ skill and contract from the Driftless installer.
 Normal repository command:
 
 ```powershell
-pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Invoke-StarrailSprint.ps1 -TopologyPath .\examples\starrail-sprint\topology.pass.json -ContractPath .\.runtime\codex-home\shared\contract\STARTRAIL_SPRINT_CONTRACT.json -ReceiptPath .\.runtime\starrail-sprint\receipt.json
+pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Invoke-StarrailSprint.ps1 -TopologyPath .\examples\starrail-sprint\topology.pass.json -ContractPath .\.runtime\codex-home\shared\contract\STARRAIL_SPRINT_CONTRACT.json -ReceiptPath .\.runtime\starrail-sprint\receipt.json
 ```
 
 The receipt's `compatibility.worker_role` and `compatibility.route` fields are

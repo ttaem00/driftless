@@ -173,6 +173,10 @@ function Install-IsolatedHome {
       Get-ChildItem -LiteralPath $shared -Force |
         Where-Object { $_.Name -ne 'skills' } |
         ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $sharedDest -Recurse -Force }
+      $obsoleteStarrailContract = Join-Path $sharedDest 'contract\STARTRAIL_SPRINT_CONTRACT.json'
+      if (Test-Path -LiteralPath $obsoleteStarrailContract -PathType Leaf) {
+        Remove-Item -LiteralPath $obsoleteStarrailContract -Force
+      }
     }
 
     $activeSkills = Join-Path $HomeDir 'skills'

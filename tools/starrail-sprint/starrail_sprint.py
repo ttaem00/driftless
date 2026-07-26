@@ -12,6 +12,23 @@ from pathlib import Path
 from typing import Any
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9._-]*$")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+CANONICAL_ALIASES = {
+    "Aemeth": ["Aemeth", "에이메스"],
+    "Stelle": ["Stelle", "스텔레"],
+    "StarrailTopology": ["StarrailTopology", "스타레일 토폴로지", "스타레일"],
+    "Trailblazer": ["Trailblazer", "개척자", "개척자Trailblazer"],
+}
+
+
+def resolve_repo_path(raw_path: Path, *, must_exist: bool) -> Path:
+    candidate = raw_path if raw_path.is_absolute() else REPO_ROOT / raw_path
+    candidate = candidate.resolve(strict=must_exist)
+    try:
+        candidate.relative_to(REPO_ROOT)
+    except ValueError as exc:
+        raise ValueError(f"path must stay inside the Driftless repository: {raw_path}") from exc
+    return candidate
 
 
 class Aemeth:
@@ -19,15 +36,18 @@ class Aemeth:
 
     def __init__(self, sprint_spec: dict[str, Any]):
         self.required_status = str(sprint_spec.get("required_status", "PASS"))
-        self.require_evidence = bool(sprint_spec.get("require_evidence", True))
+        if self.required_status != "PASS":
+            raise ValueError("Aemeth required_status must be PASS; failed or unproven work cannot be configured as success")
+        if sprint_spec.get("require_evidence") is not True:
+            raise ValueError("Aemeth require_evidence must be true in v1; unproven work cannot pass")
 
     def verify(self, step: "Stelle") -> tuple[bool, str]:
         verification = step.verification
         passed = verification.get("status") == self.required_status
         evidence = verification.get("evidence")
-        if self.require_evidence and (not isinstance(evidence, str) or not evidence.strip()):
+        if not isinstance(evidence, str) or not evidence.strip():
             return False, "verification evidence is missing"
-        normalized_evidence = evidence.strip() if isinstance(evidence, str) else "evidence not required"
+        normalized_evidence = evidence.strip()
         if not passed:
             return False, normalized_evidence
         return True, normalized_evidence
@@ -64,8 +84,8 @@ class Stelle:
             raise ValueError(f"step {step_id}: verification is required")
         if not isinstance(input_contract, dict) or not isinstance(output_contract, dict):
             raise ValueError(f"step {step_id}: input and output contracts are required")
-        if not isinstance(exception_contract, dict) or not exception_contract.get("on_failure"):
-            raise ValueError(f"step {step_id}: exception.on_failure is required")
+        if not isinstance(exception_contract, dict) or exception_contract.get("on_failure") not in {"stop", "feedback"}:
+            raise ValueError(f"step {step_id}: exception.on_failure must be stop or feedback")
         return cls(step_id, action.strip(), tuple(dependencies), input_contract, output_contract, verification, exception_contract)
 
 
@@ -84,10 +104,15 @@ class StarrailTopology:
         self.artifacts = artifacts
         self.boundary = boundary
         self.feedback_edges = feedback_edges
-        if not artifacts or not all(isinstance(item, dict) and item.get("id") for item in artifacts):
-            raise ValueError("topology artifacts must contain named objects")
-        if not isinstance(boundary, dict) or not isinstance(boundary.get("in_scope"), list) or not isinstance(boundary.get("out_of_scope"), list):
-            raise ValueError("topology boundary requires in_scope and out_of_scope arrays")
+        if not isinstance(artifacts, list) or not artifacts or not all(isinstance(item, dict) and isinstance(item.get("id"), str) and item.get("id") for item in artifacts):
+            raise ValueError("topology artifacts must be an array of named objects")
+        if (
+            not isinstance(boundary, dict)
+            or not isinstance(boundary.get("in_scope"), list)
+            or not isinstance(boundary.get("out_of_scope"), list)
+            or not all(isinstance(item, str) for item in boundary.get("in_scope", []) + boundary.get("out_of_scope", []))
+        ):
+            raise ValueError("topology boundary requires string arrays in_scope and out_of_scope")
         if not isinstance(feedback_edges, list):
             raise ValueError("feedback_edges must be an array")
         self._by_id = {step.id: step for step in steps}
@@ -100,12 +125,25 @@ class StarrailTopology:
         for edge in feedback_edges:
             if not isinstance(edge, dict) or edge.get("from") not in self._by_id or edge.get("to") not in self._by_id or edge.get("when") != "FAIL":
                 raise ValueError("each feedback edge requires existing from/to step ids and when=FAIL")
+            if self._by_id[str(edge.get("from"))].exception_contract.get("on_failure") != "feedback":
+                raise ValueError(f"step {edge.get('from')}: feedback edge requires exception.on_failure=feedback")
+        for step in steps:
+            matching_edges = [edge for edge in feedback_edges if edge.get("from") == step.id and edge.get("when") == "FAIL"]
+            if step.exception_contract.get("on_failure") == "feedback" and len(matching_edges) != 1:
+                raise ValueError(f"step {step.id}: feedback policy requires exactly one matching FAIL feedback edge")
         self.ordered_steps()
 
     @classmethod
     def from_dict(cls, raw: dict[str, Any]) -> "StarrailTopology":
+        if not isinstance(raw, dict):
+            raise ValueError("topology document must be a JSON object")
         if raw.get("schema_version") != "starrail-topology.v1":
             raise ValueError("schema_version must be starrail-topology.v1")
+        steps_raw = raw.get("steps")
+        if not isinstance(steps_raw, list):
+            raise ValueError("topology steps must be an array")
+        if not all(isinstance(item, dict) for item in steps_raw):
+            raise ValueError("each topology step must be a JSON object")
         compatibility = raw.get("compatibility", {})
         if not isinstance(compatibility, dict):
             raise ValueError("compatibility must be an object")
@@ -118,7 +156,7 @@ class StarrailTopology:
             raise ValueError("aemeth sprint schema is required")
         return cls(
             str(raw.get("topology_id", "")),
-            [Stelle.from_dict(item) for item in raw.get("steps", [])],
+            [Stelle.from_dict(item) for item in steps_raw],
             normalized,
             aemeth_spec,
             raw.get("artifacts", []),
@@ -166,7 +204,7 @@ def Trailblazer(topology: StarrailTopology) -> dict[str, Any]:
             break
         completed.add(step.id)
     return {
-        "schema_version": "trailblazer-receipt.v1",
+        "schema_version": "trailblazer-run-receipt.v1",
         "topology_id": topology.topology_id,
         "status": status,
         "blocked_at": blocked_at,
@@ -185,20 +223,39 @@ def main() -> int:
     parser.add_argument("--contract", type=Path)
     parser.add_argument("--receipt", type=Path)
     args = parser.parse_args()
+    receipt_path: Path | None = None
     try:
+        topology_path = resolve_repo_path(args.topology, must_exist=True)
+        receipt_path = resolve_repo_path(args.receipt, must_exist=False) if args.receipt else None
         if args.contract:
-            contract = json.loads(args.contract.read_text(encoding="utf-8"))
-            if contract.get("schema_version") != "starrail-sprint.v1" or set(contract.get("profiles", [])) != {"claude", "codex"}:
-                raise ValueError("contract must be the shared starrail-sprint.v1 two-profile contract")
-        raw = json.loads(args.topology.read_text(encoding="utf-8"))
+            contract_path = resolve_repo_path(args.contract, must_exist=True)
+            contract = json.loads(contract_path.read_text(encoding="utf-8"))
+            if (
+                contract.get("schema_version") != "aemeth-sprint.v1"
+                or contract.get("receipt_schema") != "trailblazer-run-receipt.v1"
+                or set(contract.get("profiles", [])) != {"claude", "codex"}
+                or contract.get("session_aliases") != CANONICAL_ALIASES
+            ):
+                raise ValueError("contract must be the canonical aemeth-sprint.v1 two-profile contract with stable aliases and receipt schema")
+        raw = json.loads(topology_path.read_text(encoding="utf-8"))
         receipt = Trailblazer(StarrailTopology.from_dict(raw))
     except (OSError, ValueError, json.JSONDecodeError) as exc:
-        print(json.dumps({"schema_version": "trailblazer-receipt.v1", "status": "ERROR", "problem": str(exc)}, indent=2))
+        blocked_receipt = {
+            "schema_version": "trailblazer-run-receipt.v1",
+            "status": "BLOCKED",
+            "blocked_at": "topology-validation",
+            "problem": str(exc),
+        }
+        rendered_problem = json.dumps(blocked_receipt, indent=2, sort_keys=True)
+        if receipt_path:
+            receipt_path.parent.mkdir(parents=True, exist_ok=True)
+            receipt_path.write_text(rendered_problem + "\n", encoding="utf-8")
+        print(rendered_problem)
         return 1
     rendered = json.dumps(receipt, indent=2, sort_keys=True)
-    if args.receipt:
-        args.receipt.parent.mkdir(parents=True, exist_ok=True)
-        args.receipt.write_text(rendered + "\n", encoding="utf-8")
+    if receipt_path:
+        receipt_path.parent.mkdir(parents=True, exist_ok=True)
+        receipt_path.write_text(rendered + "\n", encoding="utf-8")
     print(rendered)
     return 0 if receipt["status"] == "PASS" else 2
 

@@ -1,7 +1,7 @@
 # Starrail Sprint
 
-Starrail Sprint는 증거 중심 작업을 위한 작은 공용 용어입니다. Claude와 Codex가
-같은 뜻을 사용하므로 학생이 두 개의 오케스트레이션 체계를 배울 필요가 없습니다.
+Starrail Sprint는 증거 중심 작업을 위한 작은 공용 용어입니다. Claude, Codex와
+작은 Hermes 어댑터가 같은 뜻을 사용하므로 학생이 별도 체계를 배울 필요가 없습니다.
 
 - **Aemeth / 에이메스**: 데이터 기반 스프린트 스키마와 검증·피드백 고리
 - **Stelle / 스텔레**: 입력·출력·검증·예외 계약이 있는 한 실행 단계
@@ -14,11 +14,15 @@ Starrail Sprint는 증거 중심 작업을 위한 작은 공용 용어입니다.
 pwsh.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\Invoke-StarrailSprint.ps1 -TopologyPath .\examples\starrail-sprint\topology.pass.json -ContractPath .\.runtime\codex-home\shared\contract\STARRAIL_SPRINT_CONTRACT.json -ReceiptPath .\.runtime\starrail-sprint\receipt.json
 ```
 
+`Invoke-AemethSprint.ps1`도 같은 실행기를 부르는 호환 이름입니다. 두 명령의
+결과가 같아야만 검사를 통과합니다.
+
 모든 필수 검증이 통과할 때만 종료 코드가 0입니다. 정본 계약과 호환 필드는
 `profiles/shared/contract/STARRAIL_SPRINT_CONTRACT.json` 한 곳에 있으며 설치 시
-Claude와 Codex의 격리 홈에 같은 skill/contract가 복사됩니다. Hermes와
-`hermes-worker`는 공개 JSON 호환 필드를 사용할 수 있지만 Driftless 프로필은
-Claude와 Codex 두 개뿐입니다.
+Claude와 Codex의 격리 홈에 같은 skill/contract가 복사됩니다. 설치기의
+`-Tool hermes` / `--hermes`를 쓰면 이 기술, 계약, 보호 별칭만 저장소 안
+`.runtime/hermes-home`에도 복사됩니다. `hermes-worker`도 같은 공개 JSON 필드를
+사용합니다. 이 Hermes 어댑터는 완전한 세 번째 Driftless 프로필이 아닙니다.
 
 영수증 쓰기는 생성 증거 폴더 `.runtime/starrail-sprint` 아래로 제한됩니다.
 토폴로지와 계약은 저장소 안에서만 읽습니다. `README.md` 같은 소스 파일은

@@ -185,6 +185,7 @@ Watch this repo's history fill in: [commits](https://github.com/mizan0515/driftl
 - [Apply it to your own agent](./docs/en/apply-to-your-agent.md) — adopt the pieces you want.
 - [Mission Map](./docs/en/mission-map.md) — public-safe fixture/spec for showing active goal, guardian, PR/check state, blockers, and next action.
 - [Wuther Codemap](./docs/en/wuther-codemap.md) (KO: [Wuther Codemap](./docs/ko/wuther-codemap.md)) — one versioned repository manifest for manager HTML and LLM JSON/Markdown views.
+- [Starrail Sprint](./docs/en/starrail-sprint.md) (KO: [Starrail Sprint](./docs/ko/starrail-sprint.md)) — run ordered Aemeth-verified steps from the same installed contract in Claude and Codex.
 - [Single-source two-profile mirror](./docs/en/single-source-mirror.md) — how one edit updates both.
 - [Guardrails](./docs/en/guardrails.md) — containment, the forbidden surface, and the FAIL test.
 - [Public-safe export classifier](./docs/en/public-safe-export-classifier.md) — classify private-derived lessons before they become public docs or examples.

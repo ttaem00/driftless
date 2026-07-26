@@ -1,0 +1,12 @@
+{
+  "schema_version": "starrail-topology.v1",
+  "topology_id": "evidence-disabled",
+  "compatibility": {"worker_role": "worker", "route": "local"},
+  "aemeth": {"required_status": "PASS", "require_evidence": false},
+  "artifacts": [{"id": "run-receipt", "type": "json", "durable": true}],
+  "boundary": {"in_scope": ["public fixture"], "out_of_scope": ["release publication"]},
+  "feedback_edges": [],
+  "steps": [
+    {"id": "verify", "action": "Attempt to pass without proof", "depends_on": [], "input": {"result": "unproven"}, "output": {"receipt": "must-block"}, "verification": {"status": "PASS"}, "exception": {"on_failure": "stop"}}
+  ]
+}

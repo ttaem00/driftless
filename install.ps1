@@ -224,12 +224,26 @@ function Install-HermesAemethHome {
   } else {
     $skillDest = Join-Path $homeDir 'skills\starrail-sprint'
     $contractDest = Join-Path $homeDir 'shared\contract'
+    $sourceConfig = Join-Path $profile 'config.yaml'
+    $targetConfig = Join-Path $homeDir 'config.yaml'
+    if (Test-Path -LiteralPath $targetConfig -PathType Leaf) {
+      $targetConfigText = Get-Content -LiteralPath $targetConfig -Raw -Encoding UTF8
+      if (-not $targetConfigText.Contains('# driftless-aemeth-adapter.v1')) {
+        throw 'Existing repo-local Hermes config is not owned by the Driftless Aemeth adapter. It was preserved; choose a separate home or review it before installing.'
+      }
+      Step 'Existing Hermes adapter config preserved.'
+    }
     foreach ($directory in @($homeDir, $skillDest, $contractDest)) {
       if (-not (Test-Path -LiteralPath $directory)) {
         New-Item -ItemType Directory -Path $directory -Force | Out-Null
       }
     }
-    Copy-Item -Path (Join-Path $profile '*') -Destination $homeDir -Recurse -Force
+    if (-not (Test-Path -LiteralPath $targetConfig -PathType Leaf)) {
+      Copy-Item -LiteralPath $sourceConfig -Destination $targetConfig -Force
+    }
+    Get-ChildItem -LiteralPath $profile -Force |
+      Where-Object { $_.Name -ne 'config.yaml' } |
+      ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $homeDir -Recurse -Force }
     Copy-Item -Path (Join-Path $sharedSkill '*') -Destination $skillDest -Recurse -Force
     Copy-Item -LiteralPath $sharedContract -Destination (Join-Path $contractDest 'STARRAIL_SPRINT_CONTRACT.json') -Force
     $obsoleteContract = Join-Path $contractDest 'STARTRAIL_SPRINT_CONTRACT.json'
@@ -343,6 +357,7 @@ if ($DryRun) {
   }
   if ($chosen -eq 'hermes' -or $chosen -eq 'all') {
     Step 'Hermes:  $env:HERMES_HOME="$PWD\.runtime\hermes-home"; hermes'
+    Step 'Hermes Desktop: $env:HERMES_HOME="$PWD\.runtime\hermes-home"; hermes desktop --cwd $PWD'
   }
   Step 'Details + the macOS/Linux form: docs/en/apply-to-your-agent.md (Step 3).'
 }

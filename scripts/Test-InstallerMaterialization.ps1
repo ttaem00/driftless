@@ -183,6 +183,18 @@ $sourceStarrailSkill = Join-Path $repoRoot 'profiles\shared\skills\starrail-spri
 $sourceStarrailRegistration = Join-Path $repoRoot 'profiles\shared\skills\starrail-sprint\agents\openai.yaml'
 $sourceStarrailContract = Join-Path $repoRoot 'profiles\shared\contract\STARRAIL_SPRINT_CONTRACT.json'
 $hermesFailures = [System.Collections.Generic.List[string]]::new()
+$aliases = @()
+
+foreach ($desktopEntryPoint in @(
+  @{ name = 'PowerShell installer'; path = $installer },
+  @{ name = 'POSIX installer'; path = (Join-Path $repoRoot 'install.sh') }
+)) {
+  if (-not (Test-Path -LiteralPath $desktopEntryPoint.path -PathType Leaf)) {
+    $hermesFailures.Add("$($desktopEntryPoint.name) missing") | Out-Null
+  } elseif (-not (Get-Content -LiteralPath $desktopEntryPoint.path -Raw -Encoding UTF8).Contains('hermes desktop --cwd')) {
+    $hermesFailures.Add("$($desktopEntryPoint.name) missing Hermes Desktop entry point") | Out-Null
+  }
+}
 
 $requiredHermesFiles = @($hermesSkill, $hermesRegistration, $hermesContract, $hermesGuide, $hermesConfig, $hermesBundle)
 foreach ($requiredFile in $requiredHermesFiles) {
@@ -242,13 +254,30 @@ $configHashAfter = if (Test-Path -LiteralPath $hermesConfig -PathType Leaf) { Ge
 if ($hermesRerun.exit -ne 0 -or [string]::IsNullOrWhiteSpace($configHashBefore) -or $configHashBefore -cne $configHashAfter) {
   $hermesFailures.Add('idempotent rerun failed') | Out-Null
 }
+$customPreserved = $false
+if (Test-Path -LiteralPath $hermesConfig -PathType Leaf) {
+  $originalConfigBytes = [System.IO.File]::ReadAllBytes($hermesConfig)
+  try {
+    $customConfigText = (Get-Content -LiteralPath $hermesConfig -Raw -Encoding UTF8).TrimEnd() + "`nmanager_preserved_setting: true`n"
+    [System.IO.File]::WriteAllText($hermesConfig, $customConfigText, [System.Text.UTF8Encoding]::new($false))
+    $customHashBefore = Get-Sha256 -Path $hermesConfig
+    $customRerun = Invoke-Installer -Tool 'hermes'
+    $customHashAfter = Get-Sha256 -Path $hermesConfig
+    $customPreserved = ($customRerun.exit -eq 0 -and $customHashBefore -ceq $customHashAfter)
+  } finally {
+    [System.IO.File]::WriteAllBytes($hermesConfig, $originalConfigBytes)
+  }
+}
+if (-not $customPreserved) {
+  $hermesFailures.Add('manager config preservation failed') | Out-Null
+}
 $hermesSkillCount = @(Get-SkillNames -Roots @((Join-Path $hermesHome 'skills'))).Count
 if ($hermesSkillCount -ne 1) {
   $hermesFailures.Add("bounded skill count=$hermesSkillCount") | Out-Null
 }
 
 $hermesStatus = if ($hermesInstall.exit -eq 0 -and $hermesFailures.Count -eq 0) { 'PASS' } else { 'FAIL' }
-$hermesEvidence = "installer_exit=$($hermesInstall.exit); active_skills=$hermesSkillCount; aliases=10; idempotent=$($configHashBefore -ceq $configHashAfter)"
+$hermesEvidence = "installer_exit=$($hermesInstall.exit); active_skills=$hermesSkillCount; aliases=$($aliases.Count); idempotent=$($configHashBefore -ceq $configHashAfter); manager_config_preserved=$customPreserved"
 if ($hermesFailures.Count -gt 0) {
   $hermesEvidence += '; failures=' + (($hermesFailures | Select-Object -First 8) -join ',')
 }

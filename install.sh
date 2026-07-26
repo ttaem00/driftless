@@ -230,9 +230,24 @@ materialize_hermes_aemeth_home() {
     step "Hermes Aemeth adapter home will be created at: $_hermes_home"
   fi
 
+  _hermes_config_exists=0
+  if [ "$DRY_RUN" -eq 0 ] && [ -f "$_hermes_home/config.yaml" ]; then
+    _hermes_config_exists=1
+    if ! grep -Fq '# driftless-aemeth-adapter.v1' "$_hermes_home/config.yaml"; then
+      step "Existing repo-local Hermes config is not owned by the Driftless Aemeth adapter. It was preserved; choose a separate home or review it before installing."
+      return 1
+    fi
+    step "Existing Hermes adapter config preserved."
+  fi
   run_or_plan "create the Hermes Aemeth adapter home" mkdir -p "$_hermes_home/skills/starrail-sprint" "$_hermes_home/shared/contract"
-  run_or_plan "copy the Hermes-native aliases" sh -c "cp -R \"$_hermes_profile/.\" \"$_hermes_home/\""
-  run_or_plan "copy the shared Starrail skill" sh -c "cp -R \"$_hermes_skill/.\" \"$_hermes_home/skills/starrail-sprint/\""
+  if [ "$_hermes_config_exists" -eq 0 ]; then
+    run_or_plan "copy the Hermes-native alias config" cp "$_hermes_profile/config.yaml" "$_hermes_home/config.yaml"
+  fi
+  for _profile_item in "$_hermes_profile"/*; do
+    [ "$(basename "$_profile_item")" = config.yaml ] && continue
+    run_or_plan "copy the Hermes adapter file $(basename "$_profile_item")" cp -R "$_profile_item" "$_hermes_home/"
+  done
+  run_or_plan "copy the shared Starrail skill" cp -R "$_hermes_skill/." "$_hermes_home/skills/starrail-sprint/"
   run_or_plan "copy the canonical Aemeth contract" cp "$_hermes_contract" "$_hermes_home/shared/contract/STARRAIL_SPRINT_CONTRACT.json"
   run_or_plan "remove obsolete misspelled Starrail contract" rm -f "$_hermes_home/shared/contract/STARTRAIL_SPRINT_CONTRACT.json"
 
@@ -344,6 +359,7 @@ else
   fi
   if [ "$TOOL" = "hermes" ] || [ "$TOOL" = "all" ]; then
     step "Hermes:  HERMES_HOME=\"$(pwd)/.runtime/hermes-home\" hermes"
+    step "Hermes Desktop: HERMES_HOME=\"$(pwd)/.runtime/hermes-home\" hermes desktop --cwd \"$(pwd)\""
   fi
   step "Details + the Windows (PowerShell) form: docs/en/apply-to-your-agent.md (Step 3)."
 fi

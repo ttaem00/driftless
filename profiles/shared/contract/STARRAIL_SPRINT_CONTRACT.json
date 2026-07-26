@@ -1,6 +1,6 @@
 {
   "schema_version": "aemeth-sprint.v1",
-  "purpose": "Run a small, ordered evidence sprint with one vocabulary shared by Claude and Codex.",
+  "purpose": "Run a small, ordered evidence sprint with one vocabulary shared by Claude, Codex, and the bounded Hermes Aemeth adapter.",
   "protected_meanings": {
     "Aemeth": "The data-driven sprint schema plus validation and feedback loop that refuses unproven work.",
     "Stelle": "One named executable step with input, output, verification, and exception contracts.",
@@ -14,10 +14,10 @@
     "Trailblazer": ["Trailblazer", "개척자", "개척자Trailblazer"]
   },
   "executable_identifiers": {
-    "Aemeth": "class",
-    "Stelle": "class",
-    "StarrailTopology": "class",
-    "Trailblazer": "function"
+    "Aemeth": {"object": "AemethExecutionLanguage", "function": "New-AemethSprint", "python_function": "NewAemethSprint"},
+    "Stelle": {"object": "StelleStepContract", "function": "New-StelleStep", "python_function": "NewStelleStep"},
+    "StarrailTopology": {"object": "StarrailTopologyGraph", "function": "New-StarrailTopology", "python_function": "NewStarrailTopology"},
+    "Trailblazer": {"object": "TrailblazerExecutor", "function": "Invoke-Trailblazer", "python_function": "InvokeTrailblazer"}
   },
   "input_schema": "starrail-topology.v1",
   "receipt_schema": "trailblazer-run-receipt.v1",
@@ -32,6 +32,13 @@
     "adapter_contract": "public-json-fields",
     "profile_required": false,
     "consumers": ["hermes", "hermes-worker"],
+    "hermes_adapter": {
+      "kind": "bounded-aemeth-home",
+      "home": ".runtime/hermes-home",
+      "skill": "skills/starrail-sprint/SKILL.md",
+      "contract": "shared/contract/STARRAIL_SPRINT_CONTRACT.json",
+      "reload": "/reload-skills-or-restart"
+    },
     "fields": {
       "worker_role": "compatibility.worker_role",
       "route": "compatibility.route",

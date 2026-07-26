@@ -166,7 +166,7 @@ class StarrailTopology:
             raise ValueError("aemeth sprint schema is required")
         return cls(
             str(raw.get("topology_id", "")),
-            [Stelle.from_dict(item) for item in steps_raw],
+            [NewStelleStep(item) for item in steps_raw],
             normalized,
             aemeth_spec,
             raw.get("artifacts", []),
@@ -189,7 +189,30 @@ class StarrailTopology:
         return ordered
 
 
-def Trailblazer(topology: StarrailTopology) -> dict[str, Any]:
+AemethExecutionLanguage = Aemeth
+StelleStepContract = Stelle
+StarrailTopologyGraph = StarrailTopology
+
+
+def NewStelleStep(raw: dict[str, Any]) -> StelleStepContract:
+    """Build one canonical Stelle step contract."""
+
+    return StelleStepContract.from_dict(raw)
+
+
+def NewStarrailTopology(raw: dict[str, Any]) -> StarrailTopologyGraph:
+    """Build the canonical Starrail topology graph."""
+
+    return StarrailTopologyGraph.from_dict(raw)
+
+
+def NewAemethSprint(raw: dict[str, Any]) -> StarrailTopologyGraph:
+    """Build one Aemeth sprint from its subordinate topology document."""
+
+    return NewStarrailTopology(raw)
+
+
+def _run_trailblazer(topology: StarrailTopologyGraph) -> dict[str, Any]:
     """Traverse a topology and stop at the first failed Aemeth gate."""
 
     rows: list[dict[str, Any]] = []
@@ -197,7 +220,7 @@ def Trailblazer(topology: StarrailTopology) -> dict[str, Any]:
     status = "PASS"
     blocked_at: str | None = None
     feedback: dict[str, str] | None = None
-    gate = Aemeth(topology.aemeth_spec)
+    gate = AemethExecutionLanguage(topology.aemeth_spec)
     for step in topology.ordered_steps():
         if any(item not in completed for item in step.depends_on):
             status, blocked_at = "BLOCKED", step.id
@@ -215,6 +238,10 @@ def Trailblazer(topology: StarrailTopology) -> dict[str, Any]:
         completed.add(step.id)
     return {
         "schema_version": "trailblazer-run-receipt.v1",
+        "runtime_identifiers": {
+            "objects": ["AemethExecutionLanguage", "StelleStepContract", "StarrailTopologyGraph", "TrailblazerExecutor"],
+            "functions": ["New-AemethSprint", "New-StelleStep", "New-StarrailTopology", "Invoke-Trailblazer"],
+        },
         "topology_id": topology.topology_id,
         "status": status,
         "blocked_at": blocked_at,
@@ -225,6 +252,23 @@ def Trailblazer(topology: StarrailTopology) -> dict[str, Any]:
         "steps": rows,
         "summary": {"passed": len(completed), "total": len(topology.steps)},
     }
+
+
+class TrailblazerExecutor:
+    """Contained executor for one verified Starrail topology."""
+
+    def invoke(self, topology: StarrailTopologyGraph) -> dict[str, Any]:
+        return _run_trailblazer(topology)
+
+
+def InvokeTrailblazer(topology: StarrailTopologyGraph) -> dict[str, Any]:
+    """Invoke the canonical Trailblazer executor."""
+
+    return TrailblazerExecutor().invoke(topology)
+
+
+# Backward-compatible public name retained for callers of the first adapter.
+Trailblazer = InvokeTrailblazer
 
 
 def main() -> int:
@@ -245,10 +289,11 @@ def main() -> int:
                 or contract.get("receipt_schema") != "trailblazer-run-receipt.v1"
                 or set(contract.get("profiles", [])) != {"claude", "codex"}
                 or contract.get("session_aliases") != CANONICAL_ALIASES
+                or contract.get("compatibility", {}).get("hermes_adapter", {}).get("kind") != "bounded-aemeth-home"
             ):
-                raise ValueError("contract must be the canonical aemeth-sprint.v1 two-profile contract with stable aliases and receipt schema")
+                raise ValueError("contract must be the canonical aemeth-sprint.v1 contract with stable aliases, receipt schema, and Hermes Aemeth adapter")
         raw = json.loads(topology_path.read_text(encoding="utf-8"))
-        receipt = Trailblazer(StarrailTopology.from_dict(raw))
+        receipt = InvokeTrailblazer(NewAemethSprint(raw))
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         blocked_receipt = {
             "schema_version": "trailblazer-run-receipt.v1",

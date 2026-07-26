@@ -5,7 +5,7 @@
     "id": "driftless-starrail-sprint",
     "name": "Driftless Starrail Sprint",
     "manager_summary": "One public-safe verification sprint contract shared by installed Claude and Codex profiles.",
-    "source_ref": "a632ba2af3c06be6516fc17d171b0a0c678f4a13"
+    "source_ref": "565221c97553001d45d548e6428308b515cb76a7"
   },
   "domains": [
     {"id": "sprint", "label": "Evidence sprint", "purpose": "Turn bounded steps and verification feedback into one durable review receipt.", "icon": "route"}

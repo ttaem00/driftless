@@ -17,8 +17,8 @@ $nullSteps = Join-Path $Root 'examples\starrail-sprint\topology.null-steps.json'
 $nonobjectStep = Join-Path $Root 'examples\starrail-sprint\topology.nonobject-step.json'
 $runtime = Join-Path $Root 'tools\starrail-sprint\starrail_sprint.py'
 $contract = Join-Path $Root 'profiles\shared\contract\STARRAIL_SPRINT_CONTRACT.json'
-$receiptPath = Join-Path $Root '.runtime\test-starrail-sprint\receipt.json'
-$failReceiptPath = Join-Path $Root '.runtime\test-starrail-sprint\blocked-receipt.json'
+$receiptPath = Join-Path $Root '.runtime\starrail-sprint\test\receipt.json'
+$failReceiptPath = Join-Path $Root '.runtime\starrail-sprint\test\blocked-receipt.json'
 $installer = Join-Path $Root 'install.ps1'
 $sourceSkill = Join-Path $Root 'profiles\shared\skills\starrail-sprint\SKILL.md'
 $sourceRegistration = Join-Path $Root 'profiles\shared\skills\starrail-sprint\agents\openai.yaml'
@@ -44,7 +44,7 @@ $installedRuns = foreach ($tool in @('claude', 'codex')) {
   $installedSkill = Join-Path $installedHome 'skills\starrail-sprint\SKILL.md'
   $installedRegistration = Join-Path $installedHome 'skills\starrail-sprint\agents\openai.yaml'
   $obsoleteInstalledContract = Join-Path $installedHome 'shared\contract\STARTRAIL_SPRINT_CONTRACT.json'
-  $installedReceipt = Join-Path $Root ".runtime\test-starrail-sprint\$tool-receipt.json"
+  $installedReceipt = Join-Path $Root ".runtime\starrail-sprint\test\$tool-receipt.json"
   $output = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $pass -ContractPath $installedContract -ReceiptPath $installedReceipt 2>&1)
   [pscustomobject]@{
     tool = $tool
@@ -98,13 +98,13 @@ $passReceipt = ($passOutput -join "`n") | ConvertFrom-Json
 $failOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $fail -ReceiptPath $failReceiptPath 2>&1)
 $failExit = $LASTEXITCODE
 $failReceipt = ($failOutput -join "`n") | ConvertFrom-Json
-$hostileOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $hostileStatus -ReceiptPath '.runtime\test-starrail-sprint\hostile-receipt.json' 2>&1)
+$hostileOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $hostileStatus -ReceiptPath '.runtime\starrail-sprint\test\hostile-receipt.json' 2>&1)
 $hostileExit = $LASTEXITCODE
 $hostileReceipt = ($hostileOutput -join "`n") | ConvertFrom-Json
-$invalidPolicyOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $invalidPolicy -ReceiptPath '.runtime\test-starrail-sprint\invalid-policy-receipt.json' 2>&1)
+$invalidPolicyOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $invalidPolicy -ReceiptPath '.runtime\starrail-sprint\test\invalid-policy-receipt.json' 2>&1)
 $invalidPolicyExit = $LASTEXITCODE
 $invalidPolicyReceipt = ($invalidPolicyOutput -join "`n") | ConvertFrom-Json
-$missingFeedbackOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $missingFeedback -ReceiptPath '.runtime\test-starrail-sprint\missing-feedback-receipt.json' 2>&1)
+$missingFeedbackOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $missingFeedback -ReceiptPath '.runtime\starrail-sprint\test\missing-feedback-receipt.json' 2>&1)
 $missingFeedbackExit = $LASTEXITCODE
 $missingFeedbackReceipt = ($missingFeedbackOutput -join "`n") | ConvertFrom-Json
 $evidenceDisabledOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $evidenceDisabled 2>&1)
@@ -125,6 +125,14 @@ $outsideExit = $LASTEXITCODE
 $directOutsideReceipt = Join-Path ([System.IO.Path]::GetTempPath()) ("driftless-starrail-python-receipt-{0}.json" -f [guid]::NewGuid().ToString('N'))
 $directReceiptOutput = @(& python $runtime --topology $pass --receipt $directOutsideReceipt 2>&1)
 $directReceiptExit = $LASTEXITCODE
+$trackedReceiptTarget = Join-Path $Root 'README.md'
+$trackedReceiptBefore = Get-Sha256 -Path $trackedReceiptTarget
+$wrapperTrackedOutput = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $pass -ReceiptPath $trackedReceiptTarget 2>&1)
+$wrapperTrackedExit = $LASTEXITCODE
+$trackedReceiptAfterWrapper = Get-Sha256 -Path $trackedReceiptTarget
+$directTrackedOutput = @(& python $runtime --topology $pass --receipt $trackedReceiptTarget 2>&1)
+$directTrackedExit = $LASTEXITCODE
+$trackedReceiptAfterDirect = Get-Sha256 -Path $trackedReceiptTarget
 $directOutsideTopology = Join-Path ([System.IO.Path]::GetTempPath()) ("driftless-starrail-python-topology-{0}.json" -f [guid]::NewGuid().ToString('N'))
 $directOutsideContract = Join-Path ([System.IO.Path]::GetTempPath()) ("driftless-starrail-python-contract-{0}.json" -f [guid]::NewGuid().ToString('N'))
 Copy-Item -LiteralPath $pass -Destination $directOutsideTopology
@@ -150,6 +158,7 @@ $checks = @(
   [pscustomobject]@{ name = 'malformed topology shapes normalize to blocked receipts'; pass = ($notObjectExit -eq 1 -and $notObjectReceipt.status -eq 'BLOCKED' -and $notObjectReceipt.problem.Contains('must be a JSON object') -and $nullStepsExit -eq 1 -and $nullStepsReceipt.status -eq 'BLOCKED' -and $nullStepsReceipt.problem.Contains('steps must be an array') -and $nonobjectStepExit -eq 1 -and $nonobjectStepReceipt.status -eq 'BLOCKED' -and $nonobjectStepReceipt.problem.Contains('step must be a JSON object')) },
   [pscustomobject]@{ name = 'receipt containment negative case'; pass = ($outsideExit -ne 0 -and -not (Test-Path -LiteralPath $outsideReceipt)) },
   [pscustomobject]@{ name = 'direct Python containment negative cases'; pass = ($directReceiptExit -ne 0 -and $directTopologyExit -ne 0 -and $directContractExit -ne 0 -and -not (Test-Path -LiteralPath $directOutsideReceipt)) },
+  [pscustomobject]@{ name = 'tracked source receipt targets stay unchanged'; pass = ($wrapperTrackedExit -ne 0 -and $directTrackedExit -ne 0 -and $trackedReceiptBefore -eq $trackedReceiptAfterWrapper -and $trackedReceiptBefore -eq $trackedReceiptAfterDirect -and ($wrapperTrackedOutput -join "`n").Contains('.runtime/starrail-sprint') -and ($directTrackedOutput -join "`n").Contains('.runtime/starrail-sprint')) },
   [pscustomobject]@{ name = 'canonical cross-project schema names'; pass = ($contractData.schema_version -eq 'aemeth-sprint.v1' -and $contractData.receipt_schema -eq 'trailblazer-run-receipt.v1' -and $passReceipt.schema_version -eq 'trailblazer-run-receipt.v1' -and -not (($contractData | ConvertTo-Json -Depth 20).Contains('starrail-sprint.v1')) -and -not (($passReceipt | ConvertTo-Json -Depth 20).Contains('trailblazer-receipt.v1'))) },
   [pscustomobject]@{ name = 'executable protected identifiers'; pass = @(@('class Aemeth', 'class Stelle', 'class StarrailTopology', 'def Trailblazer') | ForEach-Object { $runtimeText.Contains($_) } | Where-Object { -not $_ }).Count -eq 0 },
   [pscustomobject]@{ name = 'two profiles plus adapter fields'; pass = ($contractData.profiles.Count -eq 2 -and $contractData.profiles -contains 'claude' -and $contractData.profiles -contains 'codex' -and $contractData.compatibility.profile_required -eq $false -and $contractData.compatibility.consumers -contains 'hermes-worker') },

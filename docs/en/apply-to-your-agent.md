@@ -181,6 +181,8 @@ CLAUDE_CONFIG_DIR="$(pwd)/.runtime/claude-home" claude
 CODEX_HOME="$(pwd)/.runtime/codex-home" codex
 # Hermes Aemeth adapter
 HERMES_HOME="$(pwd)/.runtime/hermes-home" hermes
+# Hermes Desktop with the same adapter
+HERMES_HOME="$(pwd)/.runtime/hermes-home" hermes desktop --cwd "$(pwd)"
 ```
 
 Windows (PowerShell):
@@ -192,6 +194,8 @@ $env:CLAUDE_CONFIG_DIR="$PWD\.runtime\claude-home"; claude
 $env:CODEX_HOME="$PWD\.runtime\codex-home"; codex
 # Hermes Aemeth adapter
 $env:HERMES_HOME="$PWD\.runtime\hermes-home"; hermes
+# Hermes Desktop with the same adapter
+$env:HERMES_HOME="$PWD\.runtime\hermes-home"; hermes desktop --cwd $PWD
 ```
 
 That is the launch step — there is no separate launcher script to install; the env

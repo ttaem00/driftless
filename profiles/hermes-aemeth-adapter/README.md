@@ -10,6 +10,7 @@ Install and start it on Windows:
 ```powershell
 pwsh.exe -ExecutionPolicy Bypass -File install.ps1 -Tool hermes
 $env:HERMES_HOME="$PWD\.runtime\hermes-home"; hermes
+$env:HERMES_HOME="$PWD\.runtime\hermes-home"; hermes desktop --cwd $PWD
 ```
 
 On macOS or Linux:
@@ -17,6 +18,7 @@ On macOS or Linux:
 ```sh
 sh ./install.sh --hermes
 HERMES_HOME="$PWD/.runtime/hermes-home" hermes
+HERMES_HOME="$PWD/.runtime/hermes-home" hermes desktop --cwd "$PWD"
 ```
 
 The installer does not read or change a host-global Hermes home. Existing

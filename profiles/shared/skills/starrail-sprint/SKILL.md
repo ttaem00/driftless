@@ -3,8 +3,9 @@ name: starrail-sprint
 description: >
   starrail-sprint: Use when a maintainer says Aemeth/에이메스, Stelle/스텔레,
   StarrailTopology/스타레일 토폴로지/스타레일, or
-  Trailblazer/개척자/개척자Trailblazer; also use for an ordered verification
-  topology, deterministic receipt, Hermes adapter session, or Hermes worker handoff.
+  Trailblazer/개척자/개척자Trailblazer, Starrail Atlas/스타레일 아틀라스;
+  also use for an ordered verification topology, deterministic receipt, Hermes
+  adapter session, or Hermes worker handoff.
 ---
 
 ## Improvement Principle
@@ -20,6 +21,18 @@ Use the installed `shared/contract/STARRAIL_SPRINT_CONTRACT.json` as the single
 meaning and compatibility authority. Claude and Codex receive this exact skill
 and contract as full Driftless profiles. Hermes receives the same files through
 the bounded repo-local Aemeth adapter home.
+
+## Starrail Atlas boundary
+
+`Starrail Atlas` / `스타레일 아틀라스` is the contract's non-executable companion
+projection. It may read existing public-safe state and show goals, plans, routes,
+current work, owners, evidence, review, blockers, and the next action to a
+manager or LLM. It is freshness-labelled and `projection-only`: it does not
+schedule or mutate work and is never a source of truth.
+
+An Atlas request must not run `Trailblazer`, call either sprint runner, or emit a
+`trailblazer-run-receipt.v1` receipt. Use the execution steps below only when the
+maintainer explicitly asks to build or run a Starrail sprint/topology.
 
 1. Model each bounded step as a `Stelle` with explicit dependencies and evidence.
 2. Put the steps in one acyclic `StarrailTopology`.

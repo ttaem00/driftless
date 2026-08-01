@@ -133,6 +133,21 @@ foreach ($entry in $tools) {
   }
   if (-not (Test-Path -LiteralPath $starrailContract -PathType Leaf) -or (Test-Path -LiteralPath $obsoleteStarrailContract)) {
     $triggerFailures.Add('canonical Starrail contract materialization') | Out-Null
+  } else {
+    $installedContractData = Get-Content -LiteralPath $starrailContract -Raw -Encoding UTF8 | ConvertFrom-Json -Depth 20
+    $installedAtlas = $installedContractData.companion_projections.StarrailAtlas
+    $installedStarrailSkill = Get-Content -LiteralPath (Join-Path $homeSkills 'starrail-sprint\SKILL.md') -Raw -Encoding UTF8
+    if ($installedAtlas.mode -cne 'read-only' -or $installedAtlas.authority -cne 'projection-only' -or [bool]$installedAtlas.may_execute -or [bool]$installedAtlas.may_run_trailblazer -or [bool]$installedAtlas.may_emit_receipt) {
+      $triggerFailures.Add('Starrail Atlas non-executable contract') | Out-Null
+    }
+    foreach ($alias in @($installedAtlas.aliases)) {
+      if (-not $installedStarrailSkill.Contains([string]$alias)) {
+        $triggerFailures.Add("Starrail Atlas skill alias missing=$alias") | Out-Null
+      }
+    }
+    if ($installedContractData.session_aliases.psobject.Properties.Name -contains 'StarrailAtlas' -or $installedContractData.executable_identifiers.psobject.Properties.Name -contains 'StarrailAtlas') {
+      $triggerFailures.Add('Starrail Atlas must not be an execution alias or identifier') | Out-Null
+    }
   }
   foreach ($leafName in $leafCloseoutSkills) {
     $leafRegistration = Join-Path $homeSkills "$leafName\agents\openai.yaml"
@@ -184,6 +199,7 @@ $sourceStarrailRegistration = Join-Path $repoRoot 'profiles\shared\skills\starra
 $sourceStarrailContract = Join-Path $repoRoot 'profiles\shared\contract\STARRAIL_SPRINT_CONTRACT.json'
 $hermesFailures = [System.Collections.Generic.List[string]]::new()
 $aliases = @()
+$atlasAliases = @()
 
 foreach ($desktopEntryPoint in @(
   @{ name = 'PowerShell installer'; path = $installer },
@@ -222,6 +238,9 @@ if ($hermesFailures.Count -eq 0) {
   $skillText = Get-Content -LiteralPath $hermesSkill -Raw -Encoding UTF8
   $guideText = Get-Content -LiteralPath $hermesGuide -Raw -Encoding UTF8
   $configText = Get-Content -LiteralPath $hermesConfig -Raw -Encoding UTF8
+  $bundleText = Get-Content -LiteralPath $hermesBundle -Raw -Encoding UTF8
+  $atlasProjection = $contractData.companion_projections.StarrailAtlas
+  $atlasAliases = @($atlasProjection.aliases | ForEach-Object { [string]$_ })
   foreach ($alias in $aliases) {
     if (-not $skillText.Contains($alias)) {
       $hermesFailures.Add("skill alias missing=$alias") | Out-Null
@@ -231,6 +250,19 @@ if ($hermesFailures.Count -eq 0) {
     if (([regex]::Matches($configText, $mappingPattern)).Count -ne 1) {
       $hermesFailures.Add("quick alias invalid=$alias") | Out-Null
     }
+  }
+  foreach ($alias in $atlasAliases) {
+    if (-not $skillText.Contains($alias) -or -not $guideText.Contains($alias) -or -not $bundleText.Contains($alias)) {
+      $hermesFailures.Add("Starrail Atlas recognition missing=$alias") | Out-Null
+    }
+    $escapedAlias = [regex]::Escape($alias)
+    $mappingPattern = "(?m)^  (?:'$escapedAlias'|$escapedAlias):\r?`n    type: alias\r?`n    target: /starrail-sprint\r?$"
+    if (([regex]::Matches($configText, $mappingPattern)).Count -ne 0) {
+      $hermesFailures.Add("Starrail Atlas must not be an execution alias=$alias") | Out-Null
+    }
+  }
+  if ($atlasProjection.mode -cne 'read-only' -or $atlasProjection.authority -cne 'projection-only' -or [bool]$atlasProjection.may_execute -or [bool]$atlasProjection.may_schedule -or [bool]$atlasProjection.may_mutate -or [bool]$atlasProjection.may_run_trailblazer -or [bool]$atlasProjection.may_emit_receipt) {
+    $hermesFailures.Add('Starrail Atlas non-executable boundary invalid') | Out-Null
   }
   foreach ($identifier in @('AemethExecutionLanguage', 'StelleStepContract', 'StarrailTopologyGraph', 'TrailblazerExecutor', 'New-AemethSprint', 'New-StelleStep', 'New-StarrailTopology', 'Invoke-Trailblazer')) {
     if (-not $guideText.Contains($identifier)) {
@@ -277,7 +309,7 @@ if ($hermesSkillCount -ne 1) {
 }
 
 $hermesStatus = if ($hermesInstall.exit -eq 0 -and $hermesFailures.Count -eq 0) { 'PASS' } else { 'FAIL' }
-$hermesEvidence = "installer_exit=$($hermesInstall.exit); active_skills=$hermesSkillCount; aliases=$($aliases.Count); idempotent=$($configHashBefore -ceq $configHashAfter); manager_config_preserved=$customPreserved"
+$hermesEvidence = "installer_exit=$($hermesInstall.exit); active_skills=$hermesSkillCount; execution_aliases=$($aliases.Count); atlas_aliases=$($atlasAliases.Count); idempotent=$($configHashBefore -ceq $configHashAfter); manager_config_preserved=$customPreserved"
 if ($hermesFailures.Count -gt 0) {
   $hermesEvidence += '; failures=' + (($hermesFailures | Select-Object -First 8) -join ',')
 }

@@ -95,6 +95,26 @@ public relationships such as `summarizes`, `guards`, `blocks`, or `validates`.
 It is useful for showing dependencies, but it is not a scheduler, lock service,
 worker queue, or merge authority.
 
+### Stable rail and focused relationships
+
+Starrail Atlas should render verified work as a stable semantic rail rather than
+packing nodes into a fixed visual grid. The main path keeps one direction and a
+stable `rank`; evidence, cards, and observers attach as short branches. A status
+change keeps every existing position. Only a topology change may recompute the
+layout, and it should preserve existing ranks when possible.
+
+The default view focuses the selected node and its direct one-hop neighbors.
+Relation labels appear only on focused edges; the complete relationship text
+remains available in an inspector or semantic list. Feedback such as rework or
+resume uses an outer route instead of crossing the forward rail. Moving a node
+is presentation-only and never changes work state.
+
+The same normalized projection serves people and LLMs. Agent adapters request a
+bounded `brief` first, use `current` for the selected rail, and request `full`
+only for explicit inspection. When the map revision is unchanged, return only
+an honest `changed: false` marker and the revision. This context projection adds
+no prompt ceremony, work card, receipt, monitor agent, or pipeline step.
+
 Graph and card UI must remain a projection, not execution authority. A graph may
 show that a lane is blocked or that a validation step is next, but the source of
 truth stays with the owning runtime control plane, local gate output, issue, PR,

@@ -25,6 +25,9 @@ $sourceSkill = Join-Path $Root 'profiles\shared\skills\starrail-sprint\SKILL.md'
 $sourceRegistration = Join-Path $Root 'profiles\shared\skills\starrail-sprint\agents\openai.yaml'
 $contractData = Get-Content -LiteralPath $contract -Raw -Encoding UTF8 | ConvertFrom-Json -Depth 20
 $aliases = @($contractData.session_aliases.psobject.Properties | ForEach-Object { @($_.Value) } | ForEach-Object { [string]$_ })
+$atlasProjection = $contractData.companion_projections.StarrailAtlas
+$atlasAliases = @($atlasProjection.aliases | ForEach-Object { [string]$_ })
+$recognitionAliases = @($aliases + $atlasAliases)
 $wuther = Join-Path $Root 'scripts\Invoke-WutherCodemap.ps1'
 $wutherManifest = Join-Path $Root 'examples\wuther-codemap\starrail-sprint\codemap.json'
 $wutherOutput = '.runtime/test-starrail-sprint/wuther'
@@ -50,14 +53,22 @@ $installedRuns = foreach ($tool in @('claude', 'codex', 'hermes')) {
   $installedReceipt = Join-Path $Root ".runtime\starrail-sprint\test\$tool-receipt.json"
   $output = @(& pwsh.exe -NoProfile -ExecutionPolicy Bypass -File $runner -TopologyPath $pass -ContractPath $installedContract -ReceiptPath $installedReceipt 2>&1)
   $installedSkillText = Get-Content -LiteralPath $installedSkill -Raw -Encoding UTF8
-  $recognitionMatch = @($aliases | Where-Object { -not $installedSkillText.Contains($_) }).Count -eq 0
+  $recognitionMatch = @($recognitionAliases | Where-Object { -not $installedSkillText.Contains($_) }).Count -eq 0
   if ($tool -eq 'hermes') {
     $hermesConfigText = Get-Content -LiteralPath (Join-Path $installedHome 'config.yaml') -Raw -Encoding UTF8
     $hermesGuideText = Get-Content -LiteralPath (Join-Path $installedHome 'HERMES.md') -Raw -Encoding UTF8
+    $hermesBundleText = Get-Content -LiteralPath (Join-Path $installedHome 'skill-bundles\starrail-sprint.yaml') -Raw -Encoding UTF8
     foreach ($alias in $aliases) {
       $escapedAlias = [regex]::Escape($alias)
       $mappingPattern = "(?m)^  (?:'$escapedAlias'|$escapedAlias):\r?`n    type: alias\r?`n    target: /starrail-sprint\r?$"
       if (([regex]::Matches($hermesConfigText, $mappingPattern)).Count -ne 1) { $recognitionMatch = $false }
+    }
+    foreach ($alias in $atlasAliases) {
+      $escapedAlias = [regex]::Escape($alias)
+      $mappingPattern = "(?m)^  (?:'$escapedAlias'|$escapedAlias):\r?`n    type: alias\r?`n    target: /starrail-sprint\r?$"
+      if (-not $hermesGuideText.Contains($alias) -or -not $hermesBundleText.Contains($alias) -or ([regex]::Matches($hermesConfigText, $mappingPattern)).Count -ne 0) {
+        $recognitionMatch = $false
+      }
     }
     foreach ($identifier in @('AemethExecutionLanguage', 'StelleStepContract', 'StarrailTopologyGraph', 'TrailblazerExecutor', 'New-AemethSprint', 'New-StelleStep', 'New-StarrailTopology', 'Invoke-Trailblazer')) {
       if (-not $hermesGuideText.Contains($identifier)) { $recognitionMatch = $false }
@@ -184,6 +195,7 @@ $checks = @(
   [pscustomobject]@{ name = 'direct Python containment negative cases'; pass = ($directReceiptExit -ne 0 -and $directTopologyExit -ne 0 -and $directContractExit -ne 0 -and -not (Test-Path -LiteralPath $directOutsideReceipt)) },
   [pscustomobject]@{ name = 'tracked source receipt targets stay unchanged'; pass = ($wrapperTrackedExit -ne 0 -and $directTrackedExit -ne 0 -and $trackedReceiptBefore -eq $trackedReceiptAfterWrapper -and $trackedReceiptBefore -eq $trackedReceiptAfterDirect -and ($wrapperTrackedOutput -join "`n").Contains('.runtime/starrail-sprint') -and ($directTrackedOutput -join "`n").Contains('.runtime/starrail-sprint')) },
   [pscustomobject]@{ name = 'canonical cross-project schema names'; pass = ($contractData.schema_version -eq 'aemeth-sprint.v1' -and $contractData.receipt_schema -eq 'trailblazer-run-receipt.v1' -and $passReceipt.schema_version -eq 'trailblazer-run-receipt.v1' -and -not (($contractData | ConvertTo-Json -Depth 20).Contains('starrail-sprint.v1')) -and -not (($passReceipt | ConvertTo-Json -Depth 20).Contains('trailblazer-receipt.v1'))) },
+  [pscustomobject]@{ name = 'Starrail Atlas stays a non-executable companion projection'; pass = ($atlasProjection.mode -ceq 'read-only' -and $atlasProjection.authority -ceq 'projection-only' -and $atlasAliases.Count -eq 2 -and -not [bool]$atlasProjection.may_execute -and -not [bool]$atlasProjection.may_schedule -and -not [bool]$atlasProjection.may_mutate -and -not [bool]$atlasProjection.may_run_trailblazer -and -not [bool]$atlasProjection.may_emit_receipt -and -not ($contractData.session_aliases.psobject.Properties.Name -contains 'StarrailAtlas') -and -not ($contractData.executable_identifiers.psobject.Properties.Name -contains 'StarrailAtlas')) },
   [pscustomobject]@{ name = 'executable protected identifiers'; pass = @(@('AemethExecutionLanguage', 'StelleStepContract', 'StarrailTopologyGraph', 'class TrailblazerExecutor', 'def NewAemethSprint', 'def NewStelleStep', 'def NewStarrailTopology', 'def InvokeTrailblazer') | ForEach-Object { $runtimeText.Contains($_) } | Where-Object { -not $_ }).Count -eq 0 -and @($passReceipt.runtime_identifiers.objects).Count -eq 4 -and @($passReceipt.runtime_identifiers.functions).Count -eq 4 },
   [pscustomobject]@{ name = 'two full profiles plus bounded Hermes adapter'; pass = ($contractData.profiles.Count -eq 2 -and $contractData.profiles -contains 'claude' -and $contractData.profiles -contains 'codex' -and $contractData.compatibility.profile_required -eq $false -and $contractData.compatibility.hermes_adapter.kind -eq 'bounded-aemeth-home' -and $contractData.compatibility.consumers -contains 'hermes-worker') },
   [pscustomobject]@{ name = 'installed session aliases and implicit recognition'; pass = ($installExit -eq 0 -and @($installedRuns | Where-Object { $_.exit -ne 0 -or $_.status -ne 'PASS' -or -not $_.contract_match -or -not $_.skill_match -or -not $_.registration_match -or -not $_.implicit -or -not $_.recognition_match -or -not $_.obsolete_absent -or -not $_.receipt }).Count -eq 0) },

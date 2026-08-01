@@ -5,6 +5,23 @@ non-developer users. It is not a launcher, an IDE, or a private runtime adapter.
 It answers one question: what is happening now, what is guarded, what is blocked,
 and what can be done next?
 
+## Map names and boundaries
+
+These related names answer different questions and must not be used as aliases
+for one another:
+
+| Name | What it answers | Authority and side effect |
+| --- | --- | --- |
+| **Wuther Codemap** | How is a repository structured at a named source revision? | On-demand, source-backed repository map; not live work state. |
+| **StarrailTopology** | In what dependency order should verified `Stelle` steps run? | Executable plan traversed by `Trailblazer`; may emit a sprint receipt. |
+| **Mission Map** | What generic public-safe card or node pattern can explain agent work? | UI pattern only; always a projection, never execution authority. |
+| **Starrail Atlas** | How do the current goal, Aemeth plan, Starrail route, Stelle, Trailblazer or session owner, evidence, review, blockers, and next action relate right now? | Read-only, freshness-labelled manager and LLM projection of existing state; it never adds a pipeline step, runs `Trailblazer`, schedules or mutates work, or emits a receipt. |
+
+`Starrail Atlas` / `스타레일 아틀라스` is therefore the named live work
+relationship use of the Mission Map pattern. Source authority remains with the
+owning runtime, repository gate, issue or pull request, and manager-approved
+action. Missing or stale evidence stays visible as `UNVERIFIED` or `BLOCKED`.
+
 The pattern keeps three tiers visible:
 
 | Tier | User question | Public-safe fields |

@@ -1,5 +1,5 @@
 name: "starrail-sprint"
-description: "Aemeth sprint execution with Stelle, StarrailTopology, and Trailblazer"
+description: "Aemeth sprint execution plus the read-only Starrail Atlas work relationship projection"
 skills:
   - "starrail-sprint"
-instruction: "Use the canonical Aemeth contract, preserve the protected runtime identifiers, stop failed verification, and emit a trailblazer-run-receipt.v1 receipt."
+instruction: "Use the canonical Aemeth contract and preserve the protected runtime identifiers. Starrail Atlas or 스타레일 아틀라스 means the read-only, projection-only companion view and must never invoke Trailblazer or emit a receipt; sprint execution still stops failed verification and emits a trailblazer-run-receipt.v1 receipt."

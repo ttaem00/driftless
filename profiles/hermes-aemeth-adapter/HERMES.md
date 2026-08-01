@@ -5,8 +5,14 @@ language. It is not a full third Driftless profile.
 
 When the manager says `Aemeth` / `에이메스`, `Stelle` / `스텔레`,
 `StarrailTopology` / `스타레일 토폴로지` / `스타레일`, or `Trailblazer` /
-`개척자` / `개척자Trailblazer`, load `skills/starrail-sprint/SKILL.md` and use
+`개척자` / `개척자Trailblazer`, or `Starrail Atlas` / `스타레일 아틀라스`,
+load `skills/starrail-sprint/SKILL.md` and use
 `shared/contract/STARRAIL_SPRINT_CONTRACT.json` as the one meaning.
+
+Starrail Atlas is a read-only, freshness-labelled manager and LLM projection of
+existing work relationships. It is not a quick command or execution alias: an
+Atlas request never invokes Trailblazer, schedules or changes work, or emits a
+receipt.
 
 The protected runtime names are `AemethExecutionLanguage`,
 `StelleStepContract`, `StarrailTopologyGraph`, and `TrailblazerExecutor`. The

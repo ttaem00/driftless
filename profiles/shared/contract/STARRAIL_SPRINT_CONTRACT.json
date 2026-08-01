@@ -13,6 +13,19 @@
     "StarrailTopology": ["StarrailTopology", "스타레일 토폴로지", "스타레일"],
     "Trailblazer": ["Trailblazer", "개척자", "개척자Trailblazer"]
   },
+  "companion_projections": {
+    "StarrailAtlas": {
+      "aliases": ["Starrail Atlas", "스타레일 아틀라스"],
+      "meaning": "A read-only, freshness-labelled manager and LLM projection of existing goals, Aemeth plans, Starrail routes, current Stelle work, Trailblazer or session ownership, evidence, review, blockers, and the next action.",
+      "mode": "read-only",
+      "authority": "projection-only",
+      "may_execute": false,
+      "may_schedule": false,
+      "may_mutate": false,
+      "may_run_trailblazer": false,
+      "may_emit_receipt": false
+    }
+  },
   "executable_identifiers": {
     "Aemeth": {"object": "AemethExecutionLanguage", "function": "New-AemethSprint", "python_function": "NewAemethSprint"},
     "Stelle": {"object": "StelleStepContract", "function": "New-StelleStep", "python_function": "NewStelleStep"},

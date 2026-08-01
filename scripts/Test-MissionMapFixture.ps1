@@ -20,6 +20,60 @@ function New-Result {
   }
 }
 
+function ConvertTo-CanonicalValue {
+  param([AllowNull()][object]$Value)
+
+  if ($null -eq $Value) {
+    return $null
+  }
+  if ($Value -is [pscustomobject]) {
+    $ordered = [ordered]@{}
+    foreach ($property in @($Value.PSObject.Properties | Sort-Object -Property Name)) {
+      $ordered[$property.Name] = ConvertTo-CanonicalValue -Value $property.Value
+    }
+    return [pscustomobject]$ordered
+  }
+  if ($Value -is [System.Collections.IEnumerable] -and $Value -isnot [string]) {
+    $items = @()
+    foreach ($item in $Value) {
+      $items += ,(ConvertTo-CanonicalValue -Value $item)
+    }
+    return ,$items
+  }
+  return $Value
+}
+
+function Get-CanonicalDigest16 {
+  param([Parameter(Mandatory = $true)][object]$Value)
+
+  $canonical = ConvertTo-CanonicalValue -Value $Value
+  $json = $canonical | ConvertTo-Json -Depth 50 -Compress
+  $bytes = [System.Text.Encoding]::UTF8.GetBytes($json)
+  $sha = [System.Security.Cryptography.SHA256]::Create()
+  try {
+    $hash = $sha.ComputeHash($bytes)
+  } finally {
+    $sha.Dispose()
+  }
+  return ([System.Convert]::ToHexString($hash).ToLowerInvariant().Substring(0, 16))
+}
+
+function Get-ScopedProjection {
+  param(
+    [Parameter(Mandatory = $true)][object]$Source,
+    [Parameter(Mandatory = $true)][string[]]$Scope
+  )
+
+  $projection = [ordered]@{}
+  foreach ($field in @($Scope | Sort-Object -Unique)) {
+    if (-not ($Source.PSObject.Properties.Name -contains $field)) {
+      throw "digest scope field missing: $field"
+    }
+    $projection[$field] = $Source.$field
+  }
+  return [pscustomobject]$projection
+}
+
 function Test-ControlPlaneState {
   param([object]$ControlPlane)
 
@@ -118,6 +172,12 @@ if (-not (Test-Path -LiteralPath $docPath -PathType Leaf)) {
   } else {
     $results.Add((New-Result 'Starrail Atlas map distinction' 'FAIL' 'doc must distinguish Starrail Atlas, StarrailTopology, Mission Map, and Wuther Codemap with an explicit no-execution boundary'))
   }
+
+  if ($doc -match 'stable semantic rail' -and $doc -match 'direct one-hop neighbors' -and $doc -match 'Relation labels appear only on focused edges' -and $doc -match 'Only a topology change may recompute' -and $doc -match '`brief` first' -and $doc -match 'changed: false' -and $doc -match '`contextRevision`' -and $doc -match '`topologyRevision`' -and $doc -match 'canonical, key-sorted JSON' -and $doc -match 'share `rank`') {
+    $results.Add((New-Result 'Starrail Atlas stable rail and bounded context' 'PASS' 'doc separates topology and context digests, stable layered lanes, focused labels, and progressive no-change context'))
+  } else {
+    $results.Add((New-Result 'Starrail Atlas stable rail and bounded context' 'FAIL' 'doc must define separate canonical topology/context digests, stable layered lanes, focused labels, and brief/current/full no-change context'))
+  }
 }
 
 if (-not (Test-Path -LiteralPath $starrailContractPath -PathType Leaf)) {
@@ -154,6 +214,7 @@ if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
       'controlPlane',
       'runtimeCards',
       'nodeGraph',
+      'agentContext',
       'pr',
       'checks',
       'blockers',
@@ -244,6 +305,35 @@ if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
           $graphFailures.Add('nodeGraph nodes must reference runtimeCards by cardId') | Out-Null
         }
       }
+      if (@($nodeIds | Where-Object { [string]::IsNullOrWhiteSpace($_) }).Count -gt 0 -or @($nodeIds | Select-Object -Unique).Count -ne $nodeIds.Count) {
+        $graphFailures.Add('nodeGraph node ids must be unique non-empty strings') | Out-Null
+      }
+      $ranks = @($fixture.nodeGraph.nodes | ForEach-Object { $_.rank })
+      $lanes = @($fixture.nodeGraph.nodes | ForEach-Object { $_.lane })
+      if (@($ranks | Where-Object { ($_ -isnot [int] -and $_ -isnot [long]) -or $_ -lt 0 }).Count -gt 0 -or @($lanes | Where-Object { ($_ -isnot [int] -and $_ -isnot [long]) -or $_ -lt 0 }).Count -gt 0) {
+        $graphFailures.Add('nodeGraph rank and lane must be non-negative integers') | Out-Null
+      }
+      $positions = @($fixture.nodeGraph.nodes | ForEach-Object { ([string]$_.rank + ':' + [string]$_.lane) })
+      if (@($positions | Select-Object -Unique).Count -ne $positions.Count) {
+        $graphFailures.Add('nodeGraph rank and lane pairs must be unique') | Out-Null
+      }
+      if ($nodeIds -notcontains [string]$fixture.nodeGraph.selectedNodeId) {
+        $graphFailures.Add('nodeGraph selectedNodeId must reference an existing node') | Out-Null
+      }
+      $layout = $fixture.nodeGraph.layout
+      if ([string]$layout.kind -ne 'stable-layered-rail' -or [string]$layout.positionKey -ne 'rank' -or [string]$layout.recomputeWhen -ne 'topology-change' -or [string]$layout.defaultFocus -ne 'selected-one-hop' -or [string]$layout.edgeLabelPolicy -ne 'focused-only' -or [string]$layout.feedbackRoute -ne 'outer-curve') {
+        $graphFailures.Add('nodeGraph layout must keep stable ranks, one-hop focus, focused labels, and an outer feedback route') | Out-Null
+      }
+      $expectedTopologyScope = @('edges', 'layout', 'nodes')
+      $topologyScope = @($fixture.nodeGraph.topologyRevisionScope | ForEach-Object { [string]$_ })
+      if ([string]$fixture.nodeGraph.topologyRevisionAlgorithm -ne 'sha256-canonical-json-16' -or ($topologyScope | Sort-Object) -join '|' -cne ($expectedTopologyScope -join '|')) {
+        $graphFailures.Add('nodeGraph topology revision must use the canonical layout/nodes/edges digest') | Out-Null
+      } else {
+        $expectedTopologyRevision = Get-CanonicalDigest16 -Value (Get-ScopedProjection -Source $fixture.nodeGraph -Scope $topologyScope)
+        if ([string]$fixture.nodeGraph.topologyRevision -notmatch '^[a-f0-9]{16}$' -or [string]$fixture.nodeGraph.topologyRevision -cne $expectedTopologyRevision) {
+          $graphFailures.Add("nodeGraph topology revision mismatch: expected=$expectedTopologyRevision") | Out-Null
+        }
+      }
       if (@($fixture.nodeGraph.edges).Count -eq 0) {
         $graphFailures.Add('nodeGraph.edges must not be empty') | Out-Null
       }
@@ -251,12 +341,60 @@ if (Test-Path -LiteralPath $fixturePath -PathType Leaf) {
         if ($nodeIds -notcontains [string]$edge.from -or $nodeIds -notcontains [string]$edge.to) {
           $graphFailures.Add('nodeGraph edges must connect existing nodes') | Out-Null
         }
+        if (@('flow', 'evidence', 'observation', 'feedback') -notcontains [string]$edge.kind) {
+          $graphFailures.Add('nodeGraph edge kind is unsupported') | Out-Null
+        }
       }
     }
     if ($graphFailures.Count -eq 0) {
       $results.Add((New-Result 'Mission Map optional node graph' 'PASS' ('nodes=' + @($fixture.nodeGraph.nodes).Count + '; edges=' + @($fixture.nodeGraph.edges).Count)))
     } else {
       $results.Add((New-Result 'Mission Map optional node graph' 'FAIL' ($graphFailures -join '; ')))
+    }
+
+    $contextFailures = New-Object System.Collections.Generic.List[string]
+    $context = $fixture.agentContext
+    if ([string]$context.schemaVersion -ne 'starrail-atlas-context.example.v1' -or [string]$context.authority -ne 'projection-only') {
+      $contextFailures.Add('agentContext must use the public projection-only schema') | Out-Null
+    }
+    $derivedContextScope = New-Object System.Collections.Generic.List[string]
+    $unsupportedViewIncludes = New-Object System.Collections.Generic.List[string]
+    $viewIncludes = @($context.views.brief.includes) + @($context.views.current.includes) + @($context.views.full.includes)
+    foreach ($include in @($viewIncludes | ForEach-Object { [string]$_ })) {
+      if (@('brief', 'current') -contains $include) {
+        continue
+      }
+      if (@('selectedNodeId', 'selected-one-hop') -contains $include) {
+        $derivedContextScope.Add('nodeGraph') | Out-Null
+      } elseif ($include -ne 'agentContext' -and $fixture.PSObject.Properties.Name -contains $include) {
+        $derivedContextScope.Add($include) | Out-Null
+      } else {
+        $unsupportedViewIncludes.Add($include) | Out-Null
+      }
+    }
+    $requiredContextScope = @($derivedContextScope | Sort-Object -Unique)
+    $contextScope = @($context.contextRevisionScope | ForEach-Object { [string]$_ })
+    if ($unsupportedViewIncludes.Count -gt 0 -or [string]$context.contextRevisionAlgorithm -ne 'sha256-canonical-json-16' -or ($contextScope | Sort-Object) -join '|' -cne ($requiredContextScope -join '|')) {
+      $contextFailures.Add('agentContext revision must cover every source field emitted by brief/current/full') | Out-Null
+    } else {
+      $expectedContextRevision = Get-CanonicalDigest16 -Value (Get-ScopedProjection -Source $fixture -Scope $contextScope)
+      if ([string]$context.contextRevision -notmatch '^[a-f0-9]{16}$' -or [string]$context.contextRevision -cne $expectedContextRevision) {
+        $contextFailures.Add("agentContext revision mismatch: expected=$expectedContextRevision") | Out-Null
+      }
+    }
+    $viewBytes = @([int]$context.views.brief.maxBytes, [int]$context.views.current.maxBytes, [int]$context.views.full.maxBytes)
+    if ([string]$context.defaultView -ne 'brief' -or $viewBytes[0] -le 0 -or $viewBytes[0] -ge $viewBytes[1] -or $viewBytes[1] -ge $viewBytes[2] -or $viewBytes[2] -gt 16384) {
+      $contextFailures.Add('agentContext must default to progressively bounded brief/current/full views') | Out-Null
+    }
+    $unchangedIncludes = @($context.unchangedResponse.includes | ForEach-Object { [string]$_ })
+    $unchangedMaxBytes = [int]$context.unchangedResponse.maxBytes
+    if ([bool]$context.unchangedResponse.changed -or $unchangedMaxBytes -lt 1 -or $unchangedMaxBytes -gt 256 -or $unchangedIncludes.Count -ne 2 -or $unchangedIncludes -notcontains 'contextRevision' -or $unchangedIncludes -notcontains 'changed') {
+      $contextFailures.Add('agentContext unchanged response must contain only a 1..256 byte contextRevision and changed marker') | Out-Null
+    }
+    if ($contextFailures.Count -eq 0) {
+      $results.Add((New-Result 'Starrail Atlas bounded agent context' 'PASS' ('contextRevision=' + [string]$context.contextRevision + '; bytes=' + ($viewBytes -join '/'))))
+    } else {
+      $results.Add((New-Result 'Starrail Atlas bounded agent context' 'FAIL' ($contextFailures -join '; ')))
     }
 
     $badPendingActive = [pscustomobject]@{

@@ -86,7 +86,9 @@
   "nodeGraph": {
     "mode": "optional-projection",
     "authority": "projection-only",
-    "revision": "4df4e5e4a6617286",
+    "topologyRevision": "dbc618280c252888",
+    "topologyRevisionAlgorithm": "sha256-canonical-json-16",
+    "topologyRevisionScope": ["edges", "layout", "nodes"],
     "selectedNodeId": "runtime-control-card",
     "layout": {
       "kind": "stable-layered-rail",
@@ -103,21 +105,24 @@
         "cardId": "goal-card",
         "kind": "intent",
         "label": "Mission Map demo",
-        "rank": 0
+        "rank": 0,
+        "lane": 0
       },
       {
         "id": "runtime-control-card",
         "cardId": "runtime-control-card",
         "kind": "runtime",
         "label": "Control-plane projection",
-        "rank": 1
+        "rank": 1,
+        "lane": 0
       },
       {
         "id": "validation-card",
         "cardId": "validation-card",
         "kind": "evidence",
         "label": "Fixture validation",
-        "rank": 2
+        "rank": 1,
+        "lane": 1
       }
     ],
     "edges": [
@@ -139,7 +144,9 @@
   "agentContext": {
     "schemaVersion": "starrail-atlas-context.example.v1",
     "authority": "projection-only",
-    "revision": "4df4e5e4a6617286",
+    "contextRevision": "58bd00130454b9db",
+    "contextRevisionAlgorithm": "sha256-canonical-json-16",
+    "contextRevisionScope": ["activeGoal", "blockers", "checks", "controlPlane", "evidence", "nextAction", "nodeGraph", "runtimeCards"],
     "defaultView": "brief",
     "views": {
       "brief": {
@@ -158,7 +165,7 @@
     "unchangedResponse": {
       "changed": false,
       "maxBytes": 256,
-      "includes": ["revision", "changed"]
+      "includes": ["contextRevision", "changed"]
     }
   },
   "pr": {

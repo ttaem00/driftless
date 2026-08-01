@@ -111,9 +111,18 @@ is presentation-only and never changes work state.
 
 The same normalized projection serves people and LLMs. Agent adapters request a
 bounded `brief` first, use `current` for the selected rail, and request `full`
-only for explicit inspection. When the map revision is unchanged, return only
-an honest `changed: false` marker and the revision. This context projection adds
-no prompt ceremony, work card, receipt, monitor agent, or pipeline step.
+only for explicit inspection. `contextRevision` is the first 16 lowercase hex
+characters of SHA-256 over canonical, key-sorted JSON for every source field
+emitted by those three views. Any emitted value change invalidates it. When that
+revision is unchanged, return only an honest `changed: false` marker and the
+`contextRevision`.
+
+Layout freshness stays separate. `topologyRevision` uses the same digest rule
+over `layout`, `nodes`, and `edges` only. Selection, status, blocker, or summary
+changes may update `contextRevision` without moving nodes; a topology change may
+update both. Nodes in the same layer share `rank` and use a non-negative `lane`
+to keep positions distinct. This context projection adds no prompt ceremony,
+work card, receipt, monitor agent, or pipeline step.
 
 Graph and card UI must remain a projection, not execution authority. A graph may
 show that a lane is blocked or that a validation step is next, but the source of

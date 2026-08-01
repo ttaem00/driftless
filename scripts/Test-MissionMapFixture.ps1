@@ -89,6 +89,7 @@ function Test-ControlPlaneState {
 $results = New-Object System.Collections.Generic.List[object]
 $fixturePath = Join-Path $Root 'examples\mission-map-state.json'
 $docPath = Join-Path $Root 'docs\en\mission-map.md'
+$starrailContractPath = Join-Path $Root 'profiles\shared\contract\STARRAIL_SPRINT_CONTRACT.json'
 
 if (-not (Test-Path -LiteralPath $fixturePath -PathType Leaf)) {
   $results.Add((New-Result 'Mission Map fixture exists' 'FAIL' 'examples/mission-map-state.json is missing'))
@@ -110,6 +111,37 @@ if (-not (Test-Path -LiteralPath $docPath -PathType Leaf)) {
     $results.Add((New-Result 'Mission Map card/graph vocabulary' 'PASS' 'doc defines runtime cards, optional node graph, and projection-only authority'))
   } else {
     $results.Add((New-Result 'Mission Map card/graph vocabulary' 'FAIL' 'doc must define public-safe runtime cards, optional node graph vocabulary, and state that graph/card UI is a projection, not execution authority'))
+  }
+
+  if ($doc -match 'Starrail Atlas' -and $doc -match 'StarrailTopology' -and $doc -match 'Mission Map' -and $doc -match 'Wuther Codemap' -and $doc -match 'never adds a pipeline step' -and $doc -match 'never.*runs `Trailblazer`' -and $doc -match 'freshness-labelled') {
+    $results.Add((New-Result 'Starrail Atlas map distinction' 'PASS' 'doc separates live observation, executable topology, generic UI pattern, and repository map'))
+  } else {
+    $results.Add((New-Result 'Starrail Atlas map distinction' 'FAIL' 'doc must distinguish Starrail Atlas, StarrailTopology, Mission Map, and Wuther Codemap with an explicit no-execution boundary'))
+  }
+}
+
+if (-not (Test-Path -LiteralPath $starrailContractPath -PathType Leaf)) {
+  $results.Add((New-Result 'Starrail Atlas shared contract' 'FAIL' 'shared Starrail contract is missing'))
+} else {
+  $starrailContract = Get-Content -LiteralPath $starrailContractPath -Raw -Encoding UTF8 | ConvertFrom-Json -Depth 20
+  $atlasProjection = $starrailContract.companion_projections.StarrailAtlas
+  $atlasAliases = @($atlasProjection.aliases | ForEach-Object { [string]$_ })
+  $atlasIsNonExecutable = (
+    $atlasProjection.mode -ceq 'read-only' -and
+    $atlasProjection.authority -ceq 'projection-only' -and
+    $atlasAliases.Count -eq 2 -and
+    -not [bool]$atlasProjection.may_execute -and
+    -not [bool]$atlasProjection.may_schedule -and
+    -not [bool]$atlasProjection.may_mutate -and
+    -not [bool]$atlasProjection.may_run_trailblazer -and
+    -not [bool]$atlasProjection.may_emit_receipt -and
+    -not ($starrailContract.session_aliases.psobject.Properties.Name -contains 'StarrailAtlas') -and
+    -not ($starrailContract.executable_identifiers.psobject.Properties.Name -contains 'StarrailAtlas')
+  )
+  if ($atlasIsNonExecutable) {
+    $results.Add((New-Result 'Starrail Atlas shared contract' 'PASS' 'contract keeps Atlas read-only, projection-only, and outside execution aliases'))
+  } else {
+    $results.Add((New-Result 'Starrail Atlas shared contract' 'FAIL' 'Atlas must stay outside execution aliases and must not schedule, mutate, run Trailblazer, or emit a receipt'))
   }
 }
 

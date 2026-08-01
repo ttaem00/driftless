@@ -86,39 +86,80 @@
   "nodeGraph": {
     "mode": "optional-projection",
     "authority": "projection-only",
+    "revision": "4df4e5e4a6617286",
+    "selectedNodeId": "runtime-control-card",
+    "layout": {
+      "kind": "stable-layered-rail",
+      "direction": "left-to-right",
+      "positionKey": "rank",
+      "recomputeWhen": "topology-change",
+      "defaultFocus": "selected-one-hop",
+      "edgeLabelPolicy": "focused-only",
+      "feedbackRoute": "outer-curve"
+    },
     "nodes": [
       {
         "id": "goal-card",
         "cardId": "goal-card",
         "kind": "intent",
-        "label": "Mission Map demo"
+        "label": "Mission Map demo",
+        "rank": 0
       },
       {
         "id": "runtime-control-card",
         "cardId": "runtime-control-card",
         "kind": "runtime",
-        "label": "Control-plane projection"
+        "label": "Control-plane projection",
+        "rank": 1
       },
       {
         "id": "validation-card",
         "cardId": "validation-card",
         "kind": "evidence",
-        "label": "Fixture validation"
+        "label": "Fixture validation",
+        "rank": 2
       }
     ],
     "edges": [
       {
         "from": "goal-card",
         "to": "runtime-control-card",
-        "relationship": "summarizes"
+        "relationship": "summarizes",
+        "kind": "observation"
       },
       {
         "from": "runtime-control-card",
         "to": "validation-card",
-        "relationship": "validated-by"
+        "relationship": "validated-by",
+        "kind": "evidence"
       }
     ],
     "detail": "The graph is optional navigation over public-safe cards; it is not a scheduler, worker queue, lock service, or merge authority."
+  },
+  "agentContext": {
+    "schemaVersion": "starrail-atlas-context.example.v1",
+    "authority": "projection-only",
+    "revision": "4df4e5e4a6617286",
+    "defaultView": "brief",
+    "views": {
+      "brief": {
+        "maxBytes": 1024,
+        "includes": ["activeGoal", "selectedNodeId", "nextAction", "blockers"]
+      },
+      "current": {
+        "maxBytes": 4096,
+        "includes": ["brief", "selected-one-hop", "controlPlane", "checks"]
+      },
+      "full": {
+        "maxBytes": 16384,
+        "includes": ["current", "nodeGraph", "runtimeCards", "evidence"]
+      }
+    },
+    "unchangedResponse": {
+      "changed": false,
+      "maxBytes": 256,
+      "includes": ["revision", "changed"]
+    }
   },
   "pr": {
     "label": "Pull request",

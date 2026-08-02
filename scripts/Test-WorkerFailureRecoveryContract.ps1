@@ -119,6 +119,7 @@ foreach ($requirement in $requirements) {
 }
 
 Write-Output '== Driftless worker failure recovery contract gate =='
+Write-Output ("writer_handoff_detector_self_test={0} positive={1} missing_terms_caught={2}/{3}" -f $(if ($positiveDetected -and $missingTermsCaught -eq $writerHandoffNeedles.Count) { 'PASS' } else { 'FAIL' }), $positiveDetected, $missingTermsCaught, $writerHandoffNeedles.Count)
 $results | Format-Table -AutoSize | Out-String | Write-Output
 
 $failed = @($results | Where-Object { $_.status -ne 'PASS' })

@@ -23,6 +23,15 @@ function Add-Result {
   }) | Out-Null
 }
 
+function Get-MissingNeedles {
+  param(
+    [string]$Text,
+    [string[]]$Needles
+  )
+
+  return @($Needles | Where-Object { -not $Text.Contains($_) })
+}
+
 $results = [System.Collections.Generic.List[object]]::new()
 
 $commonNeedles = @(
@@ -32,10 +41,25 @@ $commonNeedles = @(
   'PARTIAL_RETRY_REQUIRED'
 )
 
+$writerHandoffNeedles = @(
+  'Writer Handoff: Make Before Break',
+  'prepare -> dispatch -> commit-or-abort',
+  'successor_started_receipt',
+  'task identity',
+  'writable surface',
+  'expected revision',
+  'live run',
+  'card, session id, heartbeat, or running status alone',
+  'not write authority',
+  'plan-only capability',
+  'retain or restore the authorized fallback writer',
+  'zero active writers'
+)
+
 $requirements = @(
   @{
     path = 'profiles\shared\skills\mission-control\SKILL.md'
-    needles = @('Worker Failure Recovery', 'COMPLETE', 'FAILED', 'BLOCKED', 'reversible work') + $commonNeedles
+    needles = @('Worker Failure Recovery', 'COMPLETE', 'FAILED', 'BLOCKED', 'reversible work') + $commonNeedles + $writerHandoffNeedles
   },
   @{
     path = 'profiles\shared\skills\parallel-ticket-planner\SKILL.md'
@@ -63,6 +87,24 @@ $requirements = @(
   }
 )
 
+$completeFixture = $writerHandoffNeedles -join "`n"
+$positiveDetected = @(Get-MissingNeedles -Text $completeFixture -Needles $writerHandoffNeedles).Count -eq 0
+$missingTermsCaught = 0
+foreach ($needle in $writerHandoffNeedles) {
+  $incompleteFixture = $completeFixture.Replace($needle, '')
+  $missing = @(Get-MissingNeedles -Text $incompleteFixture -Needles $writerHandoffNeedles)
+  if ($missing.Count -eq 1 -and $missing[0] -eq $needle) {
+    $missingTermsCaught += 1
+  }
+}
+
+Add-Result `
+  -Results $results `
+  -Check 'writer handoff detector self-test' `
+  -Path '<built-in>' `
+  -Pass ($positiveDetected -and $missingTermsCaught -eq $writerHandoffNeedles.Count) `
+  -Needle ("positive={0}; missing_terms_caught={1}/{2}" -f $positiveDetected, $missingTermsCaught, $writerHandoffNeedles.Count)
+
 foreach ($requirement in $requirements) {
   $path = Join-Path $Root $requirement.path
   $exists = Test-Path -LiteralPath $path -PathType Leaf
@@ -70,12 +112,14 @@ foreach ($requirement in $requirements) {
   if (-not $exists) { continue }
 
   $text = Get-Content -LiteralPath $path -Raw -Encoding UTF8
+  $missing = @(Get-MissingNeedles -Text $text -Needles $requirement.needles)
   foreach ($needle in $requirement.needles) {
-    Add-Result -Results $results -Check "contains $needle" -Path $requirement.path -Pass $text.Contains($needle) -Needle $needle
+    Add-Result -Results $results -Check "contains $needle" -Path $requirement.path -Pass ($missing -notcontains $needle) -Needle $needle
   }
 }
 
 Write-Output '== Driftless worker failure recovery contract gate =='
+Write-Output ("writer_handoff_detector_self_test={0} positive={1} missing_terms_caught={2}/{3}" -f $(if ($positiveDetected -and $missingTermsCaught -eq $writerHandoffNeedles.Count) { 'PASS' } else { 'FAIL' }), $positiveDetected, $missingTermsCaught, $writerHandoffNeedles.Count)
 $results | Format-Table -AutoSize | Out-String | Write-Output
 
 $failed = @($results | Where-Object { $_.status -ne 'PASS' })

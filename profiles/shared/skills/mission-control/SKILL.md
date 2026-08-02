@@ -225,6 +225,25 @@ context/fallback route, and keep a `worker_recovery_inventory`. Nonzero
 agent-solvable `FAILED` blocks final Done until retried, completed, or converted
 to an explicit not-Done tracker with the next retry condition.
 
+### Writer Handoff: Make Before Break
+
+A writer handoff is a transaction: `prepare -> dispatch -> commit-or-abort`.
+
+- **Prepare:** keep the current authorized writer active and bind the handoff to
+  the same task identity, intended writable surface, expected revision, and
+  fallback route.
+- **Dispatch:** ask the successor to start without releasing or fencing the
+  current writer.
+- **Commit:** release the current writer only after a
+  `successor_started_receipt` binds that task identity, writable surface,
+  expected revision, and a live run from the actual write-capable successor.
+  A card, session id, heartbeat, or running status alone is lookup or liveness
+  evidence, not write authority.
+- **Abort:** plan-only capability, a missing/invalid/mismatched/timed-out receipt,
+  or dispatch failure must retain or restore the authorized fallback writer and
+  continue agent-solvable product work. Never leave zero active writers while a
+  valid fallback exists.
+
 ## Parent Closeout Boundary
 
 Large-goal closeout is a parent decision, not a child-ticket echo. A child issue,

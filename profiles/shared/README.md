@@ -15,7 +15,8 @@ driftless/
 │   ├── shared/          <- this tier (tool-agnostic; the single source)
 │   │   ├── contract/    <- SHARED_DESIGN_CONTRACT.md (vocabulary + rules)
 │   │   ├── schemas/     <- forbidden-paths.json and other machine-readable rules
-│   │   └── skills/      <- tool-agnostic skills consumed by both profiles
+│   │   ├── skills/      <- tool-agnostic skills consumed by both profiles
+│   │   └── modules/     <- detachable tool-agnostic implementation modules
 │   ├── claude/          <- Claude Code profile (built from shared + Claude-specific)
 │   └── codex/           <- Codex profile (built from shared + Codex-specific)
 ```
@@ -48,6 +49,7 @@ no mirroring, and no external sync step.
 | `contract/` | `SHARED_DESIGN_CONTRACT.md` — evidence statuses, the four manager report labels, manager-only gates, run-status enum, and improvement principle. | both profiles |
 | `schemas/` | `forbidden-paths.json` protects secret surfaces; `model-tier-routing.json` defines provider-detachable routing; `wuther-codemap-manifest.schema.json` keeps manager and LLM repository views on one versioned model. | both profiles |
 | `skills/` | Tool-agnostic skills (one folder each) that behave the same regardless of which AI runs them. | both profiles |
+| `modules/config-generation-reconcile/` | Candidate-only source/base/target reconciliation for updateable customizations. | product adapters |
 
 ### Shared skills present under `skills/`
 

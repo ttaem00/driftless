@@ -53,3 +53,25 @@ The receipt's `compatibility.worker_role` and `compatibility.route` fields are
 portable adapter data for `hermes-worker`. Driftless also offers a bounded
 Hermes Aemeth adapter home; it is not a full third Driftless profile and does
 not authorize peer-agent execution.
+
+## Document organization across projects
+
+
+For every Aemeth, reuse one project-owned document entry point and organize
+records by role: plans (goal/acceptance), design (contracts/data flow),
+experiments (dated attempts and evidence), decisions (why changed), lessons
+(failures, corrections, successful mechanisms, retry conditions), history
+(superseded plans/prompts), and sources (original locations and gaps).
+The repository guide is `docs/en/starrail-sprint.md#document-organization`;
+these self-contained roles also apply in installed profiles and projects using
+different paths. Small tasks may use sections in an
+existing document; create no empty folder tree or extra workflow stage.
+Preserve original content, provenance, newer owner edits, old anchors and
+relocation links. Consolidate exact duplicates into one retained full copy.
+Connect each attempt to its decision, lesson and current plan; keep historical
+instructions distinct from live authority and mark unread/missing sources.
+Use descriptive filenames, update the entry map after moves, and check body
+preservation and links. On resume read relevant changes and evidence, not all
+history each turn. Documentation, delivery, implementation, quality acceptance,
+main and stable adoption remain distinct. A status/explanation request stays
+read-only; this convention adds no execution or approval gate.
